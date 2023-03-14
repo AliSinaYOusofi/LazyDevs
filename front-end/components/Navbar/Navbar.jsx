@@ -1,90 +1,176 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
+"use client";
+import { useState, useEffect, useRef } from "react";
+import {
+  Navbar,
+  MobileNav,
+  Typography,
+  Button,
+  IconButton,
+} from "@material-tailwind/react";
+import CredOptions from "./CredOptions";
+import MobileOptions from "./MobileOptions";
+ 
+export default function Example() {
 
-export default function Navbar() {
-  return (
-        <section class="overflow-hidden">
-            <div class="flex items-center justify-between px-7 xl:px-40 py-5 bg-white">
-                <div class="w-auto">
-                    <div class="flex flex-wrap items-center">
-                        
-                        <Link className="flex items-center" href="#">
-                            <span className="text-indigo-500 text-[2rem] font-extrabold"> ForwardDEVS </span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                            </svg>
+    const [openNav, setOpenNav] = useState(false);
+    const [options, setOptions] = useState(false);
+    const [mobileOptions, setMobileOptions] = useState(false);
+    const containerRef = useRef(null);
+    const mobileNavbarRef = useRef(null);
+    
+    useEffect(() => {
+        window.addEventListener(
+        "resize",
+        () => window.innerWidth >= 960 && setOpenNav(false)
+        );
+    }, []);
 
-                        </Link>
-                        
-                    </div>
-                </div>
-                <div class="w-auto">
-                <div class="flex flex-wrap items-center">
-                    <div class="w-auto hidden lg:block">
-                    <ul class="flex items-center mr-16">
-                        <li class="mr-9 font-medium hover:text-gray-700"><a href="#">Features</a></li>
-                        <li class="mr-9 font-medium hover:text-gray-700"><a href="#">Solutions</a></li>
-                        <li class="mr-9 font-medium hover:text-gray-700"><a href="#">Resources</a></li>
-                        <li class="font-medium hover:text-gray-700"><a href="#">Pricing</a></li>
-                    </ul>
-                    </div>
-                    <div class="w-auto hidden lg:block">
-                    <div class="inline-block">
-                        <button class="py-3 px-5 w-full text-white font-semibold rounded-xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button">Try 14 Days Free Trial</button>
-                    </div>
-                    </div>
-                    <div class="w-auto lg:hidden">
-                    <a href="#">
-                        <svg class="navbar-burger text-indigo-600" width="51" height="51" viewbox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="56" height="56" rx="28" fill="currentColor"></rect>
-                        <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
-                    </div>
-                </div>
-                </div>
+    
+    useEffect( () => {
+        window.addEventListener("click", handleClickOutsideContainer);
+        return () => window.removeEventListener("click", handleClickOutsideContainer);
+    }, []);
+    
+    const handleClickOutsideContainer = (event) => {
+        if (containerRef.current && ! containerRef.current.contains(event.target))
+            setOptions(false);
+        
+        if (mobileNavbarRef.current && ! mobileNavbarRef.current.contains(event.target))
+            if (mobileOptions) setOpenNav(false); // putting another. is should not close the navbar if it is profile icon.
+    }
+
+    //TODO: 1: make navbar work when clicked on profile while in mobile mode.
+    
+    const navList = (
+        <ul className="mb-4  flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+        <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-normal"
+        >
+            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            Pages
+            </a>
+        </Typography>
+        <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-normal"
+        >
+            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            Account
+            </a>
+        </Typography>
+        <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-normal"
+        >
+            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            Blocks
+            </a>
+        </Typography>
+        <Typography
+            as="li"
+            variant="small"
+            color="blue-gray"
+            className="p-1 font-normal"
+        >
+            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            Docs
+            </a>
+        </Typography>
+        </ul>
+    );
+    
+    return (
+        <Navbar className="mx-auto w-[90%] max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 bg- bg-black/10 mt-2 sticky rounded-md">
+        <div className="container relative mx-auto flex items-center justify-between text-blue-gray-900 my-auto">
+            <Typography
+            as="a"
+            href="#"
+            variant="small"
+            className="mr-4 cursor-pointer py-1.5 font-normal flex bg-white p-2 rounded-full hover:animate-pulse"
+            >
+                <code className="text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                    </svg>
+                </code>
+                <span className="text-blue-200">LazyDevs</span>
+                
+            </Typography>
+            <div className="hidden lg:block">{navList}</div>
+            <Button ref={containerRef} onClick={() => setOptions(prev => !prev)} variant="gradient" size="sm" className="hidden lg:inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </Button>
+          
+            <IconButton
+            variant="text"
+            className="ml-auto flex items-center h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+            ripple={false}
+            onClick={() => setOpenNav(!openNav)}
+            ref={mobileNavbarRef}
+            >
+            {openNav ? (
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                />
+                </svg>
+            ) : (
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                />
+                </svg>
+            )}
+            </IconButton>
+            
+        </div>
+        
+        <div >
+            {
+                options ? <CredOptions /> : null
+            }
+        </div>
+        <MobileNav open={openNav} >
+            <div className="container mx-auto">
+            {navList}
+            <div className="relative" >
+                <Button  onClick={() => setMobileOptions(prev => !prev)} variant="gradient" size="sm" className=" lg:inline-block">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </Button>
+                {
+                    mobileOptions ? <MobileOptions /> : null
+                }
             </div>
-            <div class="hidden navbar-menu fixed top-0 left-0 bottom-0 w-4/6 sm:max-w-xs z-50">
-                <div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-80"></div>
-                <nav class="relative z-10 px-9 pt-8 bg-white h-full overflow-y-auto">
-                    <div class="flex flex-wrap justify-between h-full">
-                        <div class="w-full">
-                            <div class="flex items-center justify-between -m-2">
-                                <div class="w-auto p-2">
-                                <a class="inline-block" href="#">
-                                    <img src="flaro-assets/logos/flaro-logo-black.svg" alt="" />
-                                </a>
-                                </div>
-                                <div class="w-auto p-2">
-                                <a class="navbar-burger" href="#">
-                                    <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 18L18 6M6 6L18 18" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col justify-center py-16 w-full">
-                        <ul>
-                            <li class="mb-12"><a class="font-medium hover:text-gray-700" href="#">Features</a></li>
-                            <li class="mb-12"><a class="font-medium hover:text-gray-700" href="#">Solutions</a></li>
-                            <li class="mb-12"><a class="font-medium hover:text-gray-700" href="#">Resources</a></li>
-                            <li><a class="font-medium hover:text-gray-700" href="#">Pricing</a></li>
-                        </ul>
-                        </div>
-                        <div class="flex flex-col justify-end w-full pb-8">
-                        <div class="flex flex-wrap">
-                            <div class="w-full">
-                            <div class="block">
-                                <button class="py-3 px-5 w-full text-white font-semibold rounded-xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button">Try 14 Days Free Trial</button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </nav>
             </div>
-        </section>
-  )
+        </MobileNav>
+        </Navbar>
+    );
 }
