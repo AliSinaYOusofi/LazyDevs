@@ -17,6 +17,7 @@ export default function Example() {
     const [mobileOptions, setMobileOptions] = useState(false);
     const containerRef = useRef(null);
     const mobileNavbarRef = useRef(null);
+    const profileButton = useRef(null);
     
     useEffect(() => {
         window.addEventListener(
@@ -36,10 +37,9 @@ export default function Example() {
             setOptions(false);
         
         if (mobileNavbarRef.current && ! mobileNavbarRef.current.contains(event.target))
-            if (mobileOptions) setOpenNav(false); // putting another. is should not close the navbar if it is profile icon.
+            if (profileButton.current && !profileButton.current.contains(event.target))
+                setOpenNav(false); // putting another. is should not close the navbar if it is profile icon.
     }
-
-    //TODO: 1: make navbar work when clicked on profile while in mobile mode.
     
     const navList = (
         <ul className="mb-4  flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -87,7 +87,7 @@ export default function Example() {
     );
     
     return (
-        <Navbar className="mx-auto w-[90%] max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 bg- bg-black/10 mt-2 sticky rounded-md">
+        <Navbar className="mx-auto w-[90%] max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 shadow-white/20 shadow-md mt-2 sticky rounded-md">
         <div className="container relative mx-auto flex items-center justify-between text-blue-gray-900 my-auto">
             <Typography
             as="a"
@@ -104,11 +104,11 @@ export default function Example() {
                 
             </Typography>
             <div className="hidden lg:block">{navList}</div>
-            <Button ref={containerRef} onClick={() => setOptions(prev => !prev)} variant="gradient" size="sm" className="hidden lg:inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </Button>
+
+            <svg ref={containerRef} onClick={() => setOptions(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hidden lg:inline-flex">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            
           
             <IconButton
             variant="text"
@@ -160,7 +160,7 @@ export default function Example() {
             <div className="container mx-auto">
             {navList}
             <div className="relative" >
-                <Button  onClick={() => setMobileOptions(prev => !prev)} variant="gradient" size="sm" className=" lg:inline-block">
+                <Button ref={profileButton}  onClick={() => setMobileOptions(prev => !prev)} variant="gradient" size="sm" className=" lg:inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
