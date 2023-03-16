@@ -4,7 +4,7 @@ import image from '../../public/13317062_5208993.jpg';
 
 export default function Step () {
     return (
-      <div className="px-4 flex py-16 h-screen gap-x-10 shadow-black/20 shadow-lg rounded-md flex-col md:flex-row mx-auto sm:max-w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+      <div className="px-4 mb-24 flex py-16 h-screen gap-x-10 shadow-black/10 shadow-lg rounded-md flex-col md:flex-row mx-auto sm:max-w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="grid max-w-2xl mx-auto">
           <div className="flex">
             <div className="flex flex-col items-center mr-6">
