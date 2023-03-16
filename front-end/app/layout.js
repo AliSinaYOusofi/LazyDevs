@@ -1,5 +1,6 @@
 import HeroSection from '@/components/heroSection/HeroSection'
 import Navbar from '@/components/Navbar/Navbar'
+import Step from '@/components/Step/Step'
 import './globals.css'
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
       <body>
         <Navbar />
         <HeroSection />
+        <Step />
         {children}
       </body>
     </html>
