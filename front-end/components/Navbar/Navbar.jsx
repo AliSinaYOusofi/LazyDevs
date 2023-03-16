@@ -49,7 +49,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-md rounded-full py-2 px-3">
             Pages
             </a>
         </Typography>
@@ -59,7 +59,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-full py-2 px-3">
             Account
             </a>
         </Typography>
@@ -69,7 +69,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-full py-2 px-3">
             Blocks
             </a>
         </Typography>
@@ -79,7 +79,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:bg-white rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 shadow-black/20 hover:shadow-md rounded-full py-2 px-3">
             Docs
             </a>
         </Typography>
@@ -93,7 +93,7 @@ export default function Example() {
             as="a"
             href="#"
             variant="small"
-            className="mr-4 cursor-pointer py-1.5 font-normal flex bg-white p-2 rounded-full hover:animate-pulse"
+            className="mr-4 cursor-pointer py-1.5 font-normal flex shadow-black/20 shadow-md p-2 rounded-full hover:animate-pulse"
             >
                 <code className="text-indigo-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -105,7 +105,7 @@ export default function Example() {
             </Typography>
             <div className="hidden lg:block">{navList}</div>
 
-            <svg ref={containerRef} onClick={() => setOptions(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hidden lg:inline-flex">
+            <svg ref={containerRef} onClick={() => setOptions(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hidden lg:inline-flex cursor-pointer">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             
@@ -159,12 +159,12 @@ export default function Example() {
         <MobileNav open={openNav} >
             <div className="container mx-auto">
             {navList}
-            <div className="relative" >
-                <Button ref={profileButton}  onClick={() => setMobileOptions(prev => !prev)} variant="gradient" size="sm" className=" lg:inline-block">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </Button>
+            <div className="relative flex w-full" >
+                
+                <svg ref={profileButton}  onClick={() => setMobileOptions(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer text-black ml-7">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                
                 {
                     mobileOptions ? <MobileOptions /> : null
                 }

@@ -47,16 +47,9 @@ export default function HeroSection() {
                         accusantium doloremque rem aperiam, eaque ipsa quae.
                         </p>
                     </div>
-                    <div>
-                        <Link
-                        href="/"
-                        className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-black transition duration-500 rounded shadow-md bg-deep-purple-accent-400 hover:bg-black/90 hover:text-white"
-                        >
-                        Get started
-                        </Link>
+                    
                     </div>
-                    </div>
-                    <form className="flex mt-5 flex-col items-center w-full mb-4 md:flex-row md:px-16">
+                    <form className="flex  flex-col items-center w-full mb-4 md:flex-row md:px-16">
                         <input
                         placeholder="Email"
                         required=""
