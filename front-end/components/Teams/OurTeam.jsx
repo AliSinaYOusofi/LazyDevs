@@ -1,6 +1,7 @@
 import React from "react";
 export default function Teams () {
     
+    // scrolling through our tema members: animation
     return (
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
             <div className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
@@ -42,102 +43,98 @@ export default function Teams () {
                 accusantium doloremque rem aperiam, eaque ipsa quae.
             </p>
             </div>
-            <div className="flex items-center jusitfy-center gap-x-24 h-fit p-10 overflow-scroll">
-                <div className="flex items-center gap-x-2 w-full jusitfy-center p-2">
-                    <img
-                        className="object-cover w-20 h-20 rounded-full"
-                        src="https://cdn-icons-png.flaticon.com/512/2202/2202112.png"
+            <div className="flex w-full p-10 items-center justify-evenly flex-row flex-wrap shadow-black/10 shadow-md rounded-md i gap-x-24">
+                <div className="gap-y-4 flex flex-col">
+
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
+                        <img
+                            className="object-cover w-20 h-20 rounded-full"
+                            src="https://cdn-icons-png.flaticon.com/512/2202/2202112.png"
+                            alt="Person"
+                        />
+                        <span className="text-sm font-bold">Oliver Aguilerra</span>
+                        <span className="text-sm text-gray-800">Product Manager</span>
+                    </div>
+                    
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2  jusitfy-center">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
+                        src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
                         alt="Person"
-                    />
-                    <span className="text-sm font-bold">Oliver Aguilerra</span>
-                    <span className="text-sm text-gray-800">Product Manager</span>
-                </div>
-                <div className="flex w-fit  p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://images.pexels.com/photos/2381069/pexels-photo-2381069.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-sm font-bold">Marta Clermont</p>
-                    <p className="text-sm text-gray-800">Design Team Lead</p>
+                        />
+                    
+                        <p className="text-sm font-bold">Anthony Geek</p>
+                        <p className="text-sm text-gray-800">CTO, Lorem Inc.</p>
+                        
+                    </div>
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2  jusitfy-center ">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow "
+                        src="https://cdn-icons-png.flaticon.com/512/3006/3006876.png"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-sm font-bold">Alice Melbourne</p>
+                        <p className="text-sm text-gray-800">Human Resources</p>
+                        
+                    </div>
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
+                        src="https://cdn-icons-png.flaticon.com/512/145/145843.png"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-lg font-bold">Martin Garix</p>
+                        <p className="text-sm text-gray-800">Bad boy</p>
+                        
                     </div>
                 </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-sm font-bold">Anthony Geek</p>
-                    <p className="text-sm text-gray-800">CTO, Lorem Inc.</p>
+                <div className="gap-y-4 flex flex-col">
+
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow gap-x-2"
+                        src="https://cdn-icons-png.flaticon.com/512/4139/4139993.png"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-sm font-bold">Andrew Larkin</p>
+                        <p className="text-sm text-gray-800">Backend Developer</p>
+                        
                     </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow "
-                    src="https://cdn-icons-png.flaticon.com/512/3006/3006876.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-sm font-bold">Alice Melbourne</p>
-                    <p className="text-sm text-gray-800">Human Resources</p>
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
+                        src="https://cdn-icons-png.flaticon.com/512/805/805370.png"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-lg font-bold">Sophie Denmo</p>
+                        <p className="text-sm text-gray-800">Designer UI/UX</p>
+                        
                     </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://cdn-icons-png.flaticon.com/512/145/145843.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-lg font-bold">Martin Garix</p>
-                    <p className="text-sm text-gray-800">Bad boy</p>
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
+                        src="https://cdn-icons-png.flaticon.com/512/4202/4202831.png"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-lg font-bold">Benedict Caro</p>
+                        <p className="text-sm text-gray-800">Frontend Developer</p>
+                        
                     </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow gap-x-2"
-                    src="https://cdn-icons-png.flaticon.com/512/4139/4139993.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center">
-                    <p className="text-sm font-bold">Andrew Larkin</p>
-                    <p className="text-sm text-gray-800">Backend Developer</p>
-                    </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://cdn-icons-png.flaticon.com/512/805/805370.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-lg font-bold">Sophie Denmo</p>
-                    <p className="text-sm text-gray-800">Designer UI/UX</p>
-                    </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://cdn-icons-png.flaticon.com/512/4202/4202831.png"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-lg font-bold">Benedict Caro</p>
-                    <p className="text-sm text-gray-800">Frontend Developer</p>
-                    </div>
-                </div>
-                <div className="flex w-fit p-4">
-                    <img
-                    className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                    src="https://avatars.githubusercontent.com/u/92437693?v=4"
-                    alt="Person"
-                    />
-                    <div className="flex flex-row items-center justify-center gap-x-2">
-                    <p className="text-sm font-bold">Ali Sina</p>
-                    <p className="text-sm text-gray-800">Full Stack Developer</p>
+                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
+                        <img
+                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
+                        src="https://avatars.githubusercontent.com/u/92437693?v=4"
+                        alt="Person"
+                        />
+                        
+                        <p className="text-sm font-bold">Ali Sina</p>
+                        <p className="text-sm text-gray-800">Full Stack Developer</p>
+                        
                     </div>
                 </div>
             </div>
