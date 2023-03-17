@@ -10,7 +10,7 @@ export default function Teams () {
                 Dream Team
                 </p>
             </div>
-            <h2 className="max-w-lg mb-6 font-sans text-[30px] font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
+            <h2 className="max-w-lg mb-6 font-sans text-[3rem] font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
                 <span className="relative inline-block">
                 <svg
                     viewBox="0 0 52 24"
@@ -39,8 +39,8 @@ export default function Teams () {
                 our talented team of professionals
             </h2>
             <p className="text-base text-gray-700 md:text-lg">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque rem aperiam, eaque ipsa quae.
+            The team of programmers is truly remarkable, their exceptional skills, dedication, and collaborative spirit have resulted in the creation of 
+            innovative, high-quality software solutions that have exceeded all expectations.
             </p>
             </div>
             <div className="flex w-full p-10 items-center justify-evenly flex-row flex-wrap shadow-black/10 shadow-md rounded-md i gap-x-24">
@@ -128,11 +128,11 @@ export default function Teams () {
                     <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
                         <img
                         className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                        src="https://avatars.githubusercontent.com/u/92437693?v=4"
+                        src="https://cdn-icons-png.flaticon.com/512/4202/4202841.png"
                         alt="Person"
                         />
                         
-                        <p className="text-sm font-bold">Ali Sina</p>
+                        <p className="text-sm font-bold">Mraca Draco</p>
                         <p className="text-sm text-gray-800">Full Stack Developer</p>
                         
                     </div>
