@@ -1,3 +1,4 @@
+"use client"
 import Footer from '@/components/Footer/Footer'
 import HeroSection from '@/components/heroSection/HeroSection'
 import Navbar from '@/components/Navbar/Navbar'
@@ -5,6 +6,7 @@ import Statistic from '@/components/Stats/Stats'
 import Step from '@/components/Step/Step'
 import Teams from '@/components/Teams/OurTeam'
 import './globals.css'
+import React from 'react'
 
 export const metadata = {
   title: 'Create Next App',
@@ -15,12 +17,16 @@ export const metadata = {
 // before a user logs
 // so users see what they can do on a website
 export default function RootLayout({ children }) {
+
+  const stepsComponentRef = React.useRef(null);
   return (
     <html lang="en">
       <body>
         <Navbar />
-        <HeroSection />
-        <Step />
+        <HeroSection stepsComponentRef={stepsComponentRef}/>
+        <div ref={stepsComponentRef}>
+          <Step /> 
+        </div>
         <Statistic />
         <Teams />
         <Footer />

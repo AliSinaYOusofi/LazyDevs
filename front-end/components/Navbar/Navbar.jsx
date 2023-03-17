@@ -49,7 +49,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-md rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-md rounded-md py-2 px-3">
             Pages
             </a>
         </Typography>
@@ -59,7 +59,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-md py-2 px-3">
             Account
             </a>
         </Typography>
@@ -69,7 +69,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 hover:shadow-md shadow-black/20 rounded-md py-2 px-3">
             Blocks
             </a>
         </Typography>
@@ -79,7 +79,7 @@ export default function Example() {
             color="blue-gray"
             className="p-1 font-normal"
         >
-            <a href="#" className="flex items-center transition-all duration-300 shadow-black/20 hover:shadow-md rounded-full py-2 px-3">
+            <a href="#" className="flex items-center transition-all duration-300 shadow-black/20 hover:shadow-md rounded-md py-2 px-3">
             Docs
             </a>
         </Typography>

@@ -1,7 +1,16 @@
-import Link from 'next/link'
+"use client";
 import React from 'react'
 
-export default function HeroSection() {
+export default function HeroSection({stepsComponentRef}) {
+
+    const scrollDown = () => {
+        console.log(stepsComponentRef)
+        if (stepsComponentRef.current)
+            stepsComponentRef.current.scrollIntoView({ behavior: "smooth",
+            block: "center",
+            inline: "start"})
+    }
+
     return (
             <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
                 <div className="max-w-xl sm:mx-auto lg:max-w-2xl">
@@ -38,50 +47,46 @@ export default function HeroSection() {
                                 height="24"
                             />
                             </svg>
-                            <span className="relative">The</span>
+                            <span className="relative"></span>
                         </span>{' '}
-                        quick, brown fox jumps over a lazy dog
+                        Create and share your unique voice with the world.
                         </h2>
                         <p className="text-base text-gray-700 md:text-lg">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                        accusantium doloremque rem aperiam, eaque ipsa quae.
+                            Intuitive and user-friendly blogging platform for developers.
+                            Made by developers for developers/Programmers.
                         </p>
                     </div>
                     
                     </div>
-                    <form className="flex  flex-col items-center w-full mb-4 md:flex-row md:px-16">
+                    <form className="flex  flex-col items-center w-full mb-4 md:flex-row">
                         <input
-                        placeholder="Email"
-                        required=""
-                        type="text"
-                        className="flex-grow w-full h-12 px-4 mb-3 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none md:mr-2 md:mb-0 focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                            placeholder="Email"
+                            required=""
+                            type="text"
+                            className="flex-grow w-full h-12 px-4 mb-3 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none md:mr-2 md:mb-0 focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
                         />
                         <button
-                        type="submit"
-                        className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-black hover:bg-black/90 hover:text-white transition duration-500 rounded shadow-md md:w-auto "
+                            type="submit"
+                            className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-black hover:bg-black/90 hover:text-white transition duration-500 rounded shadow-md md:w-auto "
                         >
                         Subscribe
                         </button>
                     </form>
-                    <p className="max-w-md mx-auto mb-10 text-xs text-gray-600 sm:text-sm md:mb-16">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                        accusantium doloremque laudantium.
+                    <p className="max-w-md  mb-10 text-xs text-gray-600 sm:text-sm">
+                    Subscribe to our newsletter today and never miss out on the latest blogs.
+
                     </p>
-                    <a
-                        href="/"
-                        aria-label="Scroll down"
-                        className="flex items-center justify-center w-10 h-10 mx-auto text-gray-600 duration-300 transform border border-gray-400 rounded-full hover:text-deep-purple-accent-400 hover:border-deep-purple-accent-400 hover:shadow hover:scale-110"
-                    >
+                    <span onClick={scrollDown} className="flex items-center justify-center w-10 h-10 mx-auto text-gray-600 duration-300 transform border border-gray-400 rounded-full hover:text-deep-purple-accent-400 hover:border-deep-purple-accent-400 hover:shadow hover:scale-110 cursor-pointer">
                         <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="currentColor"
                         >
                         <path d="M10.293,3.293,6,7.586,1.707,3.293A1,1,0,0,0,.293,4.707l5,5a1,1,0,0,0,1.414,0l5-5a1,1,0,1,0-1.414-1.414Z" />
                         </svg>
-                    </a>
+                    </span>
                 </div>
             </div>
     )

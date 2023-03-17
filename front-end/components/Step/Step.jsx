@@ -36,12 +36,12 @@ export default function Step () {
               </div>
               <div>
                 <p className="text-xl font-semibold sm:text-base">
-                  Read the recipe
+                  Reasearch
                 </p>
                 <p className="text-sm text-gray-700">
-                  All recipes are written using certain conventions, which define
-                  the characteristics of common ingredients. The rules vary from
-                  place to place.
+                  Research and plan: Before you start writing, take the time to 
+                  research your topic and plan out the structure and main points 
+                  of your blog post. This will help ensure that your post is well-organized, informative, and engaging.
                 </p>
               </div>
             </div>
@@ -75,11 +75,11 @@ export default function Step () {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-semibold sm:text-base">Heart attack</p>
+                <p className="text-xl font-semibold sm:text-base">Think clearly</p>
                 <p className="text-sm text-gray-700">
-                  A flower in my garden, a mystery in my panties. Heart attack
-                  never stopped old Big Bear. I didn't even know we were calling
-                  him Big Bear.
+                  Write in a clear and concise manner: Use simple language, short sentences, and avoid unnecessary 
+                  jargon or complex vocabulary that might confuse your readers. Also, 
+                  try to make your writing more engaging by using examples, anecdotes, and relevant images or videos.
                 </p>
               </div>
             </div>
@@ -113,11 +113,11 @@ export default function Step () {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-semibold sm:text-base">Never stop</p>
+                <p className="text-xl font-semibold sm:text-base">Edit Revise Publish</p>
                 <p className="text-sm text-gray-700">
-                  The first mate and his Skipper too will do their very best to
-                  make the others comfortable in their tropic island nest. Michael
-                  Knight a young loner.
+                  Edit and revise: Once you've finished your first draft, 
+                  take some time to edit and revise your blog post.
+                  Check for spelling and grammar errors, ensure that your ideas flow logically
                 </p>
               </div>
             </div>
