@@ -4,7 +4,7 @@ import image from '../../public/13317062_5208993.jpg';
 
 export default function Step () {
     return (
-      <div className="px-4 mb-24 flex py-16 h-screen gap-x-10 shadow-black/10 shadow-lg rounded-md flex-col md:flex-row mx-auto sm:max-w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+      <div className="px-4 mb-24 flex py-16 h-fit gap-x-10 shadow-black/10 shadow-lg rounded-md flex-col md:flex-row mx-auto sm:max-w-full md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="grid max-w-2xl mx-auto">
           <div className="flex">
             <div className="flex flex-col items-center mr-6">
@@ -18,11 +18,11 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-8 h-10 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                <div className="flex items-center justify-center w-8 h-8 my-3 sm:my-0 rounded-full md:bg-indigo-50 bg-transparent sm:w-24 sm:h-24">
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/3940/3940190.png"
                     alt="research icon"
-
+                    className="w-14"  
                   />
                 </div>
               </div>
@@ -50,10 +50,11 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-10 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                <div className="flex items-center justify-center w-8 h-8 my-3 rounded-full md:bg-indigo-50 sm:bg-transparent sm:w-24 sm:h-24">
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/2452/2452203.png"
                     alt="research icon"
+                    className="w-14"
                   />
                 </div>
               </div>
@@ -79,11 +80,11 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-10 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                <div className="flex items-center justify-center w-10 h-16 my-3 rounded-full md:bg-indigo-50 sm:bg-transparent sm:w-24 sm:h-24">
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/440/440741.png"
                     alt="research icon"
-
+                    className="w-14"
                   />
                 </div>
               </div>

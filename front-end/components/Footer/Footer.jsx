@@ -106,7 +106,7 @@ export default function Footer () {
                                 <img
                                     src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
                                     alt="facebook"
-                                    className="w-10"
+                                    className="w-9"
                                 />
                             </a>
                         </div>
@@ -119,7 +119,7 @@ export default function Footer () {
                 <p className="text-sm text-gray-600">
                     © Copyright {new Date().getFullYear()} LazyDevs Inc. All rights reserved.
                 </p>
-                <ul className="flex flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
+                <ul className="flex gap-y-2 flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
                     <li>
                         <a
                             href="/"
