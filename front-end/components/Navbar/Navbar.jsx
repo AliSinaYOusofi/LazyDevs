@@ -87,7 +87,7 @@ export default function Example() {
     );
     
     return (
-        <Navbar className="mx-auto w-[90%] max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 shadow-white/20 shadow-md mt-2 sticky rounded-md">
+        <Navbar className="mx-auto z-[999] fixed left-[50%] translate-x-[-50%] w-[90%] max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 mt-2 md:rounded-full rounded-[0.3rem]">
         <div className="container relative mx-auto flex items-center justify-between text-blue-gray-900 my-auto">
             <Typography
             as="a"

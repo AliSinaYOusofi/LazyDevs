@@ -18,20 +18,12 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-10 h-10 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
-                  <svg
-                    className="w-12 h-12 text-deep-purple-accent-400 sm:w-16 sm:h-16"
-                    stroke="currentColor"
-                    viewBox="0 0 52 52"
-                  >
-                    <polygon
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                      points="29 13 14 29 25 29 23 39 38 23 27 23"
-                    />
-                  </svg>
+                <div className="flex items-center justify-center w-8 h-10 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3940/3940190.png"
+                    alt="research icon"
+
+                  />
                 </div>
               </div>
               <div>
@@ -58,20 +50,11 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-16 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
-                  <svg
-                    className="w-12 h-12 text-deep-purple-accent-400 sm:w-16 sm:h-16"
-                    stroke="currentColor"
-                    viewBox="0 0 52 52"
-                  >
-                    <polygon
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                      points="29 13 14 29 25 29 23 39 38 23 27 23"
-                    />
-                  </svg>
+                <div className="flex items-center justify-center w-10 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/2452/2452203.png"
+                    alt="research icon"
+                  />
                 </div>
               </div>
               <div>
@@ -96,20 +79,12 @@ export default function Step () {
             </div>
             <div className="flex flex-col pb-6 sm:items-center sm:flex-row sm:pb-0">
               <div className="sm:mr-5">
-                <div className="flex items-center justify-center w-16 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
-                  <svg
-                    className="w-12 h-12 text-deep-purple-accent-400 sm:w-16 sm:h-16"
-                    stroke="currentColor"
-                    viewBox="0 0 52 52"
-                  >
-                    <polygon
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                      points="29 13 14 29 25 29 23 39 38 23 27 23"
-                    />
-                  </svg>
+                <div className="flex items-center justify-center w-10 h-16 my-3 rounded-full bg-indigo-50 sm:w-24 sm:h-24">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/440/440741.png"
+                    alt="research icon"
+
+                  />
                 </div>
               </div>
               <div>
