@@ -7,6 +7,7 @@ import Step from '@/components/Step/Step'
 import Teams from '@/components/Teams/OurTeam'
 import './globals.css'
 import React from 'react'
+import MoveToTop from '@/components/moveToTop/MoveToTop'
 
 export const metadata = {
   title: 'Create Next App',
@@ -21,7 +22,7 @@ export default function RootLayout({ children }) {
   const stepsComponentRef = React.useRef(null);
   return (
     <html lang="en">
-      <body>
+      <body className="relative">
         <Navbar />
         <HeroSection stepsComponentRef={stepsComponentRef}/>
         <div ref={stepsComponentRef}>
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <Statistic />
         <Teams />
         <Footer />
+        <MoveToTop />
         {children}
       </body>
     </html>
