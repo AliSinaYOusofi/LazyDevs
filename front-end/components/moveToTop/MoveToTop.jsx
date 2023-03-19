@@ -6,19 +6,21 @@ export default function MoveToTop() {
     const iconRef = useRef(null);
     const handleMovePage = () => scroll({"behavior": "smooth", top: 0})
     // should only display if we move down
-    useEffect( () => {
-        window.addEventListener("scroll", () => {
-            if (Math.round(window.scrollY) >= 200) {
-                if (iconRef.current) {
-                    iconRef.current.style.display = "flex"
-                    iconRef.current.style.position = "fixed"
-                }
-            }
-            else
-                iconRef.current.style.display = "none"
-        });
 
-        return () => window.removeEventListener("scroll");
+    const scrollHandler =  () => {
+        if (Math.round(window.scrollY) >= 200) {
+            if (iconRef.current) {
+                iconRef.current.style.display = "flex"
+                iconRef.current.style.position = "fixed"
+            }
+        }
+        else
+            iconRef.current.style.display = "none"
+    }
+    useEffect( () => {
+        window.addEventListener("scroll", scrollHandler);
+
+        return () => window.removeEventListener("scroll", scrollHandler);
     }, []);
     return (
         <img

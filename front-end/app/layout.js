@@ -17,7 +17,7 @@ export const metadata = {
 // some articles must be shown on the homepage
 // before a user logs
 // so users see what they can do on a website
-export default function RootLayout({ children }) {
+export default function Layout({ children }) {
 
   const stepsComponentRef = React.useRef(null);
   return (
