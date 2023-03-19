@@ -93,7 +93,7 @@ export default function Example() {
             as="a"
             href="#"
             variant="small"
-            className="mr-4 cursor-pointer py-1.5 font-normal flex shadow-black/20 shadow-md p-2 rounded-full hover:animate-pulse"
+            className="mr-4 items-center cursor-pointer py-1.5 font-normal flex shadow-black/20 shadow-md p-2 rounded-full hover:animate-pulse"
             >
                 <code className="text-indigo-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
