@@ -2,16 +2,12 @@ import React from 'react'
 
 export default function Login() {
     return (
-        <div className="w-[90%] mx-auto">
-
-            <img
-                src="https://storyset.com/illustration/nerd/pana#5EB8FFFF&hide=&hide=false"
-                alt="login_illustration"
+        <>
+            <img 
+                src="https://storyset.com/illustration/nerd/amico#B9A9BEFF&hide=&hide=complete" 
+                alt="image"
+                className="w-10"
             />
-
-            <div className="">
-
-            </div>
-        </div>
+        </>
     )
 }
