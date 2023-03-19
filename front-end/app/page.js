@@ -1,13 +1,11 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+"use client";
+import { Navbar } from "@material-tailwind/react";
 
 export default function Home() {
   return (
     <main>
-      
+      <Navbar />
+      Fuck this
     </main>
   )
 }
