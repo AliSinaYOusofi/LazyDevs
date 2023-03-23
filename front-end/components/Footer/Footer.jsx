@@ -123,7 +123,7 @@ export default function Footer () {
                     <li>
                         <a
                             href="/"
-                            className="transition-all duration-700 p-2 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
+                            className="transition-all duration-700 md:p-2 p-1 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
                         >
                         F.A.Q
                         </a>
@@ -131,7 +131,7 @@ export default function Footer () {
                     <li>
                         <a
                             href="/"
-                            className="transition-all duration-700 p-2 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
+                            className="transition-all duration-700 md:p-2 p-1 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
                         >
                             Privacy Policy
                         </a>
@@ -139,7 +139,7 @@ export default function Footer () {
                     <li>
                         <a
                             href="/"
-                            className="transition-all duration-700 p-2 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
+                            className="transition-all duration-700 md:p-2 p-1 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
                         >
                             Terms &amp; Conditions
                         </a>
