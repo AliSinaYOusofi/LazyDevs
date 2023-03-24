@@ -53,13 +53,12 @@ export default function Signup() {
             <div className="h-screen md:flex items-center justify-center w-full gap-x-8">
                 <div className="relative overflow-hidden md:flex w-[50%] hidden">
                     <img
-                        src="https://images.pexels.com/photos/267569/pexels-photo-267569.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        src="https://img.freepik.com/free-psd/3d-character-young-man-with-business-concept_1150-64058.jpg?w=996&t=st=1679696401~exp=1679697001~hmac=9d84e35187ee0fab0437add98acec8fd4c05854826a59cc5bb5618cea034ea21"
                         alt="blog image"
                         className="rounded-md"
                     />
-                    <div className="w-full h-full rounded-md bg-gray-900 bg-opacity-40 absolute top-0"></div>
 
-                    <div className="w-full absolute top-[50%] translate-y-[50%] text-center ">
+                    <div className="w-full absolute bottom-[14%] translate-y-[50%] text-center ">
                         
                         <h1 className="text-white md:text-[3rem] text-sm tracking-wide font-extrabold">LazyDevs</h1>
                         <p className="text-base text-white md:text-lg mt-8">

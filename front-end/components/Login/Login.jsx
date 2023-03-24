@@ -20,13 +20,12 @@ export default function Login() {
             
             <div className="md:flex relative hidden  items-center justify-center">
                 <img 
-                    src="https://images.unsplash.com/photo-1616763355603-9755a640a287?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80)" 
+                    src="https://img.freepik.com/free-psd/3d-character-young-man-sitting-comfortable-sofa-with-freedom-happiness_1150-64274.jpg?w=996&t=st=1679696269~exp=1679696869~hmac=562f77e074e6b9833e7095a445cdc5bcb99398d05e5230c4e02aeaebfcb68b49" 
                     alt="image"
                     className="rounded-md h-[32rem]"
                 />
-                <div className="w-full h-full rounded-md bg-gray-900 bg-opacity-40 absolute top-0"></div>
 
-                <div className="max-w-xl absolute top-[50%] translate-y-[50%] mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+                <div className="max-w-xl absolute bottom-[4%] translate-y-[50%] mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
                     
                     <h1 className="text-white md:text-[3rem] text-sm tracking-wide font-extrabold">LazyDevs</h1>
                     <p className="text-base text-white md:text-lg mt-8">
