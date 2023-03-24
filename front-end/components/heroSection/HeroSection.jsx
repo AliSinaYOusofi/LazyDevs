@@ -1,14 +1,20 @@
 "use client";
-import React from 'react'
+import { emailValidator } from '@/functions/emailValidator';
+import React, { useState } from 'react'
+import ValidatorIcon from '../ValidatorIcon';
 
 export default function HeroSection({stepsComponentRef}) {
 
+    const [email, setEmail] = useState("");
+    const [subscribe, setSubscribe] = useState("Subscribe");
+
     const scrollDown = () => {
-        console.log(stepsComponentRef)
         if (stepsComponentRef.current)
-            stepsComponentRef.current.scrollIntoView({ behavior: "smooth",
-            block: "center",
-            inline: "start"})
+            stepsComponentRef.current.scrollIntoView({ behavior: "smooth", block: "center", inline: "start"});
+    }
+
+    const handleSubscribe = async () => {
+        if (emailValidator(email)) setSubscribe("Subscribed");
     }
 
     return (
@@ -24,32 +30,7 @@ export default function HeroSection({stepsComponentRef}) {
                     </a>
                     <div className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
                         <h2 className="max-w-full mb-6 font-sans text-[3rem] font-bold leading-none tracking-tight text-gray-900 sm:text-[4rem] md:mx-auto">
-                        <span className="relative inline-block">
-                            <svg
-                            viewBox="0 0 52 24"
-                            fill="currentColor"
-                            className="absolute top-0 left-0 z-0 hidden w-32 -mt-8 -ml-20 text-blue-gray-100 lg:w-32 lg:-ml-28 lg:-mt-10 sm:block"
-                            >
-                            <defs>
-                                <pattern
-                                id="e77df901-b9d7-4b9b-822e-16b2d410795b"
-                                x="0"
-                                y="0"
-                                width=".135"
-                                height=".30"
-                                >
-                                <circle cx="1" cy="1" r=".7" />
-                                </pattern>
-                            </defs>
-                            <rect
-                                fill="url(#e77df901-b9d7-4b9b-822e-16b2d410795b)"
-                                width="52"
-                                height="24"
-                            />
-                            </svg>
-                            <span className="relative"></span>
-                        </span>{' '}
-                        Create and share your unique voice with the world.
+                            Create and share your unique voice with the world.
                         </h2>
                         <p className="text-base text-gray-700 md:text-lg">
                             Intuitive and user-friendly blogging platform for developers.
@@ -58,23 +39,28 @@ export default function HeroSection({stepsComponentRef}) {
                     </div>
                     
                     </div>
-                    <form className="flex  flex-col items-center w-full mb-4 md:flex-row">
+                    <form className="flex relative  flex-col items-center w-full mb-4 md:flex-row">
+                        
                         <input
                             placeholder="Email"
                             required=""
                             type="text"
                             className="flex-grow w-full h-12 px-4 mb-3 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none md:mr-2 md:mb-0 focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleSubscribe}
                             className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-black hover:bg-black/90 hover:text-white transition duration-500 rounded shadow-md md:w-auto "
                         >
-                        Subscribe
+                            {subscribe}
                         </button>
+                        <div className="absolute md:right-[23%] lg:right-[20%] right-0 md top-3">
+                            <ValidatorIcon field={email} fieldValidator={emailValidator}/>
+                        </div>
                     </form>
-                    <p className="max-w-md  mb-10 text-xs text-gray-600 sm:text-sm">
-                    Subscribe to our newsletter today and never miss out on the latest blogs.
-
+                    <p className="mb-10 text-xs text-gray-600 sm:text-sm">
+                        Subscribe to our newsletter today and never miss out on the latest blogs.
                     </p>
                     <span onClick={scrollDown} className="flex items-center justify-center w-10 h-10 mx-auto text-gray-600 duration-300 transform border border-gray-400 rounded-full hover:text-deep-purple-accent-400 hover:border-deep-purple-accent-400 hover:shadow hover:scale-110 cursor-pointer">
                         <svg
