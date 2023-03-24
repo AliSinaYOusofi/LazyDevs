@@ -1,4 +1,6 @@
 "use client";
+import { emailValidator } from '@/functions/emailValidator';
+import { passwordValidator } from '@/functions/passwordValidator';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react'
 
@@ -45,13 +47,30 @@ export default function Login() {
                 </div>
 
                 <div className="mt-5">
-                    <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4 group">
+                    <div className="flex relative items-center border-2 py-2 px-3 rounded-2xl mb-4 group">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                 d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                         </svg>
-                        <input className="pl-2 outline-none border-none" type="text" name="" id="" placeholder="Email Address" onChange={(e) => setEmail(e.target.value)}/>
+                        <input className="pl-2 w-full outline-none border-none" type="text" name="" id="" placeholder="Email Address" onChange={(e) => setEmail(e.target.value)}/>
+                        {
+                            email.length
+                            ?
+                            (
+                                emailValidator(email)
+                                ?
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 absolute right-2 bg-green-500 rounded-full text-white">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                :
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 absolute right-2 bg-red-500 rounded-full text-white">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            )
+                            : null
+                        }
                     </div>
                         <div className="flex relative items-center border-2 py-2 px-3 rounded-2xl group">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" viewBox="0 0 20 20"
@@ -62,7 +81,6 @@ export default function Login() {
                             </svg>
                             <input className="pl-2 w-full outline-none border-none" type={hidePassword ? "text" : "password"} name="" id="" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
                             <div className="absolute right-2 cursor-pointer" onClick={() => setHidePassword(prev => !prev)}>
-                                
                                 {
                                     password.length
                                     ?
@@ -82,6 +100,25 @@ export default function Login() {
                                     : null
                                 }
                             </div>
+                            <div className="absolute right-10">
+                                {
+                                    password.length
+                                    ?
+                                    (
+                                        passwordValidator(password)
+                                        ?
+                                        
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6  bg-green-500 rounded-full text-white">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        :
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6  bg-red-500 rounded-full text-white">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    )
+                                    : null
+                                }
+                        </div>
                         </div>
                         <button type="button" onClick={handleSubmit} className="block w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
                         <Link href={"/signup"} className="text-sm w-full ml-2 hover:text-blue-500 cursor-pointer">Don't have an account? Signup</Link>
