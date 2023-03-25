@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default function HideUnhide({field, condition, setConditionFunction}) {
+export default function HideUnhide({field, condition, setConditionFunction, required}) {
     return (
-        <div className="absolute right-10 cursor-pointer" onClick={() => setConditionFunction(prev => !prev)}>
+        <div className={`absolute right-10 cursor-pointer ${required ? "right-2" : "right-10"}`} onClick={() => setConditionFunction(prev => !prev)}>
             {
                 field.length
                 ?
