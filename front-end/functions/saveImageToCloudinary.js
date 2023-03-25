@@ -1,0 +1,16 @@
+import axios from "axios";
+
+export const saveImageToCloudinaryAnReturnSecureURL = async (imageToUpload) => {
+    try {
+        const imageFile = new FormData();
+        imageFile.append("file", imageToUpload);
+        imageFile.append("upload_preset", "xvmh6gbo");
+
+        const response = await axios.post("https://api.cloudinary.com/v1_1/dudhf0avt/image/upload", imageFile);
+        return await response.data.secure_url;
+    }
+    catch(error) { 
+        console.log("Error while saving to cloudinary: %s", error);
+        return false;
+    }
+}
