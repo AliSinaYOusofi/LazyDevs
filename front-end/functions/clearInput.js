@@ -1,0 +1,1 @@
+export const clearInput = (e) => e.target.value = null 

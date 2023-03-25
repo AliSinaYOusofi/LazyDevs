@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import HideUnhide from '../HideUnhidePassword/HideUnhide';
+import Profile from '../ProfileImage/Profile';
 import ValidatorIcon from '../ValidatorIcon';
 
 export default function Signup() {
@@ -50,13 +51,14 @@ export default function Signup() {
 
     return (
         <>  
-            <div className="h-screen md:flex items-center justify-center w-full gap-x-8">
-                <div className="relative overflow-hidden md:flex w-[50%] hidden">
+            <div className="h-screen md:flex items-center justify-center w-full">
+                <div className="relative overflow-hidden md:flex w-full hidden h-screen">
                     <img
-                        src="https://img.freepik.com/free-psd/3d-character-young-man-with-business-concept_1150-64058.jpg?w=996&t=st=1679696401~exp=1679697001~hmac=9d84e35187ee0fab0437add98acec8fd4c05854826a59cc5bb5618cea034ea21"
+                        src="https://img.freepik.com/premium-photo/notebook-with-toolls-notes-about-blog_132358-3229.jpg?w=1060"
                         alt="blog image"
-                        className="rounded-md"
+                        className="object-cover w-full"
                     />
+                    <div className="absolute top-0 w-full bg-black/40 h-full"></div>
 
                     <div className="w-full absolute bottom-[14%] translate-y-[50%] text-center ">
                         
@@ -67,7 +69,7 @@ export default function Signup() {
                         </p>
                     </div>
                 </div>
-                <div className="flex-col justify-center py-10 items-center bg-white">
+                <div className="flex-col lg:px-4 w-full lg:w-1/2 md:w-1/2 justify-center items-center bg-white">
                     <div className="">
                         <code className="text-indigo-600 w-fit flex mx-auto shadow-black/20 shadow-md p-2 rounded-full hover:animate-pulse">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -77,6 +79,7 @@ export default function Signup() {
                         </code>
                         <p className="text-center mt-4">Join our community today and discover a world of possibilities</p>
                     </div>
+                    <Profile />
                     <form className="bg-white mt-4 px-4 md:px-0">
                         <div className="flex relative items-center border-2 py-2 px-3 rounded-md mb-4 group">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" viewBox="0 0 20 20"

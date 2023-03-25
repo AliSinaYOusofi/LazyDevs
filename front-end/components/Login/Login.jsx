@@ -1,5 +1,6 @@
 "use client";
 import { emailValidator } from '@/functions/emailValidator';
+import { handleLoginSubmit } from '@/functions/login_submit/handleLoginSubmit';
 import { passwordValidator } from '@/functions/passwordValidator';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react'
@@ -11,20 +12,17 @@ export default function Login() {
     const [hidePassword, setHidePassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const handleSubmit = () => {
-
-    }
 
     return (
         <div className="w-full h-screen flex flex-row items-center justify-center gap-x-10">
             
             <div className="md:flex relative hidden  items-center justify-center">
                 <img 
-                    src="https://img.freepik.com/free-psd/3d-character-young-man-sitting-comfortable-sofa-with-freedom-happiness_1150-64274.jpg?w=996&t=st=1679696269~exp=1679696869~hmac=562f77e074e6b9833e7095a445cdc5bcb99398d05e5230c4e02aeaebfcb68b49" 
+                    src="https://img.freepik.com/premium-photo/notebook-with-toolls-notes-about-blog_132358-3229.jpg?w=1060" 
                     alt="image"
                     className="rounded-md h-[32rem]"
                 />
-
+                <div className="absolute rounded-md top-0 w-full bg-black/20 h-full"></div>                
                 <div className="max-w-xl absolute bottom-[4%] translate-y-[50%] mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
                     
                     <h1 className="text-white md:text-[3rem] text-sm tracking-wide font-extrabold">LazyDevs</h1>
@@ -84,7 +82,7 @@ export default function Login() {
                             <HideUnhide field={password} condition={hidePassword} setConditionFunction={setHidePassword} />
                             <ValidatorIcon field={password} fieldValidator={passwordValidator} />
                         </div>
-                        <button type="button" onClick={handleSubmit} className="block w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
+                        <button type="button" onClick={handleLoginSubmit} className="block w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
                         <Link href={"/create_account"} className="text-sm w-full ml-2 hover:text-blue-500 cursor-pointer">Don't have an account? Signup</Link>
                         <Link href={"/"} className="text-sm block ml-2 hover:text-blue-500 cursor-pointer">Home</Link>
                 </div>
