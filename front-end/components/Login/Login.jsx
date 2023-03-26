@@ -5,7 +5,7 @@ import { passwordValidator } from '@/functions/passwordValidator';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react'
 import HideUnhide from '../HideUnhidePassword/HideUnhide';
-import ValidatorIcon from '../ValidatorIcon';
+import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 
 // toast messages
 import { ToastContainer, toast } from 'react-toastify';
