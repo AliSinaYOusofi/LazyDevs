@@ -9,8 +9,8 @@ export default function Profile() {
     const [secureUrl, setSecureUrl] = useState(false);
     const handleSelectProfile = async (e) => {
         validateImageBeforeSubmit(e.target.files[0]);
+        console.log(e.target.files[0]);
         setSecureUrl(await saveImageToCloudinaryAnReturnSecureURL(e.target.files[0]));
-
         // clean up
         e.target.value = '';
     }
