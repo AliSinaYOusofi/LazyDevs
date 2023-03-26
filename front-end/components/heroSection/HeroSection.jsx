@@ -1,8 +1,8 @@
 "use client";
 import { emailValidator } from '@/functions/emailValidator';
 import React, { useState } from 'react'
-import ValidatorIcon from '../ValidatorIcon';
-
+import ValidatorIcon from '../ValidatorIcon'; 
+ 
 export default function HeroSection({stepsComponentRef}) {
 
     const [email, setEmail] = useState("");
