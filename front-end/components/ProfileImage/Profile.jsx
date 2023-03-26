@@ -1,4 +1,5 @@
 "use client";
+import { useAppContext } from '@/context/useContextProvider';
 import { clearInput } from '@/functions/clearInput';
 import { validateImageBeforeSubmit } from '@/functions/imageValidator';
 import { saveImageToCloudinaryAnReturnSecureURL } from '@/functions/saveImageToCloudinary';
@@ -6,12 +7,19 @@ import React, { useState } from 'react'
 import { ToastContainer } from 'react-toastify';
 
 export default function Profile() {
+    
+    const {setProfileUrl} = useAppContext();
     const [secureUrl, setSecureUrl] = useState(false);
+
     const handleSelectProfile = async (e) => {
+        
         validateImageBeforeSubmit(e.target.files[0]);
-        console.log(e.target.files[0]);
-        setSecureUrl(await saveImageToCloudinaryAnReturnSecureURL(e.target.files[0]));
+        console.log(e.target.files[0])
+        let url = await saveImageToCloudinaryAnReturnSecureURL(e.target.files[0])
         // clean up
+        setProfileUrl(url);
+        setSecureUrl(url);
+        console.log(url, "SECURE URL FOUND");
         e.target.value = '';
     }
 

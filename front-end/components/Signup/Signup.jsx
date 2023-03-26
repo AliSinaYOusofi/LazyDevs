@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppContext } from '@/context/useContextProvider';
 import { emailValidator } from '@/functions/emailValidator';
 import { fullnameValidator } from '@/functions/fullnameValidator';
 import { passwordValidator } from '@/functions/passwordValidator';
@@ -9,45 +10,23 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import HideUnhide from '../HideUnhidePassword/HideUnhide';
 import Profile from '../ProfileImage/Profile';
-import ValidatorIcon from '../ValidatorIcon';
+import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
+import axios from 'axios';
+import { handleSignupSubmit } from '@/functions/signup_submit/handleSignupSubmit';
+
 
 export default function Signup() {
     const router = useRouter();
+
+    const {profileUrl} = useAppContext();
     
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
-
     const [hidePassword, setHidePassword] = useState(false);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
-    
-    const handleSubmit = async (e) => {
-                
-        const newUserRegData = {
-            username,
-            password,
-            confirmPassword,
-            fullName,
-            email
-        }
-        
-        try {
-            const response = await axios.post("/api/update_profile", {
-                newUserRegData
-            });
-
-            const {message} = await response.data
-            if (message === "updated") {
-                toast.success("you profile has been updated");
-                router.refresh();
-            }
-            else if(message === "queryError") toast.error("503 internal server error.");
-        } catch(error) {
-            console.log(error);
-        }
-    }
 
     return (
         <>  
@@ -142,7 +121,9 @@ export default function Signup() {
                             <HideUnhide field={confirmPassword} condition={hideConfirmPassword} setConditionFunction={setHideConfirmPassword} />
                             <ValidatorIcon field={confirmPassword} fieldValidator={passwordValidator} />
                         </div>
-                        <button type="button" onClick={handleSubmit} className="block w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
+                        
+                        <button type="button" onClick={() => handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl)} className="block w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
+                        
                         <Link href={"/login"} className="text-sm ml-2 hover:text-blue-500 cursor-pointer">Already have an account? login</Link>
                         <Link href={"/"} className="text-sm block ml-2 hover:text-blue-500 cursor-pointer">Back to homepage</Link>
                     
