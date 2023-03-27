@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
+
 require("dotenv").config();
 
 app.use(express.urlencoded({extended: true})); // extract data from the req body and add to request object

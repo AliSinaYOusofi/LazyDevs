@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcrypt");
 // For Registration Users
 
 const usersSignupSchema = new mongoose.Schema( {
@@ -9,7 +9,7 @@ const usersSignupSchema = new mongoose.Schema( {
         required: true,
         unique: true, // should be checked on every signup
         trim: true,
-        minLegth: 3,
+        minLength: 3,
         maxLength: 20
     },
 
@@ -17,7 +17,7 @@ const usersSignupSchema = new mongoose.Schema( {
         type: String,
         required: true,
         trim: true,
-        minLegth: 3,
+        minLength: 3,
         maxLength: 20
     },
 
@@ -48,9 +48,51 @@ const usersSignupSchema = new mongoose.Schema( {
             },
             message: "invalid profile url"
         }
+    },
+
+    joined: {
+        type: Date,
+        required: false,
+        default: () => new Date().toISOString()
     }
 });
 
-const SignupUser = mongoose.model("SignedUpUsers", usersSignupSchema);
+usersSignupSchema.pre("save", function(next) { // hash password middleware
+    
+    if (!this.isModified('password')) return next();
+    
+    bcrypt.genSalt(10, function(error, slatRounds) {
+        
+        if (error) return next(error);
 
-module.exports = SignupUser;
+        bcrypt.hash(this.password, slatRounds, function(error, hash) {
+            if (error) return next(error);
+            this.password = hash;
+            next();
+        });
+    });
+});
+
+// checking for unique username and email
+usersSignupSchema.static.emailAlreadyExists = async (email) => !! (await SignedUpUser.findOne({ email }));
+usersSignupSchema.static.usernameAlreadyExists = async (username) => !! (await SignedUpUser.findOne({username}));
+
+// static method
+usersSignupSchema.static.authenticateUser = async (candidatePassword) => {
+    let user = usersSignupSchema.static.emailAlreadyExists(this.email);
+    if (!user) return "emailNotFound";
+    let isUserAuthenticate = await bcrypt.compare(candidatePassword, user.password);
+    return isUserAuthenticate ? user : "wrongPassword";
+}
+
+// return current user as json
+usersSignupSchema.methods.userToJson = () => {
+    let currentUser = this;
+    const currentUserObject = currentUser.toObject();
+    delete currentUserObject.password;
+    return currentUserObject;
+}
+
+const SignedUpUser = mongoose.model("SignedUpUsers", usersSignupSchema);
+
+module.exports = SignedUpUser;
