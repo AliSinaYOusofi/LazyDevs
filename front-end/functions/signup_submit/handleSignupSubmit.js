@@ -16,16 +16,16 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
     
     else if (!emailValidator(email)) toast.error("Invalid email provided");
     
-    else if (!passwordValidator(password)) toast.error("Password is to short. Include a number an a character.");
+    else if (!passwordValidator(password) || ! passwordValidator(confirmPassword)) toast.error("Password is to short. Include a number an a character.");
 
-    else if (!passwordValidator(confirmPassword)) toast.error("Passwords don't match");
+    else if (password !== confirmPassword) toast.error("Confirm password don't match");
     
     else {
         
         // default avatar for profile picture
-        if (!profileUrl) profileUrl = "https://cdn-icons-png.flaticon.com/512/4202/4202831.png"
+        if (!profileUrl) profileUrl = "https://cdn-icons-png.flaticon.com/512/4202/4202831.png";
         
-        try {
+        try { 
             const response = await axios.post("http://localhost:3001/user/save_user", 
             {
                 username,
@@ -34,11 +34,9 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
                 email,
                 profileUrl
             });
-
-            const {message} = await response.data
             
-            if (message === "updated") toast.success("you profile has been updated");
-            else if(message === "queryError") toast.error("503 internal server error.");
+            if (response.data === "UserSaved") toast.success("you profile has been updated");
+            else toast.error("503 internal server error.");
         
         } catch(error) {
             console.log(error);
