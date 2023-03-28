@@ -14,30 +14,44 @@ router.post("/save_user", async (req, res) => {
 
     const userInfo = { username, fullName, password, email, profileUrl };
 
-    console.log(username, fullName, password, email, profileUrl, 'what is going on');
-    console.log(req.body);
-
     const db = await getDB();
 
     try {
         
         let newUserData = new SignedUpUser(userInfo);
-        
-        newUserData.save( error => {
-            
-            if (error) {
-                console.error(error, "while saving. in save()");
-                return res.status(500).send("serverError");
-            }
+        // TODO: before saving we must check for duplicate email and username.
+        newUserData.save(); // no longer accepts callback
 
-            return res.status(200).send("UserSaved");
-        });
+        return res.status(200).send("UserSaved");
     }catch(error) {
         console.log(error, "error while saving data");
+        return res.status(500).send("serverError");
     }
-    res.status(200).send({message: "youtube | Blogger | Programmer"});
 });
 
+router.post("/check_user_login", async (req, res) => {
+    const {email, password} = req.body;
 
+    console.log(email, password);
+    
+    let db = await getDB();
+
+    try {
+        
+        let isUserRegistered = await SignedUpUser.emailAlreadyExists(email);
+
+        if (isUserRegistered ) {
+            let currentUserData = await SignedUpUser.authenticateUser(password, email);
+            if (currentUserData) {
+                return res.status(200).json(currentUserData);
+            }
+            return res.status(200).send("Invalid");
+        }
+        return res.status(200).send("Invalid");
+ 
+    } catch (error) {
+        console.log("Error Login route", error);
+    }
+})
 
 module.exports = router; // to special object

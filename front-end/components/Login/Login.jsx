@@ -10,12 +10,21 @@ import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 // toast messages
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import Spinner from '../Spinner/Spinner';
+
 
 export default function Login() {
 
     const [hidePassword, setHidePassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [spinner, setSpinner] = useState(false);
+
+    const handleSubmit = async () => {
+        setSpinner(true);
+        await handleLoginSubmit(email, password);
+        setSpinner(false);
+    }
 
     return (
         <div className="w-full h-screen flex flex-row items-center justify-center gap-x-10">
@@ -69,7 +78,15 @@ export default function Login() {
                             <input required={true} className="pl-2 w-full outline-none border-none" type={hidePassword ? "text" : "password"} name="" id="" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
                             <HideUnhide required={true} field={password} condition={hidePassword} setConditionFunction={setHidePassword} />
                         </div>
-                        <button type="button" onClick={ () => handleLoginSubmit(email, password)} className="block w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
+                        <button 
+                            disabled={spinner}
+                            type="button" 
+                            onClick={handleSubmit} 
+                            className="block relative w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                            
+                            Create Account
+                            { spinner ? <Spinner /> : null}
+                        </button>
                         <Link href={"/create_account"} className="text-sm w-full ml-2 hover:text-blue-500 cursor-pointer">Don't have an account? Signup</Link>
                         <Link href={"/"} className="text-sm block ml-2 hover:text-blue-500 cursor-pointer">Home</Link>
                 </div>

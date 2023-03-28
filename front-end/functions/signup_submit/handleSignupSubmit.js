@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { emailValidator } from '../emailValidator';
@@ -35,8 +36,10 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
                 profileUrl
             });
             
-            if (response.data === "UserSaved") toast.success("you profile has been updated");
-            else toast.error("503 internal server error.");
+            // we are good from the front-end part.
+            // just check the back-end. for unique email and username
+            if (response.data === "UserSaved") toast.success("You are now a member.");
+            else toast.error("Server error. Try again later!");
         
         } catch(error) {
             console.log(error);
