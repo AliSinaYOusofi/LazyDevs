@@ -53,12 +53,11 @@ router.post("/check_user_login", async (req, res) => {
                 const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
                 const refreshToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "7d"});
                 
-                res.cookie('accessToken', accessToken, {maxAge: 900000, httpOnly: true, sameSite: "Lax"});
-                res.cookie('refreshToken', refreshToken, {maxAge: 604800000, httpOnly: true, sameSite: "Lax"});
+                res.cookie('accessToken', accessToken, {maxAge: 900000, sameSite: "Lax"});
+                res.cookie('refreshToken', refreshToken, {maxAge: 604800000,  sameSite: "Lax"});
 
                 return res.status(200).send(currentUserData);
             }
-            return res.status(200).send("Invalid");
         }
         return res.status(200).send("Invalid");
  
