@@ -14,6 +14,7 @@ import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 import axios from 'axios';
 import { handleSignupSubmit } from '@/functions/signup_submit/handleSignupSubmit';
 import Spinner from '../Spinner/Spinner';
+import { sleep } from '@/functions/sleep/sleep';
 
 
 export default function Signup() {
@@ -33,6 +34,8 @@ export default function Signup() {
     const handleSignup = async () => {
         setSpinner(true);
         await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
+        await sleep(1000);
+        router.push("/login");
         setSpinner(false);
     }
     return (
