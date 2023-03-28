@@ -39,6 +39,8 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
             // we are good from the front-end part.
             // just check the back-end. for unique email and username
             if (response.data === "UserSaved") toast.success("You are now a member.");
+            else if (response.data === "usernameExists") toast.error("Username is taken, choose another username");
+            else if (response.data === "emailExists") toast.error("Email Already Registered !");
             else toast.error("Server error. Try again later!");
         
         } catch(error) {
