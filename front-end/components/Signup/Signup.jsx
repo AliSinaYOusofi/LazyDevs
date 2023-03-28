@@ -13,6 +13,7 @@ import Profile from '../ProfileImage/Profile';
 import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 import axios from 'axios';
 import { handleSignupSubmit } from '@/functions/signup_submit/handleSignupSubmit';
+import Spinner from '../Spinner/Spinner';
 
 
 export default function Signup() {
@@ -27,7 +28,13 @@ export default function Signup() {
     const [email, setEmail] = useState("");
     const [hidePassword, setHidePassword] = useState(false);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
+    const [spinner, setSpinner] = useState(false);
 
+    const handleSignup = async () => {
+        setSpinner(true);
+        await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
+        setSpinner(false);
+    }
     return (
         <>  
             <div className="h-screen md:flex items-center justify-center w-full">
@@ -122,7 +129,14 @@ export default function Signup() {
                             <ValidatorIcon field={confirmPassword} fieldValidator={passwordValidator} />
                         </div>
                         
-                        <button type="button" onClick={() => handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl)} className="block w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">Create Account</button>
+                        <button 
+                            disabled={spinner} 
+                            type="button" 
+                            onClick={handleSignup} 
+                            className="block relative w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                            Create Account
+                            { spinner ? <Spinner /> : null}
+                        </button>
                         
                         <Link href={"/login"} className="text-sm ml-2 hover:text-blue-500 cursor-pointer">Already have an account? login</Link>
                         <Link href={"/"} className="text-sm block ml-2 hover:text-blue-500 cursor-pointer">Back to homepage</Link>

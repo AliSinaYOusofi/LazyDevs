@@ -5,9 +5,10 @@ export const lazyContext = createContext("");
 
 export const LazyContextProvider = ({children}) => {
     const [profileUrl, setProfileUrl] = useState();
-
+    
     return (
-        <lazyContext.Provider value={{profileUrl, setProfileUrl}}>
+        <lazyContext.Provider 
+            value={{profileUrl, setProfileUrl}}>
             {children}
         </lazyContext.Provider>
     );

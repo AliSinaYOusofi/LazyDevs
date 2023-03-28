@@ -22,6 +22,7 @@ const usersSignupSchema = new mongoose.Schema( {
     },
 
     email: {
+        type: String, // i found the bug. not adding type will get the schema type error.
         required: true,
         unique: true, // should be checked on every signup
         trim: true,
@@ -59,30 +60,42 @@ const usersSignupSchema = new mongoose.Schema( {
 
 usersSignupSchema.pre("save", function(next) { // hash password middleware
     
+    let user = this;
     if (!this.isModified('password')) return next();
     
-    bcrypt.genSalt(10, function(error, slatRounds) {
+    bcrypt.genSalt(10, function(error, saltRounds) {
         
         if (error) return next(error);
 
-        bcrypt.hash(this.password, slatRounds, function(error, hash) {
+        // the bug that i got here was becuase
+        // this keyword can have different context inside nested functions.
+        // becuase the this keyword did not refer to the document being saved.
+        // instead saving it to user variable fixed the bug.
+
+        bcrypt.hash(user.password, saltRounds, function(error, hash) {
             if (error) return next(error);
-            this.password = hash;
+            user.password = hash;
             next();
         });
     });
 });
 
 // checking for unique username and email
-usersSignupSchema.static.emailAlreadyExists = async (email) => !! (await SignedUpUser.findOne({ email }));
-usersSignupSchema.static.usernameAlreadyExists = async (username) => !! (await SignedUpUser.findOne({username}));
+// this is statics not static
+usersSignupSchema.statics.emailAlreadyExists = async (email) => !! (await SignedUpUser.findOne({ email }));
+usersSignupSchema.statics.usernameAlreadyExists = async (username) => !! (await SignedUpUser.findOne({username}));
 
 // static method
-usersSignupSchema.static.authenticateUser = async (candidatePassword) => {
-    let user = usersSignupSchema.static.emailAlreadyExists(this.email);
-    if (!user) return "emailNotFound";
-    let isUserAuthenticate = await bcrypt.compare(candidatePassword, user.password);
-    return isUserAuthenticate ? user : "wrongPassword";
+usersSignupSchema.statics.authenticateUser = async (candidatePassword, email) => {
+
+    let user = await SignedUpUser.findOne({'email': email});
+    
+    if (!user) return false;  
+  
+    let isUserAuthentic = await bcrypt.compare(candidatePassword, user.password);
+    user = user.toObject();
+    delete user.password;
+    return isUserAuthentic ? user : false;
 }
 
 // return current user as json
