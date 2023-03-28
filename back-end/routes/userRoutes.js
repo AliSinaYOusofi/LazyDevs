@@ -1,6 +1,8 @@
 const router = require("express").Router();
+const jwt = require("jsonwebtoken");
 const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
+require("dotenv").config();
 
 router.post("/save_user", async (req, res) => {
     
@@ -20,7 +22,6 @@ router.post("/save_user", async (req, res) => {
     try {
         
         let newUserData = new SignedUpUser(userInfo);
-        // TODO: before saving we must check for duplicate email and username.
         
         if (await SignedUpUser.usernameAlreadyExists(username)) return res.status(200).json("usernameExists");
         else if (await SignedUpUser.emailAlreadyExists(email)) return res.status(200).json("emailExists");
@@ -46,7 +47,17 @@ router.post("/check_user_login", async (req, res) => {
 
         if (isUserRegistered ) {
             let currentUserData = await SignedUpUser.authenticateUser(password, email);
-            if (currentUserData) return res.status(200).json(currentUserData);
+            // TODO: use authenticatin and authentication using JWT
+            if (currentUserData) {
+
+                const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
+                const refreshToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "7d"});
+                
+                res.cookie('accessToken', accessToken, {maxAge: 900000, httpOnly: true, sameSite: "Lax"});
+                res.cookie('refreshToken', refreshToken, {maxAge: 604800000, httpOnly: true, sameSite: "Lax"});
+
+                return res.status(200).send(currentUserData);
+            }
             return res.status(200).send("Invalid");
         }
         return res.status(200).send("Invalid");

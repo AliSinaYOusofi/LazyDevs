@@ -19,7 +19,10 @@ export const handleLoginSubmit = async (email, password) => {
             {
                 password,
                 email,
-            });
+                
+            }, {withCredentials: true}); // allow cookies
+            console.log(response);
+            console.log(document.cookie);
             response.data === "Invalid" ? toast.error("Invalid email or password") : toast.success("Success")
         } 
         catch(error) {
