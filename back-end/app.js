@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
     if (req.path === "/user/check_user_login") return next();
 
-    jwt.verify(accessToken, process.env.JWT_SECRET, (error, decoded) => {
+    jwt.verify(accessToken, process.env.JWT_SECRET, (error) => {
         if (error) {
             jwt.verify(refreshToken, process.env.JWT_SECRET, (error, decoded) => {
                 if(error) return res.status(200).json("refreshTokenInvalid");
@@ -45,6 +45,7 @@ app.use((req, res, next) => {
                 next();
             })
         }
+        res.redirect("http://localhost:3001/login");
         next();
     })
 
