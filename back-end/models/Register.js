@@ -51,6 +51,45 @@ const usersSignupSchema = new mongoose.Schema( {
         }
     },
 
+    bio: {
+        type: String,
+        required: true,
+        minLength: 1,
+        maxLength: 200,
+        requried: false,
+        default: null,
+        validate: {
+            validator: value => String(value).length >= 1,
+            message: props => `${props} should be more than 1(length)`
+        },
+    },
+
+    education : {
+        type: String,
+        maxLength: 30,
+        requried: false,
+        default: null
+    },
+
+    work: {
+        type: String,
+        maxLength: 30,
+        requried: false,
+        default: null
+    },
+
+    socials: {
+        type: Array,
+        required: false,
+    },
+
+    personalWebsite: {
+        type: String,
+        maxLength: 30,
+        requried: false,
+        default: null
+    },
+
     joined: {
         type: Date,
         required: false,
