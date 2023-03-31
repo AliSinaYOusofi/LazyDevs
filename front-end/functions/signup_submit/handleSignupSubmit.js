@@ -42,7 +42,6 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
             else if (response.data === "usernameExists") toast.error("Username is taken, choose another username");
             else if (response.data === "emailExists") toast.error("Email Already Registered !");
             else toast.error("Server error. Try again later!");
-        
         } catch(error) {
             console.log(error);
         }
