@@ -53,11 +53,11 @@ const usersSignupSchema = new mongoose.Schema( {
 
     bio: {
         type: String,
-        required: true,
+        required: false,
         minLength: 1,
         maxLength: 200,
         requried: false,
-        default: null,
+        default: null, 
         validate: {
             validator: value => String(value).length >= 1,
             message: props => `${props} should be more than 1(length)`
@@ -145,6 +145,6 @@ usersSignupSchema.methods.userToJson = () => {
     return currentUserObject;
 }
 
-const SignedUpUser = mongoose.model("SignedUpUsers", usersSignupSchema);
+const SignedUpUser = mongoose.model("SignedUpUser", usersSignupSchema);
 
 module.exports = SignedUpUser;

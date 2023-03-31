@@ -34,7 +34,9 @@ app.use((req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    if (req.path === "/user/check_user_login") return next();
+    const safeRoutes = ["/user/check_user_login", "/user/save_user"]
+    console.log(req.path, safeRoutes.includes(req.path))
+    if (safeRoutes.includes(req.path)) return next();
 
     jwt.verify(accessToken, process.env.JWT_SECRET, (error) => {
         if (error) {
@@ -45,7 +47,6 @@ app.use((req, res, next) => {
                 next();
             })
         }
-        res.redirect("http://localhost:3001/login");
         next();
     })
 

@@ -25,7 +25,7 @@ router.post("/save_user", async (req, res) => {
         
         if (await SignedUpUser.usernameAlreadyExists(username)) return res.status(200).json("usernameExists");
         else if (await SignedUpUser.emailAlreadyExists(email)) return res.status(200).json("emailExists");
-        
+         
         newUserData.save(); // no longer accepts callback
         return res.status(200).send("UserSaved");
 
@@ -47,7 +47,7 @@ router.post("/check_user_login", async (req, res) => {
 
         if (isUserRegistered ) {
             let currentUserData = await SignedUpUser.authenticateUser(password, email);
-            // TODO: use authenticatin and authentication using JWT
+           
             if (currentUserData) {
 
                 const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
@@ -63,6 +63,7 @@ router.post("/check_user_login", async (req, res) => {
  
     } catch (error) {
         console.log("Error Login route", error);
+        return res.status(200).send("Server Error");
     }
 })
 
