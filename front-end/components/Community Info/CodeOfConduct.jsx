@@ -17,7 +17,7 @@ export default function CodeOfConduct() {
                 </p>
 
                 <ul className="flex flex-col gap-y-4 mt-5">
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840653.png"
                             alt="one_image"
@@ -27,7 +27,7 @@ export default function CodeOfConduct() {
                         This includes other bloggers, readers, and administrators. Treat others as you would like to be treated.
                     </li>
                     
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840738.png"
                             alt="one_image"
@@ -38,7 +38,7 @@ export default function CodeOfConduct() {
                         and any other form of behavior that makes others feel uncomfortable or unwelcome.
                     </li>
 
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840739.png"
                             alt="one_image"
@@ -48,7 +48,7 @@ export default function CodeOfConduct() {
                         This includes content that is sexually explicit, violent, or discriminatory.
                     </li>
                     
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840753.png"
                             alt="one_image"
@@ -58,7 +58,7 @@ export default function CodeOfConduct() {
                        and promotion of other products or services that are not related to the website.
                     </li>
 
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840754.png"
                             alt="one_image"
@@ -68,7 +68,7 @@ export default function CodeOfConduct() {
                         Do not share any personal information about other users or engage in any form of doxxing.
                     </li>
 
-                    <li className="flex justify-center items-center gap-x-2">
+                    <li className="flex justify-center items-start gap-x-2">
                         <img
                             src="https://cdn-icons-png.flaticon.com/512/3840/3840755.png"
                             alt="one_image"

@@ -14,6 +14,12 @@ export default function Example() {
         window.addEventListener("click", handleClickOutsideContainer);
         return () => window.removeEventListener("click", handleClickOutsideContainer);
     }, []);
+
+    useEffect( () => {
+        const handleResize = () => setSidebar(true);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
     
     const handleClickOutsideContainer = (event) => {
         if (containerRef.current && ! containerRef.current.contains(event.target)) {
