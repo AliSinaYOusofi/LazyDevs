@@ -1,3 +1,5 @@
+import Social from "../SocialIcons/Social";
+
 export default function Footer () {
     return (
         <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
@@ -71,46 +73,7 @@ export default function Footer () {
                         </a>
                     </div>
                 
-                    <div>
-                        <span className="text-base font-bold tracking-wide text-gray-900">
-                        Social
-                        </span>
-                        <div className="flex items-center mt-1 space-x-3">
-                            <a
-                                href="http://www.twitter.com"
-                                className="transition-all duration-700 p-1 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
-                                target={"_blank"}
-                            >
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/4138/4138126.png"
-                                    alt="twitter"
-                                    className="w-10"
-                                />
-                            </a>
-                            <a
-                                href="https://www.instagram.com"
-                                className="transition-all duration-700 p-1 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
-                                target={"_blank"}
-                            >
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/4138/4138124.png"
-                                    alt="insta"
-                                    className="w-11"
-                                />
-                            </a>
-                            <a
-                                href="https://www.facebook.com"
-                                className=" transition-all duration-700 p-2 hover:shadow-md shadow-inner shadow-black/10 rounded-full"
-                                target={"_blank"}
-                            >
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
-                                    alt="facebook"
-                                    className="w-9"
-                                />
-                            </a>
-                        </div>
-                    </div>
+                    <Social />
                 </div>
                 
             </div>
