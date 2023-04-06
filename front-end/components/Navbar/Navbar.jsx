@@ -31,10 +31,10 @@ export default function Example() {
     
     return (
         <>
-            <div className="mx-auto  fixed left-[50%] translate-x-[-50%]    px-4 lg:px-8 py-2 bg-gray-100 w-full">
+            <div className="mx-auto z-[999]  fixed left-[50%] translate-x-[-50%]    px-4 lg:px-8 py-2 bg-gray-100 w-full">
                 <div className="container relative mx-auto flex items-center justify-evenly">    
                     <div className="flex items-center w-full md:w-1/2 gap-x-5 md:mr-0">
-                        <div ref={openCloseButtonRef} className="md:hidden inline cursor-pointer" onClick={() => setSidebar(prev => !prev)}>
+                        <div ref={openCloseButtonRef} className="idden inline cursor-pointer" onClick={() => setSidebar(prev => !prev)}>
                            {
                                 sidebar
                                 ?
@@ -81,7 +81,7 @@ export default function Example() {
                 </div>
             </div>
             <div ref={containerRef}>
-                {(! sidebar) ? <Sidebar /> : null}
+                {<Sidebar sidebar={sidebar}/> }
             </div>
         </>
     );
