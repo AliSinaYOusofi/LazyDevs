@@ -40,6 +40,17 @@ export default function CommunityInfo() {
                     Contact
                     </Link>
                 </li>
+
+                <li className="w-full p-1" id="bu-users-accordion">
+                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/about" ? "bg-white" : ""}`}  href="/about">
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/9220/9220622.png"
+                            alt="home"
+                            className="w-6 h-6"
+                        />
+                    About
+                    </Link>
+                </li>
             </ul>
 
         </div>
