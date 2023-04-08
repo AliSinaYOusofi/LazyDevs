@@ -6,8 +6,6 @@ export default function page() {
 
   return (
     <>
-      <Navbar />
-      <Footer />
     </>
   )
 }
