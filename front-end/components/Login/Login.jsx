@@ -11,18 +11,35 @@ import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Spinner from '../Spinner/Spinner';
+import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/context/useContextProvider';
 
+
+// 52MA6ZEiRsE9hG8 account@gmail.com
 
 export default function Login() {
+
+    const { setCurrentUser } = useAppContext();
 
     const [hidePassword, setHidePassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [spinner, setSpinner] = useState(false);
 
+    const router = useRouter();
+
     const handleSubmit = async () => {
+        
         setSpinner(true);
-        await handleLoginSubmit(email, password);
+
+        let response = await handleLoginSubmit(email, password);
+
+        if (response.data === "Invalid") return toast.error("Invalid email or password")
+        else {
+            console.log(response);
+            setCurrentUser(response.data);
+            router.push("/account");
+        }
         setSpinner(false);
     }
 
@@ -84,7 +101,7 @@ export default function Login() {
                             onClick={handleSubmit} 
                             className="block relative w-full shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
                             
-                            Create Account
+                            Login
                             { spinner ? <Spinner /> : null}
                         </button>
                         <Link href={"/create_account"} className="text-sm w-full ml-2 hover:text-blue-500 cursor-pointer">Don't have an account? Signup</Link>
