@@ -47,7 +47,6 @@ router.post("/check_user_login", async (req, res) => {
 
         if (isUserRegistered ) {
             let currentUserData = await SignedUpUser.authenticateUser(password, email);
-           
             if (currentUserData) {
 
                 const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
