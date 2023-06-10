@@ -11,10 +11,11 @@ import React, { useState } from 'react'
 import HideUnhide from '../HideUnhidePassword/HideUnhide';
 import Profile from '../ProfileImage/Profile';
 import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
-import axios from 'axios';
+
 import { handleSignupSubmit } from '@/functions/signup_submit/handleSignupSubmit';
 import Spinner from '../Spinner/Spinner';
 import { sleep } from '@/functions/sleep/sleep';
+import { toast } from 'react-toastify';
 
 
 export default function Signup() {
@@ -32,37 +33,32 @@ export default function Signup() {
     const [spinner, setSpinner] = useState(false);
 
     const handleSignup = async () => {
+
+        
         setSpinner(true);
 
         try {
-            await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
-            await sleep(1000);
-            router.push("/login");
+            let response = await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
+            
+            console.log(response);
+            if (response === "saved") {
+                await sleep(1000);
+                router.push("/login");
+            }
+            else if (response === "usernameExists" || response === "emailExists") toast.error("username or email already taken")
+
+            else if (response ==="error") toast.error("Server error try again later !");
+
             setSpinner(false);
         } catch (error) {
             console.log("Error in signup comp", error);
+            toast.error("Server error try again later !");
         }
     }
     return (
         <>  
             <div className="h-screen md:flex items-center justify-center w-full">
-                <div className="relative overflow-hidden md:flex w-full hidden h-screen">
-                    <img
-                        src="https://img.freepik.com/premium-photo/notebook-with-toolls-notes-about-blog_132358-3229.jpg?w=1060"
-                        alt="blog image"
-                        className="object-cover w-full"
-                    />
-                    <div className="absolute top-0 w-full bg-black/40 h-full"></div>
-
-                    <div className="w-full absolute bottom-[14%] translate-y-[50%] text-center ">
-                        
-                        <h1 className="text-white md:text-[3rem] text-sm tracking-wide font-extrabold">LazyDevs</h1>
-                        <p className="text-base text-white md:text-lg mt-8">
-                            Intuitive and user-friendly blogging platform for developers.
-                            Made by developers for developers/Programmers.
-                        </p>
-                    </div>
-                </div>
+                
                 <div className="flex-col lg:px-4 w-full lg:w-1/2 md:w-1/2 justify-center items-center bg-white">
                     <div className="">
                         <code className="text-white mx-auto w-fit md:hidden lg:mt-8 flex p-2 rounded-md  items-center bg-black/80">

@@ -1,6 +1,6 @@
 import React from 'react'
 import Social from '../SocialIcons/Social'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link';
 import CommunityInfo from '../Community Info/CommunityInfo';
 
