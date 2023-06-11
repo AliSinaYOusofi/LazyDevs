@@ -17,7 +17,7 @@ export default function Avatar({profileUrl}) {
                 <img
                     src={profileUrl}
                     alt="user profile image"
-                    className="object-contain  w-10 h-10 md:shadow-sm lg:shadow-md shadow-black/20 md:p-1 rounded-full "
+                    className="object-contain  w-10 h-10 md:shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
                 />
             </div>
         </div>
