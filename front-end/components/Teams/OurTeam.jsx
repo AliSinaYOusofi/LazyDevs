@@ -43,6 +43,7 @@ export default function Teams () {
             innovative, high-quality software solutions that have exceeded all expectations.
             </p>
             </div>
+
             <div className="flex w-full p-10 items-center justify-evenly flex-row flex-wrap shadow-black/10 shadow-md rounded-md i gap-x-24">
                 <div className="gap-y-4 flex flex-col">
 
@@ -52,8 +53,8 @@ export default function Teams () {
                             src="https://cdn-icons-png.flaticon.com/512/2202/2202112.png"
                             alt="Person"
                         />
-                        <span className="text-sm font-bold">Oliver Aguilerra</span>
-                        <span className="text-sm text-gray-800">Product Manager</span>
+                        <span className="text-sm font-bold">Ali Sina</span>
+                        <span className="text-sm text-gray-800"></span>
                     </div>
                     
                     <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2  jusitfy-center">
@@ -63,8 +64,8 @@ export default function Teams () {
                         alt="Person"
                         />
                     
-                        <p className="text-sm font-bold">Anthony Geek</p>
-                        <p className="text-sm text-gray-800">CTO, Lorem Inc.</p>
+                        <p className="text-sm font-bold">Ahmad Zaki</p>
+                        <p className="text-sm text-gray-800"></p>
                         
                     </div>
                     <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2  jusitfy-center ">
@@ -74,68 +75,10 @@ export default function Teams () {
                         alt="Person"
                         />
                         
-                        <p className="text-sm font-bold">Alice Melbourne</p>
-                        <p className="text-sm text-gray-800">Human Resources</p>
+                        <p className="text-sm font-bold">Mohammad Aimal</p>
+                        <p className="text-sm text-gray-800"></p>
                         
-                    </div>
-                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
-                        <img
-                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                        src="https://cdn-icons-png.flaticon.com/512/145/145843.png"
-                        alt="Person"
-                        />
-                        
-                        <p className="text-lg font-bold">Martin Garix</p>
-                        <p className="text-sm text-gray-800">Bad boy</p>
-                        
-                    </div>
-                </div>
-                <div className="gap-y-4 flex flex-col">
-
-                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
-                        <img
-                        className="object-cover w-20 h-20 mr-4 rounded-full shadow gap-x-2"
-                        src="https://cdn-icons-png.flaticon.com/512/4139/4139993.png"
-                        alt="Person"
-                        />
-                        
-                        <p className="text-sm font-bold">Andrew Larkin</p>
-                        <p className="text-sm text-gray-800">Backend Developer</p>
-                        
-                    </div>
-                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
-                        <img
-                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                        src="https://cdn-icons-png.flaticon.com/512/805/805370.png"
-                        alt="Person"
-                        />
-                        
-                        <p className="text-lg font-bold">Sophie Denmo</p>
-                        <p className="text-sm text-gray-800">Designer UI/UX</p>
-                        
-                    </div>
-                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
-                        <img
-                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                        src="https://cdn-icons-png.flaticon.com/512/4202/4202831.png"
-                        alt="Person"
-                        />
-                        
-                        <p className="text-lg font-bold">Benedict Caro</p>
-                        <p className="text-sm text-gray-800">Frontend Developer</p>
-                        
-                    </div>
-                    <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center">
-                        <img
-                        className="object-cover w-20 h-20 mr-4 rounded-full shadow"
-                        src="https://cdn-icons-png.flaticon.com/512/4202/4202841.png"
-                        alt="Person"
-                        />
-                        
-                        <p className="text-sm font-bold">Mraca Draco</p>
-                        <p className="text-sm text-gray-800">Full Stack Developer</p>
-                        
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>
