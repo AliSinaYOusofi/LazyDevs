@@ -4,8 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import EasyMDE from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css";
 import { useMemo } from 'react';
-import Footer from '../Footer/Footer';
-import Navbar from '../../components/Navbar/Navbar'
+
 
 export default function CreatePost() { 
 
@@ -66,12 +65,12 @@ export default function CreatePost() {
 
     return (
         <>
-            <div className="mt-10"></div>
-           
-            <EasyMDE 
-                options={anOptions}
-            />
-            <Footer />
+            <div className="w-[90%] mx-auto mt-[10rem]"> 
+                <EasyMDE 
+                    options={anOptions}
+                    className=""
+                />
+            </div>
         </>
     )
 }

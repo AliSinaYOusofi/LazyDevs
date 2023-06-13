@@ -20,15 +20,15 @@ export default function Home() {
 
   return (
     <main>
-        <Navbar />
-        <HeroSection stepsComponentRef={stepsComponentRef}/>
-        <div ref={stepsComponentRef}>
-          <Step /> 
-        </div>
-        <Statistic />
-        <Teams />
-        <Footer />
-        <MoveToTop /> 
+      <Navbar />
+      <HeroSection stepsComponentRef={stepsComponentRef}/>
+      <div ref={stepsComponentRef}>
+        <Step /> 
+      </div>
+      <Statistic />
+      <Teams />
+      <Footer />
+      <MoveToTop /> 
     </main>
   )
 }
