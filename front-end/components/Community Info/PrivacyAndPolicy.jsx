@@ -24,11 +24,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840653.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                                >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M14 1.5V22h-2V3.704L7.5 4.91V2.839l5-1.339z" />
+                            </svg>
                             Information we collect 
                         </h1>
                         
@@ -43,11 +46,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840738.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                                >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M16 7.5a4 4 0 10-8 0H6a6 6 0 1110.663 3.776l-7.32 8.723L18 20v2H6v-1.127l9.064-10.802A3.982 3.982 0 0016 7.5z" />
+                            </svg>
                             How we use your information 
                         </h1>
                         
@@ -62,11 +68,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840739.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                                >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M18 2v1.362L12.809 9.55a6.501 6.501 0 11-7.116 8.028l1.94-.486A4.502 4.502 0 0016.5 16a4.5 4.5 0 00-6.505-4.03l-.228.122-.69-1.207L14.855 4H6.5V2H18z" />
+                            </svg>
                             Cookies 
                         </h1>
                         
@@ -81,11 +90,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840753.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                                >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M16 1.5V16h3v2h-3v4h-2v-4H4v-1.102L14 1.5h2zM14 16V5.171L6.968 16H14z" />
+                            </svg>
                             Third-party links:
                         </h1>
                         
@@ -99,11 +111,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840754.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                            >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M18 2v2H9.3l-.677 6.445a6.5 6.5 0 11-2.93 7.133l1.94-.486A4.502 4.502 0 0016.5 16a4.5 4.5 0 00-4.5-4.5c-2.022 0-3.278.639-3.96 1.53l-1.575-1.182L7.5 2H18z" />
+                            </svg>
                             Security
                         </h1>
                         
@@ -116,11 +131,14 @@ export default function PrivacyAndPolicy() {
                     <div>
                         
                         <h1 className="flex items-center justify-start gap-x-2 text-2xl"> 
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/3840/3840755.png"
-                                alt="one_image"
-                                className="w-6 h-6"
-                            />
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="w-7 h-7"
+                            >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M14.886 2l-4.438 7.686A6.5 6.5 0 116.4 12.7L12.576 2h2.31zM12 11.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
+                            </svg>
                             Changes to the Privacy Policy
                         </h1>
                         

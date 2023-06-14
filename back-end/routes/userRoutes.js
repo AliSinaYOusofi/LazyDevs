@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
+const Post = require("../models/Blogs");
 require("dotenv").config();
 
 router.post("/save_user", async (req, res) => {
@@ -63,6 +65,40 @@ router.post("/check_user_login", async (req, res) => {
     } catch (error) {
         console.log("Error Login route", error);
         return res.status(200).send("Server Error");
+    }
+});
+
+router.post("/save_post", async (req, res) => {
+
+    const {content, token} = req.body;
+
+    const randomIdForPost = crypto.randomBytes(16).toString("hex");
+
+    console.log(content, token);
+    const {email} = jwt.decode(token);
+
+    console.log(email);
+    const signedUpUser = await SignedUpUser.findOne({email});
+
+    console.log(signedUpUser);
+ 
+    let newPost = new Post({
+        post_id: randomIdForPost,
+        author: signedUpUser._id,
+        title: content.split("\n")[0],
+        body: content,
+        comments: [],
+    });
+
+    try {
+        await newPost.save();
+
+        console.log("saved post");
+        return res.status(200).json({message: "success"}); 
+    }
+    catch(error) {
+        console.log("Error saving post", error);
+        return res.status(200).json({message: "serverError"});
     }
 })
 

@@ -1,20 +1,27 @@
 "use client";
-
+import { useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import EasyMDE from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css";
 import { useMemo } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 
 
 export default function CreatePost() { 
 
     const handleImagePreview = () => {}
+
+    
+    const [spinner, setSpinner] = useState(false);
+
+    const [postContent, setPostContent] = useState({content: ""});
  
     const handleImageUpload = async (image, onSuccess, onError) => {
         // validating the image
         if (image.size / 1000000 >= 8) return toast.error(`${image.name} is more than 5 MB`);
-        
-        else if (count > 1) return toast.error("you can't upload more than 2 images");
 
         try {
             
@@ -22,12 +29,10 @@ export default function CreatePost() {
             formData.append("file", image);
             formData.append("upload_preset", "notipfs");
             
-            count++; // set count was not working so used local var
             
             const res = await axios.post('https://api.cloudinary.com/v1_1/dudhf0avt/image/upload', formData);
             const {secure_url} = await res.data;
             
-            imageUrls.push(secure_url);
             await onSuccess(secure_url);
         } 
         catch (error) { toast.error("failed to upload image"); console.log(error)}
@@ -38,7 +43,6 @@ export default function CreatePost() {
           autosave: {
             enabled: true,
             uniqueId: "demo",
-            
           },
           spellChecker: true,
           autoFocus: true,
@@ -63,13 +67,53 @@ export default function CreatePost() {
         };
     }, []);
 
+
+    const handlePost = async () => {
+
+        setSpinner(true);
+        // saving post to db.
+        
+        if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");
+        
+        const token = document.cookie.split("=")[1];
+
+        try {
+            const res = await axios.post("http://localhost:3001/user/save_post", {
+                content: postContent.content,
+                token: token
+            });  
+
+            console.log(res.data)
+            if (res.data.message === "success") toast.success("post created successfully");
+            else if (res.data.message === "serverError") toast.success("Server Error");
+ 
+            setPostContent({content: ""})
+        } catch(err) {
+            toast.error("failed to create post");
+            console.log(err);
+        }
+        setSpinner(false);
+    }
+
     return (
         <>
-            <div className="w-[90%] mx-auto mt-[10rem]"> 
+            <div className="w-[90%] mx-auto mt-[1rem]"> 
                 <EasyMDE 
                     options={anOptions}
                     className=""
+                    value={postContent.content}
+                    onChange={(value) => setPostContent({...postContent, content: value})}
                 />
+                <button  
+                    className="py-2 flex gap-x-2 px-2 border-2 border-white rounded-md   bg-black/80 text-white"
+                    onClick={handlePost}
+                    > 
+                    
+                    post
+                    {
+                        spinner ?  <OpenRingSpinner /> : null
+                    }
+                </button>
             </div>
         </>
     )

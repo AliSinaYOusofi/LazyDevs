@@ -34,7 +34,7 @@ app.use((req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    const safeRoutes = ["/user/check_user_login", "/user/save_user"]
+    const safeRoutes = ["/user/check_user_login", "/user/save_user", "/save_post"]
     console.log(req.path, safeRoutes.includes(req.path))
     if (safeRoutes.includes(req.path)) return next();
 
@@ -50,6 +50,7 @@ app.use((req, res, next) => {
         next();
     })
 
-})
+});
+
 app.use("/user", userRoutes);
 app.listen(process.env.PORT, () => console.log("Started at: %s", new Date().toTimeString()));
