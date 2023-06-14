@@ -6,8 +6,8 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: (id) => id.length > 60, // 64
-            message: "post_id length should be greater than 60"
+            validator: (id) => id.length > 15, // 15
+            message: "post_id length should be greater than 15"
         },
         immutable: true
     },
@@ -55,17 +55,6 @@ const PostSchema = new mongoose.Schema({
         immutable: false
     },
 
-    imageUrls: {
-        type: Array,
-        required: false,
-        immutable: true,
-        validate: {
-            validator: function(u) {
-                return new RegExp("^https?:\/\/.+$").test(u);
-            },
-            message: props =>  `invalid profile url: ${props}`
-        }
-    }
 });
 
 // Middleware to update the updatedAt field when a post is modified

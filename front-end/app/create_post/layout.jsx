@@ -6,8 +6,9 @@ import CreatePost from '@/components/makePost/CreatePost'
 export default function layout({children}) {
     return (
         <div className="w-[100%] ">
-            
+            <Navbar />
             <CreatePost />
+            
             <Footer />
             
         </div>

@@ -29,17 +29,17 @@ export default function Login() {
     const router = useRouter();
 
     const handleSubmit = async () => {
-
-        setSpinner(true);
-        
         let response = await handleLoginSubmit(email, password);
 
-        if (response.data === "Invalid") return toast.error("Invalid email or password")
+        if (response.data === "Invalid")  toast.error("Invalid email or password")
+
+        else if (response.data === "Server Error")  toast.error("Server Error");
         
-        setCurrentUser(response.data);
-       
-        setSpinner(false);
-        router.push("/create_post");
+        else {
+            setCurrentUser(response.data);
+            router.push("/create_post");
+        }
+        setSpinner(false)
     }
 
     return (
@@ -89,7 +89,10 @@ export default function Login() {
                     
                     <button disabled={spinner}
                         type="button"
-                        onClick={handleSubmit}
+                        onClick={() => {
+                            setSpinner(true);
+                            handleSubmit();
+                        }}
                         className="block md:relative shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 px-6  w-full rounded-md  font-semibold mb-2">
                     Login
                     { spinner ? <Spinner /> : null}
