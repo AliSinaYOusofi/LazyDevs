@@ -34,7 +34,7 @@ app.use((req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    const safeRoutes = ["/user/check_user_login", "/user/save_user", "/save_post"]
+    const safeRoutes = ["/user/check_user_login", "/user/save_user", "/user/save_post"]
     console.log(req.path, safeRoutes.includes(req.path))
     if (safeRoutes.includes(req.path)) return next();
 

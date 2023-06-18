@@ -49,6 +49,7 @@ router.post("/check_user_login", async (req, res) => {
 
         if (isUserRegistered ) {
             let currentUserData = await SignedUpUser.authenticateUser(password, email);
+            
             if (currentUserData) {
 
                 const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
@@ -75,7 +76,8 @@ router.post("/save_post", async (req, res) => {
     const randomIdForPost = crypto.randomBytes(16).toString("hex");
 
     console.log(content, token);
-    const {email} = jwt.decode(token);
+    let pureToken = token.replace(";", "");
+    const {email} = jwt.decode(pureToken);
 
     console.log(email);
     const signedUpUser = await SignedUpUser.findOne({email});
