@@ -75,14 +75,10 @@ router.post("/save_post", async (req, res) => {
 
     const randomIdForPost = crypto.randomBytes(16).toString("hex");
 
-    console.log(content, token);
     let pureToken = token.replace(";", "");
-    const {email} = jwt.decode(pureToken);
+    const {email = "mail"} = jwt.decode(pureToken);
 
-    console.log(email);
-    const signedUpUser = await SignedUpUser.findOne({email});
-
-    console.log(signedUpUser);
+    const signedUpUser = await SignedUpUser.findOne({email}, {timeout: 2000}); 
  
     let newPost = new Post({
         post_id: randomIdForPost,
@@ -94,8 +90,6 @@ router.post("/save_post", async (req, res) => {
 
     try {
         await newPost.save();
-
-        console.log("saved post");
         return res.status(200).json({message: "success"}); 
     }
     catch(error) {
