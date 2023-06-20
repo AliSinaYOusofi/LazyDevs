@@ -1,9 +1,12 @@
+"use client";
+
 import React from 'react'
 
-export default function PrivacyAndPolicy() {
+class PrivacyAndPolicy extends React.Component {
     
-    return (
-        <div className="w-full p-6 md:w-[50%] mx-auto shadow-black/20 shadow-sm">
+    render() {
+        return (
+            <div className="w-full p-6 md:w-[50%] mx-auto shadow-black/20 shadow-sm">
             <div className="mt-14">
                 <h1 className="font-extrabold text-4xl"> Privacy And Policy</h1>
                 <p className="mt-2">
@@ -163,5 +166,9 @@ export default function PrivacyAndPolicy() {
                 </a>
             </p>
         </div>
-    )
+        )
+    }
 }
+
+
+export default PrivacyAndPolicy;

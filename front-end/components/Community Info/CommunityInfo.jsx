@@ -5,6 +5,7 @@ import React from 'react'
 export default function CommunityInfo() {
 
     const pathname = usePathname();
+    
     return (
         <div className="mt-10">
             <p className="font-bold ml-2">Other</p>
@@ -77,7 +78,6 @@ export default function CommunityInfo() {
                     </Link>
                 </li>
             </ul>
-
         </div>
     )
 }

@@ -1,9 +1,8 @@
 "use client";
 import { emailValidator } from '@/functions/emailValidator';
 import { handleLoginSubmit } from '@/functions/login_submit/handleLoginSubmit';
-import { passwordValidator } from '@/functions/passwordValidator';
 import Link from 'next/link';
-import React, { useRef, useState } from 'react'
+import React, {  useState } from 'react'
 import HideUnhide from '../HideUnhidePassword/HideUnhide';
 import ValidatorIcon from '../ValidatorIcons/ValidatorIcon';
 
@@ -29,7 +28,10 @@ export default function Login() {
     const router = useRouter();
 
     const handleSubmit = async () => {
+        
         let response = await handleLoginSubmit(email, password);
+
+        if (!response) return toast.error("Network Error")
 
         if (response.data === "Invalid")  toast.error("Invalid email or password")
 
@@ -37,7 +39,7 @@ export default function Login() {
         
         else {
             setCurrentUser(response.data);
-            router.push("/create_post");
+            // router.push("/create_post");
         }
         setSpinner(false)
     }

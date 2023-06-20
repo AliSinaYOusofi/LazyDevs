@@ -45,7 +45,7 @@ export default function Teams () {
             </div>
 
             <div className="flex w-full p-10 items-center justify-evenly flex-row flex-wrap shadow-black/10 shadow-md rounded-md i gap-x-24">
-                <div className="gap-y-4 flex flex-col">
+                <div className="gap-y-4 flex flex-col md:flex-row gap-x-10">
 
                     <div className="flex shadow-black/10 shadow-md p-4 rounded-md items-center gap-x-2 jusitfy-center ">
                         <img
