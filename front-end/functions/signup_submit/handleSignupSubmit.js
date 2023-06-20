@@ -35,7 +35,7 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
         });
         
         // we are good from the front-end part.
-        // just check the back-end. for unique email and username
+        // just check the back-end. for unique email and d
 
         console.log(response);
         if (response.data === "UserSaved") return "saved"

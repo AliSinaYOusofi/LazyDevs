@@ -76,7 +76,9 @@ router.post("/save_post", async (req, res) => {
     const randomIdForPost = crypto.randomBytes(16).toString("hex");
 
     let pureToken = token.replace(";", "");
-    const {email = "mail"} = jwt.decode(pureToken);
+    const {email = null} = jwt.decode(pureToken);
+
+    if (!token) email = "test@gmail.com"
 
     const signedUpUser = await SignedUpUser.findOne({email}, {timeout: 2000}); 
  
