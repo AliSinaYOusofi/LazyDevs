@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
+import Link from 'next/link';
 
 
 export default function CreatePost() { 
@@ -105,7 +106,7 @@ export default function CreatePost() {
                     onChange={(value) => setPostContent({...postContent, content: value})}
                 />
                 <button  
-                    className="py-2 flex gap-x-2 px-2 border-2 border-white rounded-md   bg-black/80 text-white"
+                    className="py-2  gap-x-2 px-2 border-2 border-white rounded-md   bg-black/80 text-white"
                     onClick={handlePost}
                     > 
                     
@@ -114,6 +115,9 @@ export default function CreatePost() {
                         spinner ?  <OpenRingSpinner /> : null
                     }
                 </button>
+                <Link href="/templates" className="hover:text-blue-500 ml-10">
+                    See templates
+                </Link>
             </div>
         </>
     )

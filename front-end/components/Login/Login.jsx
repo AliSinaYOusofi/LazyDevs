@@ -31,15 +31,17 @@ export default function Login() {
         
         let response = await handleLoginSubmit(email, password);
 
+        console.log(response, 'login')
+
         if (!response) return toast.error("Network Error")
 
         if (response.data === "Invalid")  toast.error("Invalid email or password")
 
         else if (response.data === "Server Error")  toast.error("Server Error");
         
-        else {
+        else if (response.data) {
             setCurrentUser(response.data);
-            // router.push("/create_post");
+            router.push("/create_post");
         }
         setSpinner(false)
     }
