@@ -16,9 +16,7 @@
     "next": "13.2.4",
     "react-markdown": "^8.0.7",
     "react-simplemde-editor": "^5.2.0",
-    "react-toastify": "^9.1.2",
-    "slate": "^0.94.1",
-    "slate-react": "^0.98.1"
+    "react-toastify": "^9.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
