@@ -4,7 +4,7 @@ export default function TemplateCard({image, content, title}) {
 
     return (
         
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+        <div class="max-w-sm bg-white  rounded-lg shadow-sm">
             <a href="#">
                 <img class="rounded-t-lg" src={image} alt="blog template image" />
             </a>
