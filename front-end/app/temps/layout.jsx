@@ -4,14 +4,15 @@ import { useSearchParams } from 'next/navigation'
 import Strawberry from '@/components/templates/Food Templates/Strawberry'
 import Link from 'next/link'
 import Burger from '@/components/templates/Food Templates/BurgerTemplate'
+import Protein from '@/components/templates/Food Templates/Fruits'
 
 
 export default function layout() {
 
     const search = useSearchParams().get("title")
     
-    const templatesNames = ["Strawberry", "Burgers", "Fruits"]
-    const templateComponents = [<Strawberry />, <Burger />]
+    const templatesNames = ["Strawberry", "Burgers", "Protein"]
+    const templateComponents = [<Strawberry />, <Burger />, <Protein />]
 
     const selectedComponent = templateComponents[templatesNames.indexOf(search)]
 
