@@ -11,9 +11,9 @@ export default function Templates() {
         <div className="w-full h-full mt-10 mx-auto">
             <h1 className="text-[3rem] font font-bold text-center"> Food Templates </h1>
             <div className="flex flex-wrap  items-center justify-center gap-x-2 gap-y-4 mt-4">
-                <TemplateCard image={"https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"The food we want"} />
-                <TemplateCard image={"https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"The food we want"} />
-                <TemplateCard image={"https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"The food we want"} />
+                <TemplateCard image={"https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"Strawberry"} />
+                <TemplateCard image={"https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"Burgers"} />
+                <TemplateCard image={"https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"The food we eat defines who we are"} title={"Protein"} />
             </div>
             <h1 className="text-[3rem] font font-bold text-center mt-3"> Programming Templates </h1>
             <div  className="flex flex-wrap items-start justify-center gap-x-2 gap-y-4 mt-4">

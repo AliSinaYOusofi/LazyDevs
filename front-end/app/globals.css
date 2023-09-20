@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
+
+.blog * {
+    font-family: 'Inter', sans-serif;
+    font-family: 'Lato', sans-serif;
+}
+
+.blog li {
+    margin-bottom: 7px;
+}
