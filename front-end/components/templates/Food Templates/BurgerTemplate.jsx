@@ -1,3 +1,4 @@
+import RenderVideos from '@/components/RenderVideo/RenderVideos';
 import React from 'react';
 
 
@@ -5,11 +6,12 @@ const Burger = () => {
     
     return (
         <div className="max-w-2xl mx-auto px-4 py-8">
-            <img src={"https://images.pexels.com/photos/5908049/pexels-photo-5908049.jpeg?auto=compress&cs=tinysrgb&w=600"} alt="Burger" className="rounded-lg mb-4" />
 
-            <h1 className="text-3xl font-semibold mb-2">Delicious and Juicy Burger</h1>
+            <h1 className="text-4xl font-extrabold mb-3"> Let's see what is a burger </h1>
+            <RenderVideos videoUrl={"https://player.vimeo.com/external/412333423.sd.mp4?s=c6750486520d14308dc665626036f1cf6d8a0ec0&profile_id=164&oauth2_token_id=57447761"} />
+            <h1 className="text-3xl font-semibold mb-2 mt-2">Delicious and Juicy Burger</h1>
 
-            <p className="text-gray-700 mb-4">
+            <p className="text-gray-700 mb-4 mt-3">
                 Burgers are an all-time favorite for many people, offering a satisfying and flavorful meal. 
                 The combination of juicy beef, fresh vegetables, and a soft bun creates a delightful taste and texture 
                 experience. Let's dive into making a delicious burger with a homemade patty and mouthwatering toppings.

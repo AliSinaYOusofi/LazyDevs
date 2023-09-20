@@ -1,3 +1,4 @@
+import RenderVideos from '@/components/RenderVideo/RenderVideos'
 import React from 'react'
 
 export default function Strawberry() {
@@ -56,6 +57,9 @@ export default function Strawberry() {
                 <li>Sprinkle toasted almonds on top for added crunch.</li>
                 <li>Serve immediately and enjoy this refreshing strawberry salad!</li>
             </ol>
+
+            <h1 className="text-2xl font-semibold mb-2"> A video might help you: </h1>
+            <RenderVideos videoUrl={"https://player.vimeo.com/external/343935136.sd.mp4?s=f8bcb74cb4c994e098f14e8d29d7848031c0901c&profile_id=164&oauth2_token_id=57447761"} />
 
             <p className="text-gray-700">
                 With its vibrant colors and burst of flavors, this strawberry salad makes a
