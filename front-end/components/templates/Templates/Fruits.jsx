@@ -124,6 +124,52 @@ const Protein = () => {
                 pros={["third-party tested by Informed Sport", "minimal ingredients", "no artificial sweeteners"]}
                 cons={["low in lactose", "high in sugar", "high in sodium"]}
             />
+
+            <h1 className="mt-4 text-2xl font-bold"> Ghost Whey Protein </h1>
+            <p className="mt-4">
+                Ghost is known for its creative dessert- and breakfast-inspired flavors. In fact, the company frequently partners with popular brands such as Chips Ahoy and Nutter Butter to include cookie pieces in some of its protein powders.
+            </p>
+
+            <p className="mt-4">
+            Ghost protein powder is made up of a blend of whey isolate and whey concentrate and a blend of digestive enzymes.
+            </p>
+
+            <p className="mt-4">
+                And you don’t have to take our word for it — Ghost Whey Protein is highly rated by customers who appreciate its delicious taste and how easy the powder is to mix using a shaker bottle.
+            </p>
+
+            <p className="mt-4">
+                Ghost Whey Protein is produced in a CGMP-certified facility and third-party tested by NSF International to ensure purity and potency. The brand’s whey protein powers are also certified soy- and gluten-free.
+            </p>
+
+            <h2 className="mt-4 font-bold text-2xl">
+                Nutrition facts per 1 scoop (34.5 g) of the Cereal Milk flavor (16):
+            </h2>
+
+            <ul className="mt-4 list-disc ml-10">
+                <li> Calories: 130 </li>
+                <li>Carbs: 4 g </li>
+                <li> Added sugars: 0 g </li>
+                <li> Protein: 25 g </li>
+            </ul>
+
+            <ProsAndCons
+                pros={["third-party tested by NSF International", "certified soy- and gluten-free", "available in multiple breakfast- and dessert-inspired flavors"]}
+                cons={["contains artificial sweeteners, which some people may prefer to avoid"]}
+            />
+            
+            <h1 className="mt-4 font-extrabold text-3xl"> What to do if your protein powder is causing breakouts </h1>
+            <p className="mt-4">
+                For some people, certain ingredients commonly found in protein powders can contribute to acne, including dairy
+            </p>
+
+            <p className="mt-4">
+                If you find that dairy causes acne or breakouts for you, switching to a dairy-free protein powder may be beneficial.
+            </p>
+
+            <p className="mt-4">
+                Some research also suggests that consuming a high amount of carbohydrates or foods with a high glycemic index — a measure of how much certain foods increase blood sugar levels — can also contribute to acne
+            </p>
         </div>
     );
 };
