@@ -1,18 +1,19 @@
 "use client"
 import React from 'react'
 import { useSearchParams } from 'next/navigation'
-import Strawberry from '@/components/templates/Food Templates/Strawberry'
+import Strawberry from '@/components/templates/Templates/Strawberry'
 import Link from 'next/link'
-import Burger from '@/components/templates/Food Templates/BurgerTemplate'
-import Protein from '@/components/templates/Food Templates/Fruits'
+import Burger from '@/components/templates/Templates/BurgerTemplate'
+import Protein from '@/components/templates/Templates/Fruits'
+import GetGoodAtProgramming from '@/components/templates/Templates/GetGoodAtProgramming'
 
 
 export default function layout() {
 
     const search = useSearchParams().get("title")
     
-    const templatesNames = ["Strawberry", "Burgers", "Protein"]
-    const templateComponents = [<Strawberry />, <Burger />, <Protein />]
+    const templatesNames = ["Strawberry", "Burgers", "Protein", "Programming"]
+    const templateComponents = [<Strawberry />, <Burger />, <Protein />, <GetGoodAtProgramming />]
 
     const selectedComponent = templateComponents[templatesNames.indexOf(search)]
 
