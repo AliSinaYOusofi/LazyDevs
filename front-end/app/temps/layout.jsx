@@ -10,14 +10,15 @@ import ChooseIDE from '@/components/templates/Templates/ChooseIDE'
 import VSShortcuts from '@/components/templates/Templates/VSShortcuts'
 import Computers from '@/components/templates/Templates/Computers'
 import GoogleTips from '@/components/templates/Templates/GoogleTips'
+import ProgrammingBooks from '@/components/templates/Templates/ProgrammingBooks'
 
 
 export default function layout() {
 
     const search = useSearchParams().get("title")
     
-    const templatesNames = ["Strawberry", "Burgers", "Protein", "Programming", "IDE", "VS", "Computers", "Google"]
-    const templateComponents = [<Strawberry />, <Burger />, <Protein />, <GetGoodAtProgramming />, <ChooseIDE />, <VSShortcuts />, <Computers />, <GoogleTips />]
+    const templatesNames = ["Strawberry", "Burgers", "Protein", "Programming", "IDE", "VS", "Computers", "Google", "Books"]
+    const templateComponents = [<Strawberry />, <Burger />, <Protein />, <GetGoodAtProgramming />, <ChooseIDE />, <VSShortcuts />, <Computers />, <GoogleTips />, <ProgrammingBooks />]
 
     const selectedComponent = templateComponents[templatesNames.indexOf(search)]
 
