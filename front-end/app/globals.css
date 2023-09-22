@@ -16,6 +16,14 @@
     .blog img {
         @apply mt-4
     }
+
+    .blog h1 {
+        @apply text-3xl font-extrabold mt-4
+    }
+
+    .blog ul {
+        @apply list-disc ml-10 mt-4
+    }
 }
 .blog * {
     font-family: 'Inter', sans-serif;

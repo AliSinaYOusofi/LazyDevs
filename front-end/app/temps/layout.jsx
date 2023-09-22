@@ -6,14 +6,18 @@ import Link from 'next/link'
 import Burger from '@/components/templates/Templates/BurgerTemplate'
 import Protein from '@/components/templates/Templates/Fruits'
 import GetGoodAtProgramming from '@/components/templates/Templates/GetGoodAtProgramming'
+import ChooseIDE from '@/components/templates/Templates/ChooseIDE'
+import VSShortcuts from '@/components/templates/Templates/VSShortcuts'
+import Computers from '@/components/templates/Templates/Computers'
+import GoogleTips from '@/components/templates/Templates/GoogleTips'
 
 
 export default function layout() {
 
     const search = useSearchParams().get("title")
     
-    const templatesNames = ["Strawberry", "Burgers", "Protein", "Programming"]
-    const templateComponents = [<Strawberry />, <Burger />, <Protein />, <GetGoodAtProgramming />]
+    const templatesNames = ["Strawberry", "Burgers", "Protein", "Programming", "IDE", "VS", "Computers", "Google"]
+    const templateComponents = [<Strawberry />, <Burger />, <Protein />, <GetGoodAtProgramming />, <ChooseIDE />, <VSShortcuts />, <Computers />, <GoogleTips />]
 
     const selectedComponent = templateComponents[templatesNames.indexOf(search)]
 
