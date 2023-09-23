@@ -42,7 +42,7 @@ export default function Login() {
         else if (response.data) {
             setCurrentUser(response.data);
             router.push("/create_post");
-        }
+        }    
         setSpinner(false)
     }
 

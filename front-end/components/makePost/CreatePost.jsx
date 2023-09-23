@@ -77,6 +77,7 @@ export default function CreatePost() {
         if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");
         
         const token = document.cookie.split("=")[1];
+        console.log(token, 'token');    
 
         try {
             const res = await axios.post("http://localhost:3001/user/save_post", {
@@ -87,6 +88,7 @@ export default function CreatePost() {
             console.log(res.data)
             if (res.data.message === "success") toast.success("post created successfully");
             else if (res.data.message === "serverError") toast.success("Server Error");
+            else toast.error("Failed to post !")
  
             setPostContent({content: ""})
         } catch(err) {
@@ -105,19 +107,23 @@ export default function CreatePost() {
                     value={postContent.content}
                     onChange={(value) => setPostContent({...postContent, content: value})}
                 />
-                <button  
-                    className="py-2  gap-x-2 px-2 border-2 border-white rounded-md   bg-black/80 text-white"
-                    onClick={handlePost}
-                    > 
-                    
-                    post
-                    {
-                        spinner ?  <OpenRingSpinner /> : null
-                    }
-                </button>
-                <Link href="/templates" className="hover:text-blue-500 ml-10">
-                    See templates
-                </Link>
+
+                <div className="w-fit flex flex-row">
+                    <button  
+                        className="py-2 px-4  gap-x-2  border-2 border-white rounded-md flex flex-row items-center justify-between   bg-black/80 text-white"
+                        onClick={handlePost}
+                        > 
+                        
+                        post
+                        {
+                            spinner ?  <OpenRingSpinner /> : null
+                        }
+                    </button>
+
+                    <Link href="/templates" className="hover:text-blue-500 ml-10 flex bg-white/50 p-2 rounded-sm w-fit">
+                        See templates
+                    </Link>
+                </div>
             </div>
         </>
     )
