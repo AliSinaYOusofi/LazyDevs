@@ -30,7 +30,7 @@ const usersSignupSchema = new mongoose.Schema( {
         validate: {
             validator: function(e) {
                 return new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}').test(e.toLowerCase())
-            },
+            }, 
             message: "Invalid email provided"
         }
     },
