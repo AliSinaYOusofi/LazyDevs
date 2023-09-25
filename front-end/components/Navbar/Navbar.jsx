@@ -59,6 +59,7 @@ export default function Example() {
                             </svg>
                             <span className=""></span>
                         </code>
+                        
 
                         <div className="hidden md:flex">
                             <SearchInput />

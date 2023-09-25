@@ -22,9 +22,9 @@ export const handleLoginSubmit = async (email, password) => {
     } 
     catch(error) {
         if (error.code === "ECONNABORTED") toast.error("Request Timed out. Try again later !");
-        else if (error.request) toast.error("Network Error. Try again later.");
-        else toast.error("Error. Try again later");
+        else toast.error("Server error Try again later");
         console.log(error, "error while handling login submit");
+        return "failed"
     }
     
 }

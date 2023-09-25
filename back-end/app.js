@@ -4,6 +4,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const userRoutes = require("./routes/userRoutes");
+const blogRoutes = require("./blogRoutes/blogRoutes")
+const { getDB } = require("./db_connection/mongoose.db.config");
 
 require("dotenv").config();
 
@@ -29,28 +31,34 @@ app.use(cookieParser());
 
 // middlwares should be before router handlers
 // or it will never get called.
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
     
-    const accessToken = req.cookies.accessToken;
-    const refreshToken = req.cookies.refreshToken;
+//     const accessToken = req.cookies.accessToken;
+//     const refreshToken = req.cookies.refreshToken;
 
-    const safeRoutes = ["/user/check_user_login", "/user/save_user", "/user/save_post"]
-    console.log(req.path, safeRoutes.includes(req.path))
-    if (safeRoutes.includes(req.path)) return next();
+//     const safeRoutes = ["/user/check_user_login", "/user/save_user", "/user/save_post"]
+//     console.log(req.path, safeRoutes.includes(req.path))
+//     if (safeRoutes.includes(req.path)) return next();
 
-    jwt.verify(accessToken, process.env.JWT_SECRET, (error) => {
-        if (error) {
-            jwt.verify(refreshToken, process.env.JWT_SECRET, (error, decoded) => {
-                if(error) return res.status(200).json("refreshTokenInvalid");
-                const newAccessToken = jwt.sign(decoded, process.env.JWT_SECRET, {expiresIn: "15m"});
-                res.cookie('accessToken', newAccessToken, {maxAge: 900000, sameSite: "Lax"});
-                next();
-            })
-        }
-        next();
-    })
+//     jwt.verify(accessToken, process.env.JWT_SECRET, (error) => {
+//         if (error) {
+//             jwt.verify(refreshToken, process.env.JWT_SECRET, (error, decoded) => {
+//                 if(error) return res.status(200).json("refreshTokenInvalid");
+//                 const newAccessToken = jwt.sign(decoded, process.env.JWT_SECRET, {expiresIn: "15m"});
+//                 res.cookie('accessToken', newAccessToken, {maxAge: 900000, sameSite: "Lax"});
+//                 next();
+//             })
+//         }
+//         next();
+//     })
 
-});
+// });
+
+app.use( async (req, res, next) => {
+    await getDB()
+    next()
+})
 
 app.use("/user", userRoutes);
+app.use("/blogRoutes", blogRoutes)
 app.listen(process.env.PORT, () => console.log("Started at: %s", new Date().toTimeString()));
