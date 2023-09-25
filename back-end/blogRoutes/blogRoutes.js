@@ -59,7 +59,7 @@ router.post("/single_post/:post_id", async (req, res) => {
             singleBlog.profileUrl = singleBlogAuthor.profileUrl;
             singleBlog.username = singleBlogAuthor.username;
             singleBlog.joined = singleBlogAuthor.joined;
-            singleBlog.socials = singleBlogAuthor.socials;
+            singleBlog.email = singleBlogAuthor.email;
             
             return res.status(200).json({
                 status: "success",
@@ -73,6 +73,52 @@ router.post("/single_post/:post_id", async (req, res) => {
         }
     }
     return res.status(200).json({message: "blog not found"})
+});
+
+
+router.post("/comment", async (req, res) => {
+    
+    let { post_id, comment, author} = req.body;
+
+    console.log(post_id, comment, author);
+
+    if (post_id) {
+        
+        try {
+
+            let singleBlog = await Post.findById(post_id);
+
+            if (! singleBlog) {
+                return res.status(200).json({
+                    status: "failed",
+                    data: "blog not found"
+                })
+            }
+            
+            const newComment = {
+                post: post_id,
+                comment: {
+                    author: author,
+                    body: comment,
+                }
+            }
+
+            singleBlog.comments.push(newComment);
+
+            await singleBlog.save();
+
+            return res.status(200).json({
+                status: "success",
+                data: "saved"
+            })
+        } 
+        
+        catch (e ) {
+            console.log(e, "saving comment");
+            return res.status(200).json({status: "failed", data: "server error"})
+        }
+    }
+    return res.status(200).json({status: "failed", data: "post_id not provided"})
 });
 
 

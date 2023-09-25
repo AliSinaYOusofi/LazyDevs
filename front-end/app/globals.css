@@ -33,3 +33,7 @@
 .blog li {
     margin-bottom: 7px;
 }
+
+.headerBlog  {
+    overflow-wrap: break-word;
+}

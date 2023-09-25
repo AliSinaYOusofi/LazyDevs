@@ -40,7 +40,7 @@ export default function layout() {
                 
 
                 {
-                    blogs.map(blog => <BlogCard title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog.post_id}/>)
+                    blogs.map(blog => <BlogCard title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </div>
