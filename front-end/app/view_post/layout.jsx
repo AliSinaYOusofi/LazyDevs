@@ -69,7 +69,7 @@ export default function layout({children}) {
             <div className="w-full flex flex-col md:flex-row justify-start items-start">
                 
                 <div className="">
-                    <SocialIcons />
+                    <SocialIcons post_id={post_id}/>
                 </div>
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">

@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const Post = require("../models/Blogs");
 const SignedUpUser = require("../models/Register");
+const Comment = require("../models/Comments");
+const Likes = require("../models/postLikes");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
@@ -27,7 +29,6 @@ router.get("/newsfeed", async (req, res) => {
             return blog;
         });
     
-        console.log(completeBlogData);
         return res.status(200).json({
             status: "success",
             data: completeBlogData
@@ -45,15 +46,12 @@ router.post("/single_post/:post_id", async (req, res) => {
     
     let { post_id } = req.params;
     post_id = String(post_id).split(":")[1];
-    
-    console.log(post_id, "post -id of the blog");
 
     if (post_id) {
         
         try {
 
             let singleBlog = await Post.findById(post_id).lean().exec();
-            console.log(singleBlog, "single blog");
 
             let singleBlogAuthor = await SignedUpUser.findById(singleBlog.author).lean().exec();
             singleBlog.profileUrl = singleBlogAuthor.profileUrl;
@@ -80,7 +78,6 @@ router.post("/comment", async (req, res) => {
     
     let { post_id, comment, author} = req.body;
 
-    console.log(post_id, comment, author);
 
     if (post_id) {
         
@@ -95,15 +92,21 @@ router.post("/comment", async (req, res) => {
                 })
             }
             
-            const newComment = {
-                post: post_id,
-                comment: {
-                    author: author,
-                    body: comment,
+            const newComment = new Comment(
+                {
+                    post: post_id.toString(),
+                    comment: [ {
+                        author: author,
+                        body: comment,
+                    } ]
                 }
-            }
+            );
 
-            singleBlog.comments.push(newComment);
+            await newComment.save();
+
+
+
+            singleBlog.comments.push(newComment._id);
 
             await singleBlog.save();
 
@@ -120,6 +123,132 @@ router.post("/comment", async (req, res) => {
     }
     return res.status(200).json({status: "failed", data: "post_id not provided"})
 });
+
+router.post("/get_post_comments", async (req, res) => {
+    
+    const {post_id} = req.body;
+
+    
+    if (post_id) {
+
+        try {
+
+            let comments = await Comment.find({post: post_id}).lean().exec();
+            
+            comments = comments.map(async comms => {
+                
+                comms.comment = await Promise.all(comms.comment.map(async comment => {
+                
+                    const whoCommented = await SignedUpUser.findOne({ email: comment.author }).lean().exec();
+                    
+                    if (whoCommented) {
+                    
+                        comment.profileUrl = whoCommented?.profileUrl;
+                        comment.username = whoCommented?.username;
+                    }
+                    
+                    return comment;
+                }));
+                
+                return comms;
+            });
+              
+              // Wait for all the mapping operations to complete
+            comments = await Promise.all(comments);
+
+            
+
+            return res.status(200).json({
+                status: "success",
+                data: comments
+            })
+        } 
+        
+        catch(e) {
+
+            return res.status(200).json({
+                status: "failed",
+                data: "server error"
+            })
+        }
+        
+    }
+    return res.status(200).json({
+        status: "failed",
+        data: "blog not found"
+    })
+});
+
+
+router.post("/like_post", async (req, res) => {
+
+    const {status, post_id, userEmail} = req.body;
+
+    console.log(status, post_id, userEmail)
+
+    const post_id_exists = await Post.findById(post_id).lean().exec();
+
+    if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
+
+    if (status === "liked") {
+        
+        let user_email = await Likes.findOne({'liker': userEmail}).lean().exec();
+        
+        if (user_email) { 
+            
+            if (user_email.likes === 0) {
+                /// adding one to the like
+                await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: 1}})
+
+                return res.status(200).json({status: "success", data: "added one like"})
+            }
+            // subtracting one
+            await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
+
+            return res.status(200).json({status: "success", data: "subtracted one like"})
+        } 
+        
+        else {
+            // new user liked should be added
+            const newLiker = new Likes({
+                post_id,
+                likes: 1,
+                liker: userEmail
+            })
+
+            await newLiker.save();
+            return res.status(200).json({status: "success", data: "new user liked"})
+        }
+    } 
+    else if (status === "disliked") {
+        
+        await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
+        return res.status(200).json({status: "success", data: "disliked and subtracted one"})
+    }
+});
+
+
+router.get("/get_likes_comments_count/:post_id", async (req, res) => {
+    
+    let {post_id} = req.params;
+    post_id = String(post_id).split(":")[1];
+
+    console.log(post_id, 'post_id for likes and comments');
+
+    if (post_id) {
+
+        let post_likes = await Likes.findOne({'post_id': post_id}).lean().exec();
+        let commentCount = await Comment.find({'post': post_id}).lean().exec();
+    
+        console.log(commentCount);
+          
+        if (post_likes) {
+            return res.status(200).json({status: "success", likeCount: post_likes, commentCount})
+        }
+    }
+    return res.status(200).json({status: "failed", data: "post not found"})
+
+})
 
 
 
