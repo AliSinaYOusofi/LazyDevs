@@ -78,7 +78,6 @@ router.post("/save_post", async (req, res) => {
     let pureToken = token.replace(";", "");
     pureToken = pureToken.split(" ")[0];   
 
-    console.log(jwt.decode(pureToken), "decode", pureToken)
     const {email = null, _id} = jwt.decode(pureToken);
     
     if (!token) email = "test@gmail.com"

@@ -10,12 +10,8 @@ const Likes = require("../models/postLikes");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
-
-
 router.get("/newsfeed", async (req, res) => {
     
-    
-
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -34,7 +30,7 @@ router.get("/newsfeed", async (req, res) => {
             data: completeBlogData
         });
   
-    } catch (e) {
+    } catch (e) {  
         console.log(e, "fetching blogs");
         res.status(400).json({
             status: "failed"
@@ -184,8 +180,6 @@ router.post("/like_post", async (req, res) => {
 
     const {status, post_id, userEmail} = req.body;
 
-    console.log(status, post_id, userEmail)
-
     const post_id_exists = await Post.findById(post_id).lean().exec();
 
     if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
@@ -214,7 +208,7 @@ router.post("/like_post", async (req, res) => {
                 post_id,
                 likes: 1,
                 liker: userEmail
-            })
+            }) 
 
             await newLiker.save();
             return res.status(200).json({status: "success", data: "new user liked"})
@@ -233,15 +227,11 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
     let {post_id} = req.params;
     post_id = String(post_id).split(":")[1];
 
-    console.log(post_id, 'post_id for likes and comments');
-
     if (post_id) {
 
         let post_likes = await Likes.findOne({'post_id': post_id}).lean().exec();
         let commentCount = await Comment.find({'post': post_id}).lean().exec();
-    
-        console.log(commentCount);
-          
+           
         if (post_likes) {
             return res.status(200).json({status: "success", likeCount: post_likes, commentCount})
         }
@@ -249,7 +239,5 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
     return res.status(200).json({status: "failed", data: "post not found"})
 
 })
-
-
 
 module.exports = router
