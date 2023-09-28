@@ -16,7 +16,7 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: (title) => title.length > 60, // 64
+            validator: (title) => title.length > 1, // 64
             message: "post title length should be greater than 1"
         },
     },

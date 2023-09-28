@@ -6,6 +6,7 @@ import "easymde/dist/easymde.min.css";
 import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer} from 'react-toastify';
 import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
@@ -29,8 +30,7 @@ export default function CreatePost() {
             const formData = new FormData();
             formData.append("file", image);
             formData.append("upload_preset", "notipfs");
-            
-            
+         
             const res = await axios.post('https://api.cloudinary.com/v1_1/dudhf0avt/image/upload', formData);
             const {secure_url} = await res.data;
             
@@ -76,8 +76,7 @@ export default function CreatePost() {
         
         if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");
         
-        const token = document.cookie.split("=")[1];
-        console.log(token, 'token');    
+        const token = document.cookie.split("=")[1];   
 
         try {
             const res = await axios.post("http://localhost:3001/user/save_post", {
@@ -125,6 +124,7 @@ export default function CreatePost() {
                     </Link>
                 </div>
             </div>
+            <ToastContainer />
         </>
     )
 }

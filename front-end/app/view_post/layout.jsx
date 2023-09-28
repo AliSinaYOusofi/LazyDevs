@@ -23,35 +23,16 @@ export default function layout({children}) {
                 const response = await fetch(`http://localhost:3001/blogRoutes/single_post/:${post_id}`, {method: "POST"});
                 const data = await response.json()
                 setCurrentBlog(data.data)
-                console.log(data.data)
             }
             catch(e) {
                 console.log("error while fetching data", e)
             }
         }
-
-        getCurrentBlog();
-    }, []);
-
-    if (! currentBlog) {
-        <div className="w-full flex flex-row">
-            <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full" role="status" aria-label="loading">
-                <span class="sr-only">Loading...</span>
-            </div>
-
-            <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full" role="status" aria-label="loading">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    }
-
-    useEffect( () => {
         const recentBlogs = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed`, {method: "GET"});
                 const data = await response.json()
                 setRecentBlogs(data.data)
-                console.log(data.data)
             }
             catch(e) {
                 console.log("error while fetching data", e)
@@ -59,7 +40,8 @@ export default function layout({children}) {
         }
 
         recentBlogs()
-    }, [])
+        getCurrentBlog();
+    }, []);
 
     return (
         <>
@@ -88,7 +70,7 @@ export default function layout({children}) {
                 </div>
 
             </div>
-            {children}
+            
             <Footer />
         </>
     )

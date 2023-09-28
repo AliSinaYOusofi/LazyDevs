@@ -10,7 +10,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
     // id and view all the results in the single_post_view page.
     
     return (
-        <div style={{backdropFilter:"blur(10px)", backgroundColor: "rgba(8, 112, 184, 0.7);"}} className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg shadow-[0_10px_1000px_rgba(8,_112,_184,_0.7)] mt-4`} id={id}>
+        <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg border-2 border-neutral-300 mt-4`} id={id}>
             <div className="flex items-center justify-between">
                 <span className="text-sm font-light text-black">{date ? date.split("T")[0] : ""}</span> 
             </div> 
