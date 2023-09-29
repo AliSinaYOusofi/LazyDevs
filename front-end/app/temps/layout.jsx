@@ -13,7 +13,7 @@ import GoogleTips from '@/components/templates/Templates/GoogleTips'
 import ProgrammingBooks from '@/components/templates/Templates/ProgrammingBooks'
 
 
-export default function layout() {
+export default function Layout() {
 
     const search = useSearchParams().get("title")
     

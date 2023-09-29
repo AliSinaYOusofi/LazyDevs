@@ -80,7 +80,7 @@ export default function CommentParent({post_id}) {
         }
 
         getPostComments();
-    }, [commentSuccessful])
+    }, [commentSuccessful, post_id])
 
     return (
         <>

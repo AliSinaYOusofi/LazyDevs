@@ -15,7 +15,7 @@ export const metadata = {
   description: 'Blogging website',
 }
 
-export default function Home() {
+export default function page() {
   const stepsComponentRef = React.useRef(null);
 
   return (
