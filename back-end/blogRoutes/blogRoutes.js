@@ -1,8 +1,5 @@
 const router = require("express").Router();
 
-const jwt = require("jsonwebtoken");
-
-const crypto = require("crypto");
 const Post = require("../models/Blogs");
 const SignedUpUser = require("../models/Register");
 const Comment = require("../models/Comments");
@@ -11,7 +8,7 @@ const Likes = require("../models/postLikes");
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
 router.get("/newsfeed", async (req, res) => {
-    
+      
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -34,10 +31,10 @@ router.get("/newsfeed", async (req, res) => {
         console.log(e, "fetching blogs");
         res.status(400).json({
             status: "failed"
-        });
-    }
+        });  
+    }     
 });
-
+  
 router.post("/single_post/:post_id", async (req, res) => {
     
     let { post_id } = req.params;
@@ -224,7 +221,7 @@ router.post("/like_post", async (req, res) => {
 
 router.get("/get_likes_comments_count/:post_id", async (req, res) => {
     
-    let {post_id} = req.params;
+    let {post_id} = req.params;     
     post_id = String(post_id).split(":")[1];
 
     if (post_id) {

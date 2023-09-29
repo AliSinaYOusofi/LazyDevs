@@ -3,7 +3,7 @@
 import BlogCard from '@/components/BlogCard/BlogCard';
 import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
-export default function layout() {
+export default function Layout() {
     
     const [blogs, setBlogs] = useState([])
 
@@ -12,7 +12,8 @@ export default function layout() {
             try {
                 const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
                 const data = await response.json()
-                setBlogs(data.data);
+                setBlogs(data.data)
+                console.log(data.data, 'from getting the blogs checking id or post_id')
             }catch(e) {
                 console.log('error in while getting feeds');
             }

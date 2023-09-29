@@ -35,7 +35,7 @@ export default function Example() {
     
     return (
         <>
-            <div className="mx-auto z-[99]      px-4 lg:px-8 py-2 bg-gray-100 w-full">
+            <div id="nav" className="mx-auto z-[99]      px-4 lg:px-8 py-2 bg-gray-100 w-full">
                 <div className="container relative mx-auto flex items-center justify-evenly">    
                     <div className="flex items-center w-full md:w-1/2 gap-x-5 md:mr-0">
                         <div ref={openCloseButtonRef} className="idden z-[999] inline cursor-pointer" onClick={() => setSidebar(prev => !prev)}>

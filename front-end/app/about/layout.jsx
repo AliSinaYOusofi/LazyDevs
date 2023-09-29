@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import React from "react";
 import About from "@/components/Community Info/About";
 
-export default function layout({ children }) {
+export default function Layout({ children }) {
     return (
       <>
         

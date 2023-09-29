@@ -1,1 +1,1 @@
-export const moveToId = (id) => document.getElementById("comments").scrollIntoView({behavior: "smooth"})
+export const moveToId = (id) => document.getElementById(id).scrollIntoView({behavior: "smooth"})

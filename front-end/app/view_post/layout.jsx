@@ -9,8 +9,9 @@ import SocialIcons from '@/components/ShareBlogIcons/ShareIcons';
 import BlogCard from '@/components/BlogCard/BlogCard';
 import Footer from '@/components/Footer/Footer';
 import CommentParent from '@/components/CommentSection.jsx/CommentParent';
+import { moveToId } from '@/functions/movtToId';
 
-export default function layout({children}) {
+export default function Layout({children}) {
     
     const post_id = useSearchParams().get("post");
     const [currentBlog, setCurrentBlog] = useState([{}])
@@ -41,7 +42,11 @@ export default function layout({children}) {
 
         recentBlogs()
         getCurrentBlog();
-    }, []);
+    }, [post_id]);
+
+    useEffect( () => {
+        moveToId("nav")
+    }, [])
 
     return (
         <>
@@ -65,12 +70,12 @@ export default function layout({children}) {
 
                 <div className="md:w-[30%] w-full flex flex-col  overflow-ellipsis headerBlog px-2 md:pr-10">
                     {
-                        recentBlogs.map(blog => <BlogCard clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog.post_id}/>)
+                        recentBlogs.map(blog => <BlogCard clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                     }
                 </div>
 
             </div>
-            
+            {children}
             <Footer />
         </>
     )
