@@ -82,6 +82,7 @@ export default function CommentParent({post_id}) {
         getPostComments();
     }, [commentSuccessful, post_id])
 
+    
     return (
         <>
             <div id="comments">

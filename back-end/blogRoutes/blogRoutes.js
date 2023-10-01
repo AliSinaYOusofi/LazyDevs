@@ -4,6 +4,7 @@ const Post = require("../models/Blogs");
 const SignedUpUser = require("../models/Register");
 const Comment = require("../models/Comments");
 const Likes = require("../models/postLikes");
+const PostView = require("../models/PostViews");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
@@ -235,6 +236,35 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
     }
     return res.status(200).json({status: "failed", data: "post not found"})
 
+});
+
+router.post("/save_new_visitor", async (req, res) => {
+    
+    let { post_id, user_id } = req.body; 
+    
+    if (post_id) {
+
+        try {
+            const userAlreadyViewed = await PostView.findOne({ post_id, viewer: user_id }).lean().exec();
+
+            if (userAlreadyViewed) {
+                return res.status(200).json({ status: "success", data: "user already viewed" });
+            } 
+
+            else {
+                const newViewer = new PostView({ post_id, viewer: user_id, viewCount: 1 }); // Save the new view
+                await newViewer.save();
+                return res.status(200).json({ status: "success", data: "new user viewed" });
+            }
+        } 
+        
+        catch (e) {
+            console.error("Failed when saving view:", e);
+            return res.status(200).json({ status: "failed", data: "server error" });
+        }
+    }
+
+    return res.status(200).json({ status: "failed", data: "post not found" });
 })
 
 module.exports = router
