@@ -38,7 +38,7 @@ export default function Layout() {
                 <div className="max-w-2xl">
 
                     {
-                        blogs.map(blog => <BlogCard title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                        blogs.map(blog => <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                     }
                 </div>
             </div>
