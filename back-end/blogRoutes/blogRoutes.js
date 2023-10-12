@@ -20,8 +20,17 @@ router.get("/newsfeed", async (req, res) => {
         const completeBlogData = blogs.map((blog, index) => {
             blog.profileUrl = authorData[index].profileUrl;
             blog.username = authorData[index].username;
+            blog.viewCount = 0
             return blog;
         });
+
+        for (const blog of completeBlogData) {
+            const views = await PostView.find({post_id: blog._id}).lean().exec();
+            console.log(views)
+            blog.viewCount = views.length
+        }
+
+        completeBlogData.sort( (a, b) => b.viewCount - a.viewCount);
     
         return res.status(200).json({
             status: "success",
