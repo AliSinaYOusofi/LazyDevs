@@ -10,17 +10,22 @@ import { ToastContainer} from 'react-toastify';
 import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 
-export default function CreatePost() { 
-
-    const handleImagePreview = () => {}
+export default function CreatePost({content}) { 
 
     
+    const handleImagePreview = () => {}
+    
+    
     const [spinner, setSpinner] = useState(false);
-
+    
     const [postContent, setPostContent] = useState({content: ""});
- 
+    
+    
+
     const handleImageUpload = async (image, onSuccess, onError) => {
         // validating the image
         if (image.size / 1000000 >= 8) return toast.error(`${image.name} is more than 5 MB`);
@@ -96,6 +101,13 @@ export default function CreatePost() {
         }
         setSpinner(false);
     }
+
+    useEffect( () => {
+        if (content) {
+            let decodeURI = decodeURIComponent(content);
+            setPostContent({content: decodeURI})
+        }
+    }, [])
 
     return (
         <>
