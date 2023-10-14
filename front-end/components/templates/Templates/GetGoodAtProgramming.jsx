@@ -5,13 +5,13 @@ import React from 'react'
 export default function GetGoodAtProgramming() {
 
     const buttonTexts = [
-        'Get Good at Programming',
-        'If you want to become a better programmer, it\'s important to focus on mastering key skills such as data structures, algorithms, object-oriented design, multi-threading, and various programming concepts like recursion, divide and conquer, prototyping, and unit testing. \n',
-        'Becoming a skilled programmer takes time and experience. It\'s not something that can be achieved overnight. Dedicate yourself to continuous learning and practice, and gradually build your expertise in different programming languages and frameworks. \n',
-        'Apart from technical skills, it\'s also vital to develop problem-solving and critical-thinking abilities. Take on challenging projects, participate in coding competitions, and engage in open-source projects to expand your problem-solving skills. \n',
-        'Writing clean and maintainable code is central to becoming a better programmer. Aim for simplicity, readability, and code reusability in your projects. Learn and follow best practices and coding conventions. \n',
-        'Collaboration and teamwork are crucial in the software development industry. Enhance your communication skills, work well with others, and learn to effectively contribute to team projects. \n',
-        'https://miro.medium.com/v2/resize:fit:482/format:webp/0*L-bFz-bz58fh63LJ.jpg',
+        '# 9 Tips to Become a Better Programmer or Software Developer in 2023. 10',
+        'To become a better programmer, you need to be good at the data structure, algorithms, designing using OOP, multi-threading, and various programming concepts like Recursion, divide and conquer, prototyping, and unit testing.',
+        'Programming is a combination of many skills, which means it’s not possible to learn it in a quick time instead, it will come with time and experience, but that won’t happen automatically.',
+        'You can spend five years doing a Java programming job without being a good programmer. Since most Java interviews focus on theory rather than programming and coding skills.',
+        'Not many programmers practice these essential programming skills. If there is a mandatory problem-solving programming test, I will bet the average programmer would have been much better. Anyway, here is my list of things that can help you become a good programmer. 10',
+        '## 1. Coding, Coding, and Coding. 10',
+        'Why have I put coding at the top of this list? Because it’s the most difficult and, at the same time, its central piece of programming. 10'
     ];
 
     const content = encodeURIComponent(JSON.stringify(buttonTexts))

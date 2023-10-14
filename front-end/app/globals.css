@@ -37,3 +37,21 @@
 .headerBlog  {
     overflow-wrap: break-word;
 }
+
+/* 
+for applying the tempaltes to the createPost component
+*/
+.header {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.unordered-list {
+    list-style-type: circle;
+    margin-left: 20px;
+}
+
+.ordered-list {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
