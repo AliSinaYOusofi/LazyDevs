@@ -10,7 +10,6 @@ import { ToastContainer} from 'react-toastify';
 import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 
@@ -46,30 +45,31 @@ export default function CreatePost({content}) {
 
     const anOptions = useMemo(() => {
         return {
-          autosave: {
-            enabled: true,
-            uniqueId: "demo",
-          },
-          spellChecker: true,
-          autoFocus: true,
-          previewImagesInEditor: true,
-          imagesPreviewHandler: handleImagePreview,
-          lineNumbers: true,
-          uploadImage: true,
-          imageUploadFunction: handleImageUpload,
-          errorCallback: errorMessage => toast.error(errorMessage),
-          showIcons: ["strikethrough", "table", "code", "upload-image"],
-          hideIcons: ["image"],
-          timeFormat: {
-            locale: 'en-US',
-            format: {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                },
+            autosave: {
+                enabled: true,
+                uniqueId: "demo",
             },
+            spellChecker: true,
+            autoFocus: true,
+            previewImagesInEditor: true,
+            imagesPreviewHandler: handleImagePreview,
+            lineNumbers: true,
+            uploadImage: true,
+            imageUploadFunction: handleImageUpload,
+            errorCallback: errorMessage => toast.error(errorMessage),
+            showIcons: ["strikethrough", "table", "code", "upload-image"],
+            hideIcons: ["image"],
+            timeFormat: {
+                locale: 'en-US',
+                format: {
+                    year: 'numeric',
+                    month: 'long',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    },
+            },
+            renderPreview: (plainText) => renderPreview(plainText)
         };
     }, []);
 
@@ -104,10 +104,16 @@ export default function CreatePost({content}) {
 
     useEffect( () => {
         if (content) {
-            let decodeURI = decodeURIComponent(content);
-            setPostContent({content: decodeURI})
+            let decodeURI = decodeURIComponent(content).replace("[", "").replace("]", "").replace(/"/g, "").split(",").join("\n")
+            
+            setPostContent({ content: decodeURI });
         }
     }, [])
+
+    const renderPreview = (plainText) => {
+        const html = plainText.replace(/\n/g, '<br />');
+        return html;
+    };
 
     return (
         <>

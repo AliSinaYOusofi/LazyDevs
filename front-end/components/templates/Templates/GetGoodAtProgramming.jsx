@@ -4,15 +4,15 @@ import React from 'react'
 
 export default function GetGoodAtProgramming() {
 
-    const buttonTexts = {
-        title: 'Get Good at Programming',
-        paragraph1: 'If you want to become a better programmer, it\'s important to focus on mastering key skills such as data structures, algorithms, object-oriented design, multi-threading, and various programming concepts like recursion, divide and conquer, prototyping, and unit testing.',
-        paragraph2: 'Becoming a skilled programmer takes time and experience. It\'s not something that can be achieved overnight. Dedicate yourself to continuous learning and practice, and gradually build your expertise in different programming languages and frameworks.',
-        paragraph3: 'Apart from technical skills, it\'s also vital to develop problem-solving and critical-thinking abilities. Take on challenging projects, participate in coding competitions, and engage in open-source projects to expand your problem-solving skills.',
-        paragraph4: 'Writing clean and maintainable code is central to becoming a better programmer. Aim for simplicity, readability, and code reusability in your projects. Learn and follow best practices and coding conventions.',
-        paragraph5: 'Collaboration and teamwork are crucial in the software development industry. Enhance your communication skills, work well with others, and learn to effectively contribute to team projects.',
-        imageSrc: 'https://miro.medium.com/v2/resize:fit:482/format:webp/0*L-bFz-bz58fh63LJ.jpg',
-    };
+    const buttonTexts = [
+        'Get Good at Programming',
+        'If you want to become a better programmer, it\'s important to focus on mastering key skills such as data structures, algorithms, object-oriented design, multi-threading, and various programming concepts like recursion, divide and conquer, prototyping, and unit testing. \n',
+        'Becoming a skilled programmer takes time and experience. It\'s not something that can be achieved overnight. Dedicate yourself to continuous learning and practice, and gradually build your expertise in different programming languages and frameworks. \n',
+        'Apart from technical skills, it\'s also vital to develop problem-solving and critical-thinking abilities. Take on challenging projects, participate in coding competitions, and engage in open-source projects to expand your problem-solving skills. \n',
+        'Writing clean and maintainable code is central to becoming a better programmer. Aim for simplicity, readability, and code reusability in your projects. Learn and follow best practices and coding conventions. \n',
+        'Collaboration and teamwork are crucial in the software development industry. Enhance your communication skills, work well with others, and learn to effectively contribute to team projects. \n',
+        'https://miro.medium.com/v2/resize:fit:482/format:webp/0*L-bFz-bz58fh63LJ.jpg',
+    ];
 
     const content = encodeURIComponent(JSON.stringify(buttonTexts))
 
