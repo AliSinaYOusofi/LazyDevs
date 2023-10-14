@@ -8,8 +8,6 @@ import { useSearchParams } from 'next/navigation'
 export default function Layout({children}) {
 
     const content = useSearchParams().get('content');
-
-    console.log(content)
     return (
         <div className="w-[100%] ">
             <Navbar />

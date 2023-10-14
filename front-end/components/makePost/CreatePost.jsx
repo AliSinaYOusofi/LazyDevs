@@ -11,6 +11,7 @@ import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import customMarkdownParser from '@/functions/previewRender';
 
 
 export default function CreatePost({content}) { 
@@ -69,7 +70,6 @@ export default function CreatePost({content}) {
                     minute: '2-digit',
                     },
             },
-            renderPreview: (plainText) => renderPreview(plainText)
         };
     }, []);
 
@@ -102,13 +102,22 @@ export default function CreatePost({content}) {
         setSpinner(false);
     }
 
-    useEffect( () => {
+    useEffect(() => {
         if (content) {
-            let decodeURI = decodeURIComponent(content).replace("[", "").replace("]", "").replace(/"/g, "").split(",").join("\n")
-            
-            setPostContent({ content: decodeURI });
+          let decodedContent = decodeURIComponent(content)
+            .replace(/\[(.*?)\]/g, '$1') // Remove square brackets []
+            .replace(/"/g, '') // Remove quotation marks ""
+            .replace(/,(?=\S)/g, '')
+            .split('10') // Split at the delimiter
+            .map((item) => item.trim()) // Trim leading/trailing whitespace
+            .filter((item) => item !== '') // Remove empty entries
+            .join('\n'); // Join the array elements with line breaks
+      
+          setPostContent({
+            content: decodedContent,
+          });
         }
-    }, [])
+      }, []);
 
     const renderPreview = (plainText) => {
         const html = plainText.replace(/\n/g, '<br />');
