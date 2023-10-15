@@ -105,6 +105,7 @@ export default function CreatePost({content}) {
     useEffect(() => {
         if (content) {
           let decodedContent = decodeURIComponent(content)
+            .replace(/(?<=!)[][]+|[][\(\)]+(?!])/g, '')
             .replace(/\[(.*?)\]/g, '$1') // Remove square brackets []
             .replace(/"/g, '') // Remove quotation marks ""
             .replace(/,(?=\S)/g, '')
