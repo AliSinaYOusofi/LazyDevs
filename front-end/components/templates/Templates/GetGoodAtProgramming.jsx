@@ -11,7 +11,13 @@ export default function GetGoodAtProgramming() {
         'You can spend five years doing a Java programming job without being a good programmer. Since most Java interviews focus on theory rather than programming and coding skills.',
         'Not many programmers practice these essential programming skills. If there is a mandatory problem-solving programming test, I will bet the average programmer would have been much better. Anyway, here is my list of things that can help you become a good programmer. 10',
         '## 1. Coding, Coding, and Coding. 10',
-        'Why have I put coding at the top of this list? Because it’s the most difficult and, at the same time, its central piece of programming. 10'
+        'Why have I put coding at the top of this list? Because it’s the most difficult and, at the same time, its central piece of programming. 10',
+        'By doing coding, you also realize your mistakes in designing, error handling, threading, and then go back to those respective skills to improve. You just can not work in designing only; coding produces output, which is vital to learn and act as a success.',
+        'Not many programmers practice these essential programming skills. If there is a mandatory problem-solving programming test, I will bet the average programmer would have been much better. Anyway, here is my list of things that can help you become a good programmer.',
+        '## 2. Reading Books',
+        'Coding is easier said than done, and there is a massive difference between good code and bad code, but how do you know? You cannot understand the difference until you have seen a good code and know why a particular code is good.',
+        'This is where books come to help; more often than not, authors are great programmers themselves. They offer their experience in the form of a book. I love books, but one book that particularly helped me is Clean Code by Uncle Bob. 10',
+        '![book image !]](https://miro.medium.com/v2/resize:fit:482/format:webp/0*L-bFz-bz58fh63LJ.jpg)'
     ];
 
     const content = encodeURIComponent(JSON.stringify(buttonTexts))
