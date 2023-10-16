@@ -10,7 +10,7 @@ export default function Templates() {
     return (
         <div className="w-full h-full mt-10 mx-auto">
             <div className="flex flex-wrap  items-center justify-center gap-x-2 gap-y-4 mt-4">
-                <TemplateCard image={"https://images.pexels.com/photos/3888151/pexels-photo-3888151.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"You can get good at programming by practicing alot and by asking the elites."} title={"Programming"} />
+                <TemplateCard image={"https://images.pexels.com/photos/3888151/pexels-photo-3888151.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"You can get good at programming by practicing alot and by asking the elites."} title={"Tips for programming"} />
                 <TemplateCard image={"https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"Burgers are a classic culinary creation that brings together juicy meat nestled between two soft."} title={"Burgers"} />
                 <TemplateCard image={"https://images.pexels.com/photos/115655/pexels-photo-115655.jpeg?auto=compress&cs=tinysrgb&w=600"} content={"How to choose the best programming based on you preferences."} title={"Computers"} />
             </div>

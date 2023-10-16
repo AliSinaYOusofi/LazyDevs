@@ -109,7 +109,7 @@ export default function CreatePost({content}) {
             .replace(/\[(.*?)\]/g, '$1') // Remove square brackets []
             .replace(/"/g, '') // Remove quotation marks ""
             .replace(/,(?=\S)/g, '')
-            .split('10') // Split at the delimiter
+            .split('$') // Split at the delimiter
             .map((item) => item.trim()) // Trim leading/trailing whitespace
             .filter((item) => item !== '') // Remove empty entries
             .join('\n'); // Join the array elements with line breaks
@@ -118,7 +118,7 @@ export default function CreatePost({content}) {
             content: decodedContent,
           });
         }
-      }, []);
+      }, [content]);
 
     const renderPreview = (plainText) => {
         const html = plainText.replace(/\n/g, '<br />');
