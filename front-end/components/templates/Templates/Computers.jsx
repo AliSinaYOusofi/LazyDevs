@@ -1,6 +1,26 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function Computers() {
+
+    let content = ['# The best laptops for programming in 2023 $',
+        'Our ultimate pick of the best laptops for programming money can buy, chosen by our expert reviewers. These laptops are perfect for coding, with glorious screens and ample battery life.',
+        'This roundup of the best laptops for programming is ideal if you do a lot of coding. All the laptops on this guide combine portability, flexibility and power in a thin and light package. Since modern machines are becoming more powerful every year, they\'re all capable of managing every complex task you could throw at it. $',
+        '![computer image !]](https://cdn.mos.cms.futurecdn.net/Nos3e7TU4vQJUeGF7jkrBd-1200-80.jpg.webp) $',
+        '## 01. MacBook Pro 16-inch (M2, 2023) $',
+        'The MacBook Pro is the most powerful and most versatile laptop ever built. It\'s a powerful, fast, and elegant machine. It\'s the perfect machine for coding, and it\'s the perfect machine for all your daily tasks.',
+        'The release of the new M2 MacBook Pro 16-inch was a blessing for programmers as it combines the incredible power of the new Apple chip with a brilliantly large and bright screen (1,600 nits, if you\'re asking). This means no squinting at a small screen with zero compromise on power and speed, hurrah. However, if you do want a smaller screen, the M2 MacBook Pro also comes in 13-inch and 14-inch versions, both of which we love. $',
+        '![[computer image !]](https://cdn.mos.cms.futurecdn.net/JScX3giLpSkc7d6we78p7Q-1200-80.jpg.webp) $',
+        '## 02. Razer Blade 17 (2022) $',
+        'The Razer Blade 17 is a fantastic laptop for coding on if you\'re working on games. Razer is a big name in PC gaming, and this laptop comes with Nvidia\'s latest Nvidia GeForce RTX 3080 Ti laptop GPU, which is extremely powerful. This allows you to work with complex 3D games that use cutting-edge tech, like ray tracing, and you\'ll be able to play your game afterwards to test how it runs. $',
+        '![computer image !]](https://cdn.mos.cms.futurecdn.net/CdBbh6UvQJUeGF7jkrBd-1200-80.jpg.webp) $'
+,
+        '## 03. Lenovo ThinkPad T490 (2022) $',
+        'The Lenovo ThinkPad T490 is a great laptop for coding on if you\'re working on games. Lenovo is a big name in PC gaming, and this laptop comes with Nvidia\'s latest Nvidia GeForce RTX 3080 Ti laptop GPU, which is extremely powerful. This allows you to work with complex 3D games that use cutting-edge tech, like ray tracing, and you\'ll be able to play your game afterwards to test how it runs. $',
+        '![[computer image !]](https://cdn.mos.cms.futurecdn.net/JScX3giLpSkc7d6we78p7Q-1200-80.jpg.webp) $',
+    ]
+
+    content = encodeURIComponent(JSON.stringify(content))
 
     return (
         <div className="max-w-2xl mx-auto px-4 py-8 blog">
@@ -31,7 +51,7 @@ export default function Computers() {
             <p>The Dell Precision 5470 laptop may be smaller than others on the list, but it comes loaded with a huge amount of power for its compact frame. In fact, our testing put its performance close to that of a 14-inch MacBook Pro with Apple’s M2 Pro chip, which is a superb laptop chip for graphic design work. Our reviewer loved it, and she is an official Apple obsessive – so that's saying something!</p>
             <p>We got over 12 hours of battery life from Dell’s Precision 5470 in our review, and the comfortable keyboard serves up an enjoyable typing experience. It’s all wrapped up in a superbly well-made chassis that feels well-built and exudes quality. So if you want portable power and are put off by some of the larger laptops on the market, Dell’s offering could be right up your street.</p>
 
-            <img src={"https://cdn.mos.cms.futurecdn.net/UQeuFprJJgW6kNDzvVF6Fi-1200-80.jpeg.webp"} alt="image" />
+            {/* <img src={"https://cdn.mos.cms.futurecdn.net/UQeuFprJJgW6kNDzvVF6Fi-1200-80.jpeg.webp"} alt="image" />
             <h1> 04. Asus Zenbook Pro 14 Duo OLED (2022)</h1>
             <p>The Asus Zenbook Pro 14 Duo OLED (2022) offers cutting-edge components, including a 12th generation Intel processor and features an Nvidia RTX 3050 Ti 4GB graphics card, which means it'll manage even the heaviest of your programming projects. </p>
             <p>The 14-core processor and 32GB of RAM also means this is an absolute beast when it comes to multitasking, which can seriously speed up your workflow. However, the most eye-catching feature of the Asus Zenbook Pro 14 Duo OLED (2022) is its dual-screen setup – there’s a 14.5-inch 120Hz OLED mains screen, which looks fantastic, and a 12.7-inch IPS display above the keyboard.</p>
@@ -53,7 +73,11 @@ export default function Computers() {
             <h1> 07. Asus ROG Flow Z13 </h1>
             <p> This unique laptop brings incredible power to a supremely thin and light form factor. In fact, it might be the most powerful tablet PC we've ever tried. It features a powerful 12th generation 14-core Intel processor, which will handle all your coding needs with ease.</p>
             <p>It also comes with an RTX 3050 Ti graphics card, which is handy for anyone who wants to code - and test - games. The 16GB of DDR5 memory also means this is supremely fast, and is ideal for people who want an easily portable laptop to code on.</p>
-            <p> It also comes with an RTX 3050 Ti graphics card, which is handy for anyone who wants to code - and test - games. The 16GB of DDR5 memory also means this is supremely fast, and is ideal for people who want an easily portable laptop to code on.</p>
+            <p> It also comes with an RTX 3050 Ti graphics card, which is handy for anyone who wants to code - and test - games. The 16GB of DDR5 memory also means this is supremely fast, and is ideal for people who want an easily portable laptop to code on.</p> */}
+            
+            <Link href={{ pathname:"/create_post", query: {'content' : content} }} className="hover:bg-blue-600 hover:text-white mt-10  flex bg-white/50 p-2 rounded-sm w-fit">
+                Apply template
+            </Link>
         </div>
     )
 }
