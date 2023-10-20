@@ -7,17 +7,20 @@ export default function Computers() {
         'Our ultimate pick of the best laptops for programming money can buy, chosen by our expert reviewers. These laptops are perfect for coding, with glorious screens and ample battery life.',
         'This roundup of the best laptops for programming is ideal if you do a lot of coding. All the laptops on this guide combine portability, flexibility and power in a thin and light package. Since modern machines are becoming more powerful every year, they\'re all capable of managing every complex task you could throw at it. $',
         '![computer image !]](https://cdn.mos.cms.futurecdn.net/Nos3e7TU4vQJUeGF7jkrBd-1200-80.jpg.webp) $',
+        
         '## 01. MacBook Pro 16-inch (M2, 2023) $',
         'The MacBook Pro is the most powerful and most versatile laptop ever built. It\'s a powerful, fast, and elegant machine. It\'s the perfect machine for coding, and it\'s the perfect machine for all your daily tasks.',
         'The release of the new M2 MacBook Pro 16-inch was a blessing for programmers as it combines the incredible power of the new Apple chip with a brilliantly large and bright screen (1,600 nits, if you\'re asking). This means no squinting at a small screen with zero compromise on power and speed, hurrah. However, if you do want a smaller screen, the M2 MacBook Pro also comes in 13-inch and 14-inch versions, both of which we love. $',
+        'You\'ll have more than enough battery to get you through the most intense coding session – this delivers an impressive 22 hours. In our review, we appreciated that there are a bunch of ports including HDMI and a memory card slot, so you can plug a second screen in directly and up your memory, too. There\'s also ProMotion and HDR (High Dynamic range).',
+        'It\'s not just a gaming laptop, however, as it\'s built for creative professionals, and this means if you\'re a programmer working on heavy-duty projects, this is a laptop well worth considering. It\'s very expensive, but for your money you\'re getting some of the best mobile tech available right now. Combined with a great build quality and stunning 17-inch screen, this is a brilliant creative workstation for people who need a lot of power. Read our Razer Blade 17 review for more information. $',
         '![[computer image !]](https://cdn.mos.cms.futurecdn.net/JScX3giLpSkc7d6we78p7Q-1200-80.jpg.webp) $',
         '## 02. Razer Blade 17 (2022) $',
         'The Razer Blade 17 is a fantastic laptop for coding on if you\'re working on games. Razer is a big name in PC gaming, and this laptop comes with Nvidia\'s latest Nvidia GeForce RTX 3080 Ti laptop GPU, which is extremely powerful. This allows you to work with complex 3D games that use cutting-edge tech, like ray tracing, and you\'ll be able to play your game afterwards to test how it runs. $',
-        '![computer image !]](https://cdn.mos.cms.futurecdn.net/CdBbh6UvQJUeGF7jkrBd-1200-80.jpg.webp) $'
-,
+        
+        '![[computer image !]](https://cdn.mos.cms.futurecdn.net/hR6EvZDsSxXuYkYtYvyRqW-1200-80.jpg.webp) $',
         '## 03. Lenovo ThinkPad T490 (2022) $',
         'The Lenovo ThinkPad T490 is a great laptop for coding on if you\'re working on games. Lenovo is a big name in PC gaming, and this laptop comes with Nvidia\'s latest Nvidia GeForce RTX 3080 Ti laptop GPU, which is extremely powerful. This allows you to work with complex 3D games that use cutting-edge tech, like ray tracing, and you\'ll be able to play your game afterwards to test how it runs. $',
-        '![[computer image !]](https://cdn.mos.cms.futurecdn.net/JScX3giLpSkc7d6we78p7Q-1200-80.jpg.webp) $',
+        'We got over 12 hours of battery life from Dell’s Precision 5470 in our review, and the comfortable keyboard serves up an enjoyable typing experience. It’s all wrapped up in a superbly well-made chassis that feels well-built and exudes quality. So if you want portable power and are put off by some of the larger laptops on the market, Dell’s offering could be right up your street'
     ]
 
     content = encodeURIComponent(JSON.stringify(content))
