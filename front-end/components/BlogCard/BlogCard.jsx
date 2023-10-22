@@ -10,33 +10,36 @@ export default function BlogCard({content, title, username, profileUrl, date, id
     // id and view all the results in the single_post_view page.
     
     return (
-        <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg border-2 border-neutral-300 mt-4`} id={id}>
-            <div className="flex items-center justify-between">
-                <span className="text-sm font-light text-black">{date ? date.split("T")[0] : ""}</span>
-                <div className="flex items-center justify-center gap-x-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <p className="flex items-center justify-center">{viewCount}</p>
+        <>
+            <hr className="mt-3 shadow-sm shadow-white"/>
+            <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg mt-4`} id={id}>
+                <div className="flex items-center justify-between">
+                    <span className="text-sm font-light text-black">{date ? date.split("T")[0] : ""}</span>
+                    <div className="flex items-center justify-center gap-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <p className="flex items-center justify-center">{viewCount}</p>
+                    </div> 
                 </div> 
-            </div> 
-            <div className="mt-2">
-                <Link href={{ pathname:"/view_post", query: {post: id} }} className="overflow-ellipsis line-clamp-1 text-2xl font-bold hover:underline">{title}</Link> 
-                <p className={`${clamp ? "line-clamp-3" : "line-clamp-4"}  overflow-ellipsis mt-2 text-black/90`}>{content}</p>
-            </div> 
-            <div className="flex items-center justify-between mt-4">
-                <Link href={{ pathname:"/view_post", query: {post: id} }} className="text-gray-700 transition-all duration-300 hover:underline" id={id}>{date ? "Read more ⟶" : null}</Link> 
-                <div className="flex items-center">
-                    {
-                        date
-                        ?
-                        <img src={profileUrl && date ? profileUrl : "https://stackdiary.com/140x100.png"} alt="Author Photo" className=" object-cover w-10 h-10 mx-4 rounded-full sm:block" /> 
-                        : null
-                    }
-                    <span className="font-bold text-black/80">{username}</span>
+                <div className="mt-2">
+                    <Link href={{ pathname:"/view_post", query: {post: id} }} className="overflow-ellipsis line-clamp-1 text-2xl font-bold hover:underline">{title}</Link> 
+                    <p className={`${clamp ? "line-clamp-3" : "line-clamp-4"}  overflow-ellipsis mt-2 text-black/90`}>{content}</p>
+                </div> 
+                <div className="flex items-center justify-between mt-4">
+                    <Link href={{ pathname:"/view_post", query: {post: id} }} className="text-gray-700 transition-all duration-300 hover:underline" id={id}>{date ? "Read more ⟶" : null}</Link> 
+                    <div className="flex items-center">
+                        {
+                            date
+                            ?
+                            <img src={profileUrl && date ? profileUrl : "https://stackdiary.com/140x100.png"} alt="Author Photo" className=" object-cover w-10 h-10 mx-4 rounded-full sm:block" /> 
+                            : null
+                        }
+                        <span className="font-bold text-black/80">{username}</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

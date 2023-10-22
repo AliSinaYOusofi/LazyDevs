@@ -41,7 +41,7 @@ export default function Login() {
         else if (response.data) {
             setCurrentUser(response.data);
             console.log(response.data)
-            router.push("/feed");
+            router.push("/create_post");
         }
         else if (response === "failed") setSpinner(false)    
         setSpinner(false)
