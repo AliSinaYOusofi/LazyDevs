@@ -25,8 +25,7 @@ router.get("/newsfeed", async (req, res) => {
         });
 
         for (const blog of completeBlogData) {
-            const views = await PostView.find({post_id: blog._id}).lean().exec();
-            console.log(views)
+            const views = await PostView.find({post_id: blog._id}).lean().exec()    
             blog.viewCount = views.length
         }
 

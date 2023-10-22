@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./blogRoutes/blogRoutes")
+const accountRoutes = require("./routes/accountRoutes")
 const { getDB } = require("./db_connection/mongoose.db.config");
 
 require("dotenv").config();
@@ -61,4 +62,5 @@ app.use( async (req, res, next) => {
 
 app.use("/user", userRoutes);
 app.use("/blogRoutes", blogRoutes)
+app.use('/accountRoutes', accountRoutes)
 app.listen(process.env.PORT, () => console.log("Started at: %s", new Date().toTimeString()));
