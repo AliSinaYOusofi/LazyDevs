@@ -52,6 +52,7 @@ export default function CreatePost({content}) {
             },
             spellChecker: true,
             autoFocus: true,
+            renderPreview: true,
             previewImagesInEditor: true,
             imagesPreviewHandler: handleImagePreview,
             lineNumbers: true,
@@ -127,7 +128,7 @@ export default function CreatePost({content}) {
 
     return (
         <>
-            <div className="w-[90%] mx-auto mt-[1rem]"> 
+            <div className="w-[90%] mx-auto mt-[1rem] editor"> 
                 <EasyMDE 
                     options={anOptions}
                     className=""

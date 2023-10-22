@@ -1,10 +1,34 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function GoogleTips() {
 
+    let content = [
+        '# 4 Google Search Tips to Use Google More Efficiently $',
+        'Millions of people use Google search every day for a variety of reasons. Students use it for school, business people use it for research, and millions more use it for entertainment. But most people may not be using Google search to its full potential.  $',
+        'Want to use Google search more efficiently and get the search results you want quickly? Here are 4 Google search tips and tricks to maximize your search efficiency: $',
+        '# 1. Use the tabs $',
+        'The first tip is to use the tabs in Google search. On the top of every search are a number of tabs. Usually you’ll see Web, Image, News, and More. Using these tabs, you can help define what kind of search you need to do. $',
+        'It’s rudimentary and most people use the tabs already. If you are not, then it’s highly recommended to get associated with them. They can cut search times dramatically if utilized properly. $',
+        '## 2. Use quotes $',
+        'When searching for something specific, try using quotes to minimize the guesswork for Google search. When you put your search parameters in quotes, it tells the search engine to search for the whole phrase. $',
+        'For instance, if you search for Puppy Dog Sweaters, the engine will search for content that contains those three words in any order. $',
+        'However, if you search “Puppy Dog Sweaters”, it will search for that phrase exactly as you typed it. This can help locate specific information that may be buried under other content if not sorted out correctly. $',
+        '## 3. Use a hyphen to exclude words $',
+        'Sometimes you may find yourself searching for a word with an ambiguous meaning. An example is Mustang. When you Google search for Mustang, you may get results for both the car made by Ford or the horse. If you want to cut one out, use the hyphen to tell the engine to ignore content with one of the other. See the example below. $',
+        '* Mustang -cars $',
+        'This tells the search engine to search for mustangs but to remove any results that have the word “car” in it. It can be wildly helpful when finding information about something without getting information about something else. $',
+        '## 4. Use a colon to search specific sites $',
+        'There may be an instance where you need to Google search for articles or content on a certain website. The syntax is very simple and we’ll show you below. $',
+        '- Sidney Crosby site:nhl.com',
+        'This will search for all content about famous hockey player Sidney Crosby, but only on NHL.com. All other search results will be removed. If you need to find specific content on a particular site, this is the shortcut you can use. '
+    ]
+
+    content = encodeURIComponent(JSON.stringify(content))
+
     return (
         <div className="max-w-2xl mx-auto px-4 py-8 blog">
-            <h1> 11 Google Search Tips to Use Google More Efficiently </h1>
+            <h1> 4 Google Search Tips to Use Google More Efficiently </h1>
             <p>Millions of people use Google search every day for a variety of reasons. Students use it for school, business people use it for research, and millions more use it for entertainment. But most people may not be using Google search to its full potential. </p>
             <p>Want to use Google search more efficiently and get the search results you want quickly? Here are 20 Google search tips and tricks to maximize your search efficiency:</p>
 
@@ -34,7 +58,7 @@ export default function GoogleTips() {
             </ul>
 
             <p> This will search for all content about famous hockey player Sidney Crosby, but only on NHL.com. All other search results will be removed. If you need to find specific content on a particular site, this is the shortcut you can use. </p>
-            <h1>5. Find a page that links to another page</h1> 
+            {/* <h1>5. Find a page that links to another page</h1> 
             <p>This Google search tip is a little obscure. Instead of searching for a specific page, you’re searching for a page that links to a specific page.</p>
 
             <p> Think about it this way. If you want to see who cited a New York Times article on their site, you would use this trick to find all the sites that link to it. The syntax is below: </p>
@@ -113,7 +137,10 @@ export default function GoogleTips() {
                 Google search is a very powerful search tool. Using the tips outlined above, you can find anything and everything you could ever need on the World Wide Web.
             </p>
 
-            <p> Whether it’s avoiding Wikipedia for a school essay project, finding the latest stock prices, or even finding song lyrics, there is a way to make Google search work for you. </p>
+            <p> Whether it’s avoiding Wikipedia for a school essay project, finding the latest stock prices, or even finding song lyrics, there is a way to make Google search work for you. </p> */}
+            <Link href={{ pathname:"/create_post", query: {'content' : content} }} className="hover:bg-blue-600 hover:text-white mt-10  flex bg-white/50 p-2 rounded-sm w-fit">
+                Apply template
+            </Link>
         </div>
     )
 }

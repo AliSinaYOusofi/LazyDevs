@@ -1,13 +1,40 @@
 import React from 'react';
 ;
 import ProsAndCons from './ProsAndCons';
+import Link from 'next/link';
 
 const Protein = () => {
+
+    let content = [
+        '# The Best Protein Powder to Build Muscle in 2023 $',
+        'Protein powders have become a staple in the nutritional regimens of competitive athletes and recreational gym-goers alike. $',
+        'These products serve as a convenient and high quality source of protein. Yet, with seemingly endless options to choose from, you may wonder which is best for building muscle. $',
+        '## A quick look at the best protein powders for building muscle  $',
+        '1 Best whey: Momentous Essential Grass-Fed Whey Protein $',
+        '2 BBest unflavored whey: Naked Whey $',
+        '3 Best casein: Ascent Native Fuel Micellar Casein $',
+        '# How we chose $',
+        '1 Formulation: To support muscle gains, we chose products that contain at least 20 g of protein per serving $',
+        '2 Quality: We looked for powders that are made with high quality ingredients and contain minimal additives and fillers. $',
+        '3 Taste: From dessert-inspired flavors to unflavored varieties, we included powders to suit a range of preferences $',
+        '# Momentous Essential Grass-Fed Whey Protein $',
+        '![[straw image!]](https://i0.wp.com/post.healthline.com/wp-content/uploads/2022/06/Momentous-Essential-Grass-Fed-Whey-Protein-Isolate_With_BG.png?w=525) $',
+        'Specifically, the powder contains whey isolate sourced from milk produced by grass-fed cows. $',
+        'Whey isolate contains more than 90% protein by weight and is relatively low in lactose, whereas whey concentrate contains 25–89% protein and more lactose (2). $',
+        'Nutrition facts per 1 scoop, or 28.7 grams (g), of Chocolate Momentous Essential Grass-Fed Whey Protein $',
+        '1 Calories: 1000 $',
+        '2 Carbs: 3 $',
+        '3 Added sugars: 0 g $',
+        '4 Protein: 20 g $',
+        'Protein shakes are a convenient and effective way to supplement your workouts and build muscle. They provide a quick and easily digestible source of quality protein that supports muscle recovery and growth. $'
+    ]
+
+    content = encodeURIComponent(JSON.stringify(content))
 
     return (
         <div className="max-w-2xl mx-auto px-4 py-8 blog">
             
-            <h1 className="text-3xl font-semibold mb-4">The 13 Best Protein Powders to Build Muscle in 2023</h1>
+            <h1 className="text-3xl font-semibold mb-4">The Best Protein Powder to Build Muscle in 2023</h1>
             <p>
                 Protein powders have become a staple in the nutritional regimens of competitive athletes and recreational gym-goers alike. 
             </p>
@@ -18,7 +45,7 @@ const Protein = () => {
 
             <h1 className="mt-4"> A quick look at the best protein powders for building muscle </h1>
             
-            <ul className="mt-4 list-disc ml-10">
+            <ol className="mt-4 list-decimal ml-10">
                 <li> Best whey: Momentous Essential Grass-Fed Whey Protein </li>
                 <li> Best unflavored whey: Naked Whey</li>
                 <li> Best casein: Ascent Native Fuel Micellar Casein </li>
@@ -26,7 +53,7 @@ const Protein = () => {
                 <li> Best vegan: Momentous Essential Plant-Based Protein </li>
                 <li> Best grass-fed: Garden of Life Sport Grass-Fed Whey </li>
                 <li> Best taste: Ghost Whey Protein </li>
-            </ul>
+            </ol>
 
             <h1 className="mt-4 text-2xl font-bold"> How we chose </h1>
             <p className="mt-4">
@@ -37,7 +64,7 @@ const Protein = () => {
                 <li> <span> Formulation: </span> To support muscle gains, we chose products that contain at least 20 g of protein per serving and have evidence-backed ingredients such as whey protein and branched-chain amino acids (BCAAs) (1Trusted Source). </li>
                 <li> <span> Quality:  </span> We looked for powders that are made with high quality ingredients and contain minimal additives and fillers. </li>
                 <li> <span>Taste: </span> From dessert-inspired flavors to unflavored varieties, we included powders to suit a range of preferences. We also looked for products that have mostly positive reviews for taste and texture</li>
-                <li> <span>Price </span> We considered whether the quality of the product aligns with the cost. </li>
+                {/* <li> <span>Price </span> We considered whether the quality of the product aligns with the cost. </li>
                 <li> <span> Manufacturing standards: </span> We considered whether the product aligns with the manufacturing standards. </li>
                 <li> <span> Nutrition: </span> We considered whether the product aligns with the nutrition. </li>
                 <li> <span>Safety: </span> We considered whether the product aligns with the safety. </li>
@@ -46,11 +73,9 @@ const Protein = () => {
                 <li> <span>Sustainability: </span> We considered whether the product aligns with the sustainability. </li>
                 <li> <span>Safety: </span> We considered whether the product aligns with the safety. </li>
                 <li> <span>Sustainability: </span> We considered whether the product aligns with the sustainability. </li>
-                <li> <span>Safety: </span> We considered whether the product aligns with the safety. </li>
+                <li> <span>Safety: </span> We considered whether the product aligns with the safety. </li> */}
             </ul>
 
-            <h1 className="mt-4 list-disc text-3xl font-bold">Healthline’s picks for the top protein powders to build muscle</h1>
-            
             <h1 className="mt-10 list-disc text-2xl font-bold "> Momentous Essential Grass-Fed Whey Protein </h1>
 
             <img src={"https://i0.wp.com/post.healthline.com/wp-content/uploads/2022/06/Momentous-Essential-Grass-Fed-Whey-Protein-Isolate_With_BG.png?w=525"} alt="Protein Shake" className="rounded-lg mb-4" />
@@ -81,18 +106,22 @@ const Protein = () => {
                 <li> Protein: 20 g</li>
             </ul>
 
-            <ProsAndCons 
+            {/* <ProsAndCons 
                 cons={["Informed Sport Certified", "NSF Certified for Sport", " no added sugars"]}
                 pros={["Only in USA", "expensive", "Available in only Chocolate and Vanilla"]}
-            />
+            /> */}
 
             <p className="text-gray-700 mb-4">
                 Protein shakes are a convenient and effective way to supplement your workouts and build muscle. 
                 They provide a quick and easily digestible source of quality protein that supports muscle recovery and growth. 
-                Here are five popular protein supplements to consider adding to your routine:
+                
             </p>
 
-            <h1 className="mt-10 list-disc text-2xl font-bold "> Ascent Native Fuel Micellar Casein</h1>
+            <Link href={{ pathname:"/create_post", query: {'content' : content} }} className="hover:bg-blue-600 hover:text-white mt-10  flex bg-white/50 p-2 rounded-sm w-fit">
+                Apply template
+            </Link>
+
+            {/* <h1 className="mt-10 list-disc text-2xl font-bold "> Ascent Native Fuel Micellar Casein</h1>
             <img src={"https://i0.wp.com/post.healthline.com/wp-content/uploads/2022/06/Ascent-Native-Fuel-Micellar-Casein-Protein-Powder_With_BG.png?w=525"} alt="Protein Shake" className="rounded-lg mb-4" />
 
             <p className="mt-4">
@@ -118,14 +147,14 @@ const Protein = () => {
                 <li> Carbs: 4 g</li>
                 <li> Added sugars: 0 g </li>
                 <li> Protein: 25 g </li>
-            </ul>
+            </ul> */}
 
-            <ProsAndCons 
+            {/* <ProsAndCons 
                 pros={["third-party tested by Informed Sport", "minimal ingredients", "no artificial sweeteners"]}
                 cons={["low in lactose", "high in sugar", "high in sodium"]}
-            />
+            /> */}
 
-            <h1 className="mt-4 text-2xl font-bold"> Ghost Whey Protein </h1>
+            {/* <h1 className="mt-4 text-2xl font-bold"> Ghost Whey Protein </h1>
             <p className="mt-4">
                 Ghost is known for its creative dessert- and breakfast-inspired flavors. In fact, the company frequently partners with popular brands such as Chips Ahoy and Nutter Butter to include cookie pieces in some of its protein powders.
             </p>
@@ -153,10 +182,10 @@ const Protein = () => {
                 <li> Protein: 25 g </li>
             </ul>
 
-            <ProsAndCons
+            {/* <ProsAndCons
                 pros={["third-party tested by NSF International", "certified soy- and gluten-free", "available in multiple breakfast- and dessert-inspired flavors"]}
                 cons={["contains artificial sweeteners, which some people may prefer to avoid"]}
-            />
+            /> 
             
             <h1 className="mt-4 font-extrabold text-3xl"> What to do if your protein powder is causing breakouts </h1>
             <p className="mt-4">
@@ -169,7 +198,7 @@ const Protein = () => {
 
             <p className="mt-4">
                 Some research also suggests that consuming a high amount of carbohydrates or foods with a high glycemic index — a measure of how much certain foods increase blood sugar levels — can also contribute to acne
-            </p>
+            </p> */}
         </div>
     );
 };
