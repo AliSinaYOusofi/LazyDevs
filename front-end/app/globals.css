@@ -5,6 +5,20 @@
 
 
 @layer base {
+    .editor h1 {
+        @apply text-3xl font-bold
+    }
+    .editor h2 {
+        @apply text-2xl font-semibold
+    }
+
+    .editor ul {
+        @apply list-disc mt-2 ml-10
+    }
+
+    .editor ol {
+        @apply list-decimal mt-2 ml-10
+    }
     .blog p {
         @apply mt-5
     }

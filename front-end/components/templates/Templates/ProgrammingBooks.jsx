@@ -47,7 +47,7 @@ export default function ProgrammingBooks() {
             <p> The Clean Coder has helped hundreds of thousands of developers become much more passionate and proficient in their craft. Don’t buy it? Start reading the programming book today and know the difference for yourself. </p>
 
 
-            <h1> 5. Code Complete: A Practical Handbook of Software Construction </h1>
+            {/* <h1> 5. Code Complete: A Practical Handbook of Software Construction </h1>
             <p> Want to know how to write robust code irrespective of the architecture of a programming language? Then consider reading the Code Complete: A Practical Handbook of Software Construction. It comprehensively covers all the aspects of the structure of good code. </p>
             <img src={"https://cdn.hackr.io/uploads/posts/attachments/BA0bDMZSatE6jsBLZZKS4o2wBFbwwK5vzdrE917R.webp"} alt="image" />
             <p>The Code Complete book is held dearly among the best practical guides on programming. The programming book has no shortage of code examples that thoroughly illustrate the art of and science behind software development.</p>
@@ -75,7 +75,7 @@ export default function ProgrammingBooks() {
             <img src={"https://cdn.hackr.io/uploads/posts/attachments/the-pragmatic-programmer-your-journey-to-mastery-20th-anniversary-edition-2nd-edition-2nd-edition.webp"} alt="image" />
             <p>No matter how many times you read The Pragmatic Programmer, there is something new to learn in every reading. It’s the creative use of classic and modern anecdotes, fascinating analogies, and thought-provoking examples that make learning each section both interesting and fun.</p>
 
-            <p>The Pragmatic Programmer covers not only a comprehensive range of programming and software development topics but also topics that aren’t the norm for programming books, such as career development and personal responsibility while developing software.</p>
+            <p>The Pragmatic Programmer covers not only a comprehensive range of programming and software development topics but also topics that aren’t the norm for programming books, such as career development and personal responsibility while developing software.</p> */}
         </div>
     )
 }
