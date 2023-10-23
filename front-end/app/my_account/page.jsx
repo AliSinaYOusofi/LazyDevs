@@ -1,5 +1,6 @@
 "use client"
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
+import EditProfile from '@/components/EditProfile/EditProfile'
 import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
 import React, {useState, useEffect} from 'react'
@@ -11,8 +12,8 @@ export default function Page() {
 
     const {currentUser} = useAppContext();
 
-    let liArray = ["Profile", "Posts", "Analytics", "Followers"]
-    let components = [<AccountDetails />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>]
+    let liArray = ["Profile", "Edit Profile", "Posts", "Analytics", "Followers"]
+    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)
