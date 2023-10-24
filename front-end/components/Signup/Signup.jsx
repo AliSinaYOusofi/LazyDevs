@@ -68,7 +68,9 @@ export default function Signup() {
                         </code>
                         <p className="text-center mt-8 md:mt-0">Join our community today and discover a world of possibilities</p>
                     </div>
+                    
                     <Profile />
+
                     <form className="bg-white mt-4 px-4 md:px-0">
                         <div className="flex relative items-center border-2 py-2 px-3 rounded-md mb-4 group">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" viewBox="0 0 20 20"
