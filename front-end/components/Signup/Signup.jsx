@@ -34,10 +34,7 @@ export default function Signup() {
 
     const handleSignup = async () => {
 
-        
         setSpinner(true);
-
-        // console.log()
 
         try {
             let response = await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
