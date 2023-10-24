@@ -38,8 +38,9 @@ export default function PostOfUserBasedId({author}) {
             <h1 className="text-5xl font-extrabold"> You have No Posts</h1>
             <Link className="mt-10 " href="/create_post"> Make Post</Link>
         </div>
+
     return (
-        <div className="w-[70%]">
+        <div className="w-[70%] ml-10">
             
             {
                 posts.length
@@ -57,6 +58,7 @@ export default function PostOfUserBasedId({author}) {
                 : noPostDiv
             }
             
+            <div className="mt-10"></div>
             {   
                 posts.map
                 (blog => 
