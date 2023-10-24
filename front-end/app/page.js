@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import Footer from '@/components/Footer/Footer'
 import HeroSection from '@/components/heroSection/HeroSection'
 import Navbar from '@/components/Navbar/Navbar'
@@ -10,10 +9,6 @@ import './globals.css'
 import React from 'react'
 import MoveToTop from '@/components/moveToTop/MoveToTop';
 
-export const metadata = {
-  title: 'LazyDevs',
-  description: 'Blogging website',
-}
 
 export default function page() {
   const stepsComponentRef = React.useRef(null);
