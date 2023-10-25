@@ -9,10 +9,11 @@ import HideUnhide from '../HideUnhidePassword/HideUnhide';
 import Spinner from '../Spinner/Spinner';
 import { sleep } from '@/functions/sleep/sleep';
 import { toast } from 'react-toastify';
+import PreviousDetailsOfUser from '../PreviousUserDetails/PreviousDetailsOfUser';
 
 const UserInfoForm = () => {
 
-    const {profileUrl} = useAppContext();
+    const {profileUrl, currentUser} = useAppContext();
 
     const [username, setUsername] = useState('');
     const [workEducation, setWorkEducation] = useState('');
@@ -23,6 +24,7 @@ const UserInfoForm = () => {
     const [spinner, setSpinner] = useState(false);
     const [hidePassword, setHidePassword] = useState(false);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
+    const [previousDetails, setPreviousDetails] = useState(false)
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -60,7 +62,7 @@ const UserInfoForm = () => {
         else if (work.length && !usernameValidator(work)) return toast.error("work must at least 2 chars")
         
         // checking if the new data is same as the old data
-        
+
         if (
             username.trim() === '' &&
             workEducation.trim() === '' &&
@@ -102,9 +104,24 @@ const UserInfoForm = () => {
         }
     };
 
+    
     return (
-        <div className="shadow-white shadow-lg">
+        <div className="shadow-white shadow-lg relative">
+            
+            <div className="relative">
 
+                <button 
+                    type="button"
+                    onClick={() => setPreviousDetails( prev => !prev )} 
+                    className=" relative px-2 ml-4 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                    My Previous data
+                </button>
+
+                {
+                    previousDetails ? <PreviousDetailsOfUser username={currentUser.username} fullName={currentUser.fullName} education={currentUser.education} bio={currentUser.bio} work={currentUser.work} profileUrl={currentUser.profileUrl}/> : null
+                }
+            </div>
+            
             <form onSubmit={handleSubmit} className="flex flex-col mx-auto justify-center items-center w-full">
 
                 <Profile />
@@ -195,7 +212,7 @@ const UserInfoForm = () => {
                     disabled={spinner} 
                     type="submit" 
                     className=" relative w-1/3 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
-                    Create Account
+                    update
                     { spinner ? <Spinner /> : null}
                 </button>
 
