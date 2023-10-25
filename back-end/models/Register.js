@@ -97,6 +97,27 @@ const usersSignupSchema = new mongoose.Schema( {
     }
 });
 
+usersSignupSchema.pre("update", function(next) {
+    
+    let user = this
+    
+    bcrypt.genSalt(10, function(error, saltRounds) {
+        
+        if (error) return next(error);
+
+        // the bug that i got here was becuase
+        // this keyword can have different context inside nested functions.
+        // becuase the this keyword did not refer to the document being saved.
+        // instead saving it to user variable fixed the bug.
+
+        bcrypt.hash(user.password, saltRounds, function(error, hash) {
+            if (error) return next(error);
+            user.password = hash;
+            next();
+        });
+    });
+})
+
 usersSignupSchema.pre("save", function(next) { // hash password middleware
     
     let user = this;
