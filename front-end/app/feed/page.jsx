@@ -1,9 +1,11 @@
 "use client"
 
 import BlogCard from '@/components/BlogCard/BlogCard';
+import Spinner from '@/components/Spinner/Spinner';
 import React, {useState, useEffect} from 'react'
 
 export default function Page() {
+  
   const [blogs, setBlogs] = useState([])
 
   useEffect( () => {
@@ -12,13 +14,16 @@ export default function Page() {
           const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
           const data = await response.json()
           setBlogs(data.data)
-          console.log(data.data, 'from getting the blogs checking id or post_id')
         }catch(e) {
             console.log('error in while getting feeds');
         }
     }
     getBlogs()
   }, [])
+
+  if (! blogs.length) return <div className="absolute mx-auto right-[50%] mt-[4rem]">
+    <div className="border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-2 h-7 w-7"></div>
+  </div>
 
   return (
     <div className="w-full bg-white/30 mx-auto z-[999]">

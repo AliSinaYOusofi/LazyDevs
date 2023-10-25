@@ -1,6 +1,7 @@
 const Post = require("../models/Blogs");
 const PostView = require("../models/PostViews");
-
+const SignedUpUser = require("../models/Register");
+const bcrypt = require("bcrypt");
 const router = require("express").Router();
 
 
@@ -22,8 +23,6 @@ router.get("/my_posts/:author", async (req, res) => {
             post.viewCount = views.length
         }
 
-        console.log("final of single user post", Posts)
-
         return res.
             status(200).
             json({
@@ -41,11 +40,83 @@ router.get("/my_posts/:author", async (req, res) => {
             json({
                 message: "execption happened",
                 status: "failed"
-            })
+        })
     }
 })
 
+router.post("/update_account", async (req, res) => {
+    
+    const {
+        username,
+        workEducation,
+        password,
+        confirmPassword,
+        bio,
+        work,
+        profileUrl,
+        id
+    } = req.body
 
+    console.log( username,
+        workEducation,
+        password,
+        confirmPassword,
+        bio,
+        work,
+        profileUrl, id)
+    
+    try {
+        
+        const currentUserToBeUpdated  = await SignedUpUser.findById(id)
+        const currentUserToBeUpdatedPlainObj = currentUserToBeUpdated.toObject()
+
+        if (currentUserToBeUpdated) {
+            if (username && username?.trim() !== '') {
+                currentUserToBeUpdatedPlainObj.username = username;
+            }
+          
+            if (workEducation && workEducation?.trim() !== '') {
+                currentUserToBeUpdatedPlainObj.education = workEducation;
+            }
+            
+            if ( bio && bio?.trim() !== '') {
+                currentUserToBeUpdatedPlainObj.bio = bio;
+            }
+          
+            if ( work && work?.trim() !== '') {
+                currentUserToBeUpdatedPlainObj.work = work;
+            }
+          
+            if ( profileUrl && profileUrl !== "https://cdn-icons-png.flaticon.com/512/4202/4202831.png") {
+                currentUserToBeUpdatedPlainObj.profileUrl = profileUrl;
+            }
+          
+            if ( password && password?.trim() !== '') {
+                const saltRounds = await bcrypt.genSalt(10);
+                const hash = await bcrypt.hash(password, saltRounds);
+                currentUserToBeUpdatedPlainObj.password = hash;
+            }
+            
+            await currentUserToBeUpdated.updateOne(currentUserToBeUpdatedPlainObj)
+            delete currentUserToBeUpdatedPlainObj.password;
+            return res.status(200).json({ message: "User information updated", status: "success", updatedData: currentUserToBeUpdatedPlainObj});
+        }
+         
+        else {
+            console.log("user not found error")
+            return res.status(200).json({message : "user not found", status: "not found"})
+        }
+    }
+    catch (e) {
+        console.log(e)
+        return res.
+            status(200).
+            json({
+                message: "execption happened",
+                status: "failed"
+        })
+    }
+})
 
 
 module.exports = router

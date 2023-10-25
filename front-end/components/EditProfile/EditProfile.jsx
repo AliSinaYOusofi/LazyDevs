@@ -13,7 +13,7 @@ import PreviousDetailsOfUser from '../PreviousUserDetails/PreviousDetailsOfUser'
 
 const UserInfoForm = () => {
 
-    const {profileUrl, currentUser} = useAppContext();
+    const {profileUrl, currentUser, setCurrentUser} = useAppContext();
 
     const [username, setUsername] = useState('');
     const [workEducation, setWorkEducation] = useState('');
@@ -50,16 +50,17 @@ const UserInfoForm = () => {
         
         e.preventDefault()
         
+        setSpinner(true)
         // validating for the new data
 
         if (! navigator.onLine) return toast.warning("You are offline");
         else if (username.length && ! fullnameValidator(username)) return toast.error("username must be at least 3 chars")
-        else if (workEducation.length && ! usernameValidator(work)) return toast.error("work must be at least 2 chars")
-        else if (password.length && passwordValidator(password)) return toast.error("Password is to short. Include a number an a character.");
-        else if (confirmPassword.length && ! passwordValidator(confirmPassword))return  toast.error("Password is to short. Include a number an a character.");
-        else if (password.length && confirmPassword.length && ! (password !== confirmPassword)) return toast.error("passwords don't match")
-        else if (bio.length && bio.length >= 5) return toast.error("bio must be at least five chars")
-        else if (work.length && !usernameValidator(work)) return toast.error("work must at least 2 chars")
+        else if (workEducation.length && ! usernameValidator(workEducation)) return toast.error("education must be at least 2 chars")
+        else if (password.length && ! passwordValidator(password)) return toast.error("Password is too short. Include a number and a character.");
+        else if (confirmPassword.length && ! passwordValidator(confirmPassword))return  toast.error("confirm pass is too short. Include a number and a character.");
+        else if ((password !== confirmPassword)) return toast.error("passwords don't match")
+        else if (bio.length && !bio.length >= 5) return toast.error("bio must be at least five chars")
+        else if (work.length && ! work.length > 2) return toast.error("work must at least 2 chars")
         
         // checking if the new data is same as the old data
 
@@ -79,7 +80,8 @@ const UserInfoForm = () => {
             confirmPassword: confirmPassword.trim() !== '' ? confirmPassword : undefined,
             bio: bio.trim() !== '' ? bio : undefined,
             work: work.trim() !== '' ? work : undefined,
-            profileUrl: profileUrl === "https://cdn-icons-png.flaticon.com/512/4202/4202831.png" ? undefined : profileUrl
+            profileUrl: profileUrl === "https://cdn-icons-png.flaticon.com/512/4202/4202831.png" ? undefined : profileUrl,
+            id: currentUser._id
         };
         
         const requestToUpdateData = JSON.stringify(
@@ -89,18 +91,33 @@ const UserInfoForm = () => {
         )
 
         try { 
-            const response = await fetch("", {
+            const response = await fetch("http://localhost:3001/accountRoutes/update_account", {
                 headers: {
-                    "Content-Type": "json/application"
+                    "Content-Type": "application/json"
                 },
+                method: "POST",
                 body: requestToUpdateData
             })
+
+            if (response.ok) {
+                
+                let json = await response.json()
+                setCurrentUser(json.updatedData)
+
+                if (json?.updatedData) toast.success("account info updated")
+                else if (json.stauts === "failed") toast.error("failed to update account info")
+                else if (json.status === "offline") toast.warning("you are offline")
+                else toast.error("unknown error!!!")
+            }
         } 
         catch(error) {
             if (error.code === "ECONNABORTED") toast.error("Request Timed out. Try again later !");
             else toast.error("Server error Try again later");
-            console.log(error, "error while handling login submit");
-            return "failed"
+            console.log(error, "error while updating user info");
+        }
+        
+        finally{
+            setSpinner(false)
         }
     };
 
