@@ -7,8 +7,6 @@ import React from 'react'
 export default function AccountDetails() {
 
     const {currentUser} = useAppContext()
-    
-    console.log(currentUser)
 
     return (
         <div className="w-[70%] px-4 mx-auto">

@@ -5,9 +5,11 @@ import Sidebar from "./Sidebar";
 import { useAppContext } from "@/context/useContextProvider";
 import Buttons from "../LoginSignupButtons/Buttons";
 import Avatar from "../LoggedInComponents/Avatar/Avatar";
+import useCurrentUser from "@/hooks/useCurrentUser";
  
 export default function Example() {
 
+    const newUser = useCurrentUser()
     const {currentUser} = useAppContext(); 
     const [searchInputs, setSearchInputs] = useState(false);
     const [sidebar, setSidebar] = useState(true);
