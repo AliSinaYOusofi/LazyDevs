@@ -39,7 +39,9 @@ export default function Login() {
         else if (response.data === "Server Error")  toast.error("Server Error");
         
         else if (response.data) {
-            setCurrentUser(response.data);
+            localStorage.setItem("currentUser", JSON.stringify(response.data))
+            setCurrentUser(JSON.parse(localStorage.getItem("currentUser")))
+            console.log(JSON.parse(localStorage.getItem("currentUser")))
             console.log(response.data)
             router.push("/feed");
         }

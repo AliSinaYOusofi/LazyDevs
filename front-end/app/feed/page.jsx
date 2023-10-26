@@ -22,7 +22,7 @@ export default function Page() {
   }, [])
 
   if (! blogs.length) return <div className="absolute mx-auto right-[50%] mt-[4rem]">
-    <div className="border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-2 h-7 w-7"></div>
+    <div className="border-t-transparent border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
   </div>
 
   return (
