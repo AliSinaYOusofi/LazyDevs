@@ -38,7 +38,7 @@ router.get("/newsfeed", async (req, res) => {
   
     } catch (e) {  
         console.log(e, "fetching blogs");
-        res.status(400).json({
+        res.status(200).json({
             status: "failed"
         });  
     }     
