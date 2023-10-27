@@ -20,6 +20,7 @@ export default function Page() {
     const [errorMessages, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
+    const [sortedBy, setSortedBy] = useState(true)
 
     const {currentUser} = useAppContext();
     
@@ -91,7 +92,10 @@ export default function Page() {
 
     const handleRetryFetchingPosts = () => {
         setRetryPosts(prev => ! prev)
-        setErrorMessages(previousErrorMessages => [...previousErrorMessages].filter(item => item !== "currentBlogFetchError"))
+        setErrorMessages(previousErrorMessages => {
+            const {currentBlogFetchError, ...rest} = previousErrorMessages
+            return rest
+        })
     }
 
     let currentBlogErrorDiv;
@@ -101,13 +105,13 @@ export default function Page() {
             
             {
             
-            errorMessages ? <div className="h-screen w-full flex items-center justify-center flex-col text-center  mx-auto text-4xl font-semibold mb-10 text-black ">
+            errorMessages?.currentBlogFetchError ? <div className="h-screen w-full flex items-center justify-center flex-col text-center  mx-auto text-4xl font-semibold mb-10 text-black ">
             
                     <div className="p-2  rounded-md  flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
                     
                         <FetchPostError error={errorMessages?.currentBlogFetchError} />
                     
-                        <button onClick={handleRetryFetchingPosts} className="mt-10 text-lg flex group items-center justify-center  px-5 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
+                        <button onClick={handleRetryFetchingPosts} className="mt-10 text-lg flex group items-center justify-center  px-5 py-2 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
                     
                             <span className="mr-2">Try again</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 group group-hover:animate-spin">
@@ -123,6 +127,10 @@ export default function Page() {
     
     const handleRetryRecentPosts = () => {
         setRetryRecentPosts(prev => !prev)
+        setErrorMessages(previousErrorMessages => {
+            const {recentBlogsFetchError, ...rest} = previousErrorMessages
+            return rest
+        })
     }
     let recentPostsDivError
 
@@ -137,7 +145,7 @@ export default function Page() {
                     
                         <RecentPostsError error={errorMessages?.recentBlogsFetchError} />
                     
-                        <button onClick={handleRetryRecentPosts} className="mt-10 flex group items-center justify-center  px-2 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
+                        <button onClick={handleRetryRecentPosts} className="mt-10 flex group items-center justify-center  px-2 py-1 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
                     
                             <span className="mr-2">Try again</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 group group-hover:animate-spin">
@@ -151,11 +159,16 @@ export default function Page() {
         </div>
     }
     
+    const handleSortRecentPosts = () => {
+       setRecentBlogs([...recentBlogs].reverse())
+       setSortedBy(prev => !prev)
+    }
+
     return (
         <>
             <div className="w-full relative flex flex-col md:flex-row justify-start items-start">
                 
-                <div className="">
+                <div className="mx-auto md:mt-0 mt-4 md:w-fit  w-full">
                     <SocialIcons post_id={post_id}/>
                 </div>
                 
@@ -171,10 +184,25 @@ export default function Page() {
                 </div>
 
                 <div className="md:w-[30%] w-full flex flex-col  overflow-ellipsis headerBlog px-2 md:pr-10">
+                    <h1 className="text-5xl  font-bold tracking-wide mt-10"> Recent Posts </h1>
+                    {
+                        errorMessages?.recentBlogsFetchError
+                        ? null :
+                            <div className="flex items-center justify-start mt-4 gap-x-4">
+                                <div onClick={handleSortRecentPosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                                    </svg>
+                                </div>
+                                <span className="mt-4"> Sorted By: {sortedBy ? "By most viewd" : "By less viewd"}</span>
+                            </div>
+                    }
+
                     {recentPostsDivError}
+                    
                     {
                         recentBlogs && recentBlogs.length > 0
-                            ? recentBlogs?.map(blog => <BlogCard clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
+                            ? recentBlogs?.map(blog => <BlogCard viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
                     }
                 </div>
 

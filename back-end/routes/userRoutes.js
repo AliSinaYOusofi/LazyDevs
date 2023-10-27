@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const { getDB } = require("../db_connection/mongoose.db.config");
+// const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
 const Post = require("../models/Blogs");
 require("dotenv").config();
@@ -19,7 +19,7 @@ router.post("/save_user", async (req, res) => {
 
     const userInfo = { username, fullName, password, email, profileUrl };
 
-    const db = await getDB();
+    // const db = await getDB();
 
     try {
         
@@ -41,7 +41,7 @@ router.post("/check_user_login", async (req, res) => {
     
     const {email, password} = req.body;
     
-    let db = await getDB();
+    // let db = await getDB();
 
     try {
         
