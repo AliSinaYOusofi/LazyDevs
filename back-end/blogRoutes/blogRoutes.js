@@ -177,7 +177,7 @@ router.post("/get_post_comments", async (req, res) => {
     }
     return res.status(200).json({
         status: "failed",
-        data: "blog not found"
+        data: "blogNotFound"
     })
 });
 

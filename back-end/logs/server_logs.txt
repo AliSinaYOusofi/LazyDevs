@@ -1,0 +1,28 @@
+[TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
+C:\Users\DELL\.pm2\pm2.log last 15 lines:
+PM2        | 2023-10-27T23:51:18: PM2 log: [Watch] Start watching app
+PM2        | 2023-10-27T23:51:18: PM2 log: App [app:0] starting in -fork mode-
+PM2        | 2023-10-27T23:51:18: PM2 log: App [app:0] online
+PM2        | 2023-10-28T00:17:08: PM2 log: Change detected on path logs for app app - restarting
+PM2        | 2023-10-28T00:17:08: PM2 log: Stopping app:app id:0
+PM2        | 2023-10-28T00:17:09: PM2 log: App [app:0] exited with code [1] via signal [SIGINT]
+PM2        | 2023-10-28T00:17:09: PM2 log: pid=10064 msg=process killed
+PM2        | 2023-10-28T00:17:09: PM2 log: App [app:0] starting in -fork mode-
+PM2        | 2023-10-28T00:17:09: PM2 log: App [app:0] online
+PM2        | 2023-10-28T00:17:32: PM2 log: Change detected on path logs\server_logs.txt for app app - restarting
+PM2        | 2023-10-28T00:17:32: PM2 log: Stopping app:app id:0
+PM2        | 2023-10-28T00:17:32: PM2 log: App [app:0] exited with code [1] via signal [SIGINT]
+PM2        | 2023-10-28T00:17:32: PM2 log: pid=16068 msg=process killed
+PM2        | 2023-10-28T00:17:32: PM2 log: App [app:0] starting in -fork mode-
+PM2        | 2023-10-28T00:17:32: PM2 log: App [app:0] online
+
+C:\Users\DELL\.pm2\logs\app-error.log last 15 lines:
+C:\Users\DELL\.pm2\logs\app-out.log last 15 lines:
+0|app      | Started at: 23:20:39 GMT+0500 (Pakistan Standard Time)
+0|app      | MongoDB connected
+0|app      | Started at: 23:51:19 GMT+0500 (Pakistan Standard Time)
+0|app      | Started at: 00:17:10 GMT+0500 (Pakistan Standard Time)
+
+0|app  | Started at: 00:17:33 GMT+0500 (Pakistan Standard Time)
+0|app  | MongoDB connected
+0|app  | MongoDB connected

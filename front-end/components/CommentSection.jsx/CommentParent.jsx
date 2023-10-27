@@ -6,12 +6,15 @@ import { toast } from 'react-toastify';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import DisplayComments from './DisplayComments';
+import RecentPostsError from '../Error/RecentPostsError/RecentPostError';
 
 export default function CommentParent({post_id}) {
 
     const [comment, setComment] = useState(true);
     const [commentSuccessful, setCommentSuccessful] = useState(false);
-    const [postComments, setPostComments] = useState([]);
+    const [errorMessage, setErrorMessages] = useState("")
+    const [postComments, setPostComments] = useState(undefined);
+    const [retryFetchComments, setRetryFetchComments] = useState(false)
     const {currentUser} = useAppContext(); 
 
 
@@ -21,8 +24,6 @@ export default function CommentParent({post_id}) {
         if (comment.length < 1) return toast.error("can't post an empty comment", {pauseOnHover: true});
 
         try {
-
-            console.log(comment, post_id, currentUser.email, 'body of the data');
 
             const data = {
                 comment,
@@ -40,7 +41,6 @@ export default function CommentParent({post_id}) {
 
             let json = await response.json();
 
-            console.log(data);
             if (json.data === "saved") {
                 setCommentSuccessful(prev => !prev);
                 setComment("");
@@ -68,21 +68,55 @@ export default function CommentParent({post_id}) {
                 
                 const data = await response.json()
                 
+                console.log(data, 'from comments')
                 if (data.status === "success") {
                     const extractedComments = data.data.map(comms => comms.comment).flat();
                     setPostComments(extractedComments);
-                }
+                } 
+                else if (data.status === "failed") setErrorMessages("Failed to get post comments")
+                else if (data.data === "blogNotFound") setErrorMessages("Blog not found")
             }
             
             catch(e) {
                 console.log("error while fetching comments", e)
+                setErrorMessages("failed to get post comments")
             }
         }
 
         getPostComments();
-    }, [commentSuccessful, post_id])
+    }, [commentSuccessful, post_id, retryFetchComments])
 
-    
+    const handleRetryFetchPostComments = () => {
+        setRetryFetchComments(prev => !prev)
+        setErrorMessages("")
+    }
+    let postCommentsErrorHandler
+
+    if (postComments === undefined) {
+            postCommentsErrorHandler = <div className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+            
+            {
+            
+            errorMessage ? <div key="commentData" className=" flex items-center justify-center flex-col text-center  mx-auto text-4xl font-semibold mb-10 text-black ">
+            
+                    <div className="p-2  rounded-md flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
+                    
+                        <RecentPostsError error={errorMessage} />
+                    
+                        <button onClick={handleRetryFetchPostComments} className="mt-10 flex group items-center justify-center  px-2 py-1 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
+                    
+                            <span className="mr-2">Try again</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 group group-hover:animate-spin">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </button>
+                    </div> 
+                </div>
+            : <div className="border-t-transparent border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
+            }
+        </div>
+    }
+
     return (
         <>
             <div id="comments">
@@ -112,8 +146,9 @@ export default function CommentParent({post_id}) {
                 </div>
                 <div>
                     <h1 className="text-3xl font-bold tracking-wide mt-10"> Comments </h1>
+                    {postCommentsErrorHandler}
                     {
-                        postComments.map(comment => <DisplayComments author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
+                        postComments?.map(comment => <DisplayComments key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
                 </div>
             </div>
