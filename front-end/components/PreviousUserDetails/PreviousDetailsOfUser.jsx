@@ -3,7 +3,7 @@ import React from 'react'
 export default function PreviousDetailsOfUser({username, fullName, work, education, bio, profileUrl}) {
 
     return (
-        <div className="border-[0.1px] ml-3 p-4 rounded shadow-sm bg-white absolute flex flex-col items-center justify-center">
+        <div className="border-[0.1px] z-[999] ml-3 p-4 rounded shadow-sm bg-white absolute flex flex-col items-center justify-center">
 
             <div>
                 <img src={profileUrl} alt="Profile" className="rounded-full w-20 h-20 object-cover mb-4" />

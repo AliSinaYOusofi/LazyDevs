@@ -22,7 +22,6 @@ export default function Page() {
     const [errorMessages, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
-    const [sortedBy, setSortedBy] = useState(true)
 
     const {currentUser} = useAppContext();
     
