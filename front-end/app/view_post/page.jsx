@@ -11,6 +11,8 @@ import { useSearchParams } from 'next/navigation';
 import ReadingTime from '@/components/ReadingTime/ReadingTime';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
+import NotLoggedInCard from '@/components/NotLoggedCard/NotLoggedInCard';
+import TextToSpeech from '@/components/TextToSpeech/TextToSpeech';
 
 export default function Page() {
 
@@ -166,17 +168,25 @@ export default function Page() {
 
     return (
         <>
-            <div className="w-full relative flex flex-col md:flex-row justify-start items-start">
+            <div className={`w-screen relative flex flex-col md:flex-row justify-start items-start makeBlurry `}>
                 
                 <div className="mx-auto md:mt-0 mt-4 md:w-fit  w-full">
                     <SocialIcons post_id={post_id}/>
                 </div>
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">
+                    
                     <UserCard email={currentBlog?.email} date={currentBlog?.joined} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
+                    
                     <ReadingTime paragraphs={currentBlog?.body}/>
+
+                    <TextToSpeech text={currentBlog?.body}/>
+                    
+                    <hr className="mt-10"/>
                     {currentBlogErrorDiv}
+                    
                     <h1 className="mt-4 mb-4 headerBlog ml-6 text-xl   font-extrabold  leading-tight text-gray-900 lg:mb-6 lg:text-2xl">{currentBlog ? currentBlog.title : ""}</h1>
+                    
                     {
                         currentBlog ? currentBlog.body?.split("\n").map( (line, index) => line.startsWith("![]") ? <img src={line} alt=""  /> : <PostText key={index}  text={line}/>) : ""
                     }
@@ -184,9 +194,12 @@ export default function Page() {
                 </div>
 
                 <div className="md:w-[30%] w-full flex flex-col  overflow-ellipsis headerBlog px-2 md:pr-10">
+                    
                     <h1 className="text-5xl  font-bold tracking-wide mt-10"> Recent Posts </h1>
+                    
                     {
                         errorMessages?.recentBlogsFetchError
+                    
                         ? null :
                             <div className="flex items-center justify-start mt-4 gap-x-4">
                                 <div onClick={handleSortRecentPosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
@@ -194,7 +207,7 @@ export default function Page() {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
                                     </svg>
                                 </div>
-                                <span className="mt-4"> Sorted By: {sortedBy ? "By most viewd" : "By less viewd"}</span>
+                                <span className="mt-4"> Sorted By: {sortedBy ? "By most viewed" : "By less viewed"}</span>
                             </div>
                     }
 

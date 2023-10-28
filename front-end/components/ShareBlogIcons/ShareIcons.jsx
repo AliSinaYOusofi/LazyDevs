@@ -52,7 +52,6 @@ export default function SocialIcons({post_id}) {
                 const data = await response.json()
                 setLikeCount(data.likeCount)
                 setCommentCount(data.commentCount ?  data.commentCount.length : 0)
-                console.log(data);
             }
             catch(e) {
                 console.log("error while fetching likes and comments count", e)

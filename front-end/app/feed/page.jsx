@@ -2,8 +2,6 @@
 
 import BlogCard from '@/components/BlogCard/BlogCard';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
-import Spinner from '@/components/Spinner/Spinner';
-import Link from 'next/link';
 import React, {useState, useEffect} from 'react'
 
 export default function Page() {
@@ -11,6 +9,7 @@ export default function Page() {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessages] = useState('')
   const [retryPosts, setRetryPosts] = useState(false)
+  const [sortedBy, setSortedBy] = useState(true)
 
   useEffect( () => {
     async function getBlogs() {
@@ -49,18 +48,28 @@ export default function Page() {
     }
   </div>
 
+  const handleSortedBy = () => {
+    setBlogs([...blogs].reverse())
+    setSortedBy(prev => ! prev)
+  }
   return (
     <div className="w-full bg-white/30 mx-auto z-[999]">
       <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
 
-                
-        <div onClick={() => setBlogs([...blogs].reverse())} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-          </svg>
-        </div>
+        {
+          errorMessage ?
+          null :
+          <div className={`flex items-center justify-start mt-4 gap-x-4 `}>
+            <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+              </svg>
+            </div>
+            <span className={` mt-4`}> Sorted By: {sortedBy ? "By most viewed" : "By less viewd"}</span>
+          </div>
+        }
 
-        <div className="max-w-2xl">
+        <div className="md:max-w-2xl max-w-[28rem]">
 
           {
             blogs.map(blog => <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
