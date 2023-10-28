@@ -7,22 +7,31 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import DisplayComments from './DisplayComments';
 import RecentPostsError from '../Error/RecentPostsError/RecentPostError';
+import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard';
 
 export default function CommentParent({post_id}) {
 
-    const [comment, setComment] = useState(true);
+    const [comment, setComment] = useState("");
     const [commentSuccessful, setCommentSuccessful] = useState(false);
     const [errorMessage, setErrorMessages] = useState("")
     const [postComments, setPostComments] = useState(undefined);
     const [retryFetchComments, setRetryFetchComments] = useState(false)
+    const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
     const {currentUser} = useAppContext(); 
 
 
     const handleSumitComment = async () => {
         
-        setCommentSuccessful(prev => !prev);
+        if (!currentUser) {
+           
+            return setNotLoggedInCard(prev => ! prev)
+        }
+        
+        
         if (comment.length < 1) return toast.error("can't post an empty comment", {pauseOnHover: true});
 
+        setCommentSuccessful(prev => !prev);
+        return
         try {
 
             const data = {
@@ -69,9 +78,12 @@ export default function CommentParent({post_id}) {
                 const data = await response.json()
                 
                 console.log(data, 'from comments')
-                if (data.status === "success") {
+
+                if (data?.data?.length === 0) setPostComments([])
+                else if (data.status === "success") {
                     const extractedComments = data.data.map(comms => comms.comment).flat();
                     setPostComments(extractedComments);
+                    console.log(postComments, 'post comments')
                 } 
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments")
                 else if (data.data === "blogNotFound") setErrorMessages("Blog not found")
@@ -84,6 +96,8 @@ export default function CommentParent({post_id}) {
         }
 
         getPostComments();
+
+        return () => setNotLoggedInCard(false)
     }, [commentSuccessful, post_id, retryFetchComments])
 
     const handleRetryFetchPostComments = () => {
@@ -119,7 +133,7 @@ export default function CommentParent({post_id}) {
 
     return (
         <>
-            <div id="comments">
+            <div id="comments" className="">
                 <div className="mt-10 max-w-2xl mx- bg-inherit flex flex-col items-start justify-start
                 gap-y-4 relative" id={"comment"}>
                 
@@ -146,11 +160,28 @@ export default function CommentParent({post_id}) {
                 </div>
                 <div>
                     <h1 className="text-3xl font-bold tracking-wide mt-10"> Comments </h1>
+                    {
+                        postComments?.length === 0
+                        ?
+                        <h1 className="text-3xl font-bold tracking-wide mt-10 text-gray-300"> No Comments Yet. Post a comment to start a conversation </h1>
+                        : null
+                    }
                     {postCommentsErrorHandler}
                     {
                         postComments?.map(comment => <DisplayComments key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
                 </div>
+            </div>
+            <div id="login" className="">
+                {
+                    showNotLoggedInCard ?
+                    <>
+                        <div className="blurry-background flex items-center justify-center">
+                            <NotLoggedInCard clicked={showNotLoggedInCard} onClose={setNotLoggedInCard}/> 
+                        </div>
+                    </>
+                    : null
+                }
             </div>
             <ToastContainer />
         </>

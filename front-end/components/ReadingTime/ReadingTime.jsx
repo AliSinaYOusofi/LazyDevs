@@ -3,19 +3,15 @@ import React from "react";
 const ReadingTime = ({ paragraphs }) => {
     
     const calculateReadingTime = () => {
-        // Assuming an average reading speed of 200 words per minute
 
         if (paragraphs) {
 
             const wordsPerMinute = 200;
     
-            // Count the number of words in the paragraphs
             const words = paragraphs.split(" ").length;
     
-            // Calculate the reading time in minutes
             const readingTimeInMinutes = words / wordsPerMinute;
     
-            // Round up the reading time to the nearest whole number
             const roundedReadingTime = Math.ceil(readingTimeInMinutes);
     
             return roundedReadingTime;
@@ -31,7 +27,7 @@ const ReadingTime = ({ paragraphs }) => {
                 </svg>
                 Reading Time: {calculateReadingTime()} minute(s)
             </i>
-            <hr />
+            
         </div>
     );
 };
