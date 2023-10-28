@@ -17,11 +17,12 @@ router.get("/my_posts/:author", async (req, res) => {
     try {
         const Posts = await Post.find({author}).lean().exec()
 
-        console.log(Posts)
         for (let post of Posts) {
             const views = await PostView.find({post_id: post._id}).lean().exec()
             post.viewCount = views.length
         }
+
+        Posts.sort( (a, b) => b.viewCount - a.viewCount)
 
         return res.
             status(200).
@@ -56,14 +57,6 @@ router.post("/update_account", async (req, res) => {
         profileUrl,
         id
     } = req.body
-
-    console.log( username,
-        workEducation,
-        password,
-        confirmPassword,
-        bio,
-        work,
-        profileUrl, id)
     
     try {
         

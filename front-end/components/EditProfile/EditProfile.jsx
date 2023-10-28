@@ -123,14 +123,14 @@ const UserInfoForm = () => {
 
     
     return (
-        <div className="shadow-white shadow-lg relative">
+        <div className="shadow-white shadow-lg">
             
-            <div className="relative">
+            <div className="">
 
                 <button 
                     type="button"
                     onClick={() => setPreviousDetails( prev => !prev )} 
-                    className=" relative px-2 ml-4 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                    className=" px-2 ml-4 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
                     My Previous data
                 </button>
 
@@ -139,7 +139,7 @@ const UserInfoForm = () => {
                 }
             </div>
             
-            <form onSubmit={handleSubmit} className="flex flex-col mx-auto justify-center items-center w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col mx-auto justify-center items-center w-full md:px-2 px-2">
 
                 <Profile />
 
@@ -228,7 +228,7 @@ const UserInfoForm = () => {
                 <button 
                     disabled={spinner} 
                     type="submit" 
-                    className=" relative w-1/3 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                    className=" relative w-1/3 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white md:mt-4 py-2 rounded-md  font-semibold mb-2">
                     update
                     { spinner ? <Spinner /> : null}
                 </button>

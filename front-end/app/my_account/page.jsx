@@ -39,16 +39,16 @@ export default function Page() {
     }, [])
 
     return (
-        <div className="w-screen h-screen gap-x-4 flex flex-row items-center justify-center mx-uto">
+        <div className="w-full h-full gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
             
-            <div className="w-[20%] ml-20">
+            <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0">
                 
                 <ul className="">
                     {menuItems}
                 </ul>
             </div>
             
-            <div className="w-[70%]">
+            <div className="md:w-[70%] w-full ">
                 {currentComponent}
             </div>
         </div>
