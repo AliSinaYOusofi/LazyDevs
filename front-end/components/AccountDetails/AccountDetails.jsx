@@ -17,17 +17,17 @@ export default function AccountDetails() {
                 <div className="md:px-6 flex items-center justify-center gap-x-2 md:gap-x-10">
         
                     <div className="mt-10">
-                        <img alt="" src={currentUser ? currentUser.profileUrl : ""} className="shadow-xl rounded-full md:w-24 md:h-24 h-16 w-16" />
+                        <img alt="" src={currentUser ? currentUser.profileUrl : ""} className="shadow-xl rounded-full md:w-24 md:h-24 h-16 w-16 object-cover" />
                     </div>
                    
                     <div className="mt-12 flex items-start justify-start">
                         
-                        <div>
+                        <div className="flex flex-col items-start justify-center">
                             <h3 className="md:text-lg text-sm leading-normal text-blueGray-700">
                                 {currentUser ? currentUser.username : "Ali Sina Yousofi"}
                             </h3>
 
-                            <h3 className="md:text-lg text-sm leading-normal mt-0 text-blueGray-400">
+                            <h3 className="md:text-lg text-sm mt-2 leading-normal text-blueGray-400">
                                 <span> Joined : {currentUser ? currentUser?.joined?.split("T")[0] : "NA"} </span>
                             </h3>
                         </div>

@@ -5,7 +5,7 @@ import FetchPostError from '../Error/FetchPostError/FetchPostError'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-export default function SearchBlogsBasedProps({blogs}) {
+export default function SearchBlogsBasedProps({blogs, size}) {
 
     const [searchFlag, setSearchFlag] = useState('Title')
     const [searchText, setSearchText] = useState('')
@@ -29,6 +29,7 @@ export default function SearchBlogsBasedProps({blogs}) {
         
         if (text) {
             
+            console.log(blogs)
             const escapeSpecailChars = escapeRegExp(text)
             const searchRegex = new RegExp(escapeSpecailChars, 'i'); 
             const matchingBlogs = blogs.filter((blog) => searchRegex.test(blog.title));
@@ -82,7 +83,7 @@ export default function SearchBlogsBasedProps({blogs}) {
     return (
 
         <>
-            <div className="flex md:flex-row flex-col items-center p-6 space-x-6 bg-white rounded-xl">
+            <div className={`flex md:${size ? "flex-col" : "flex-row"} flex-col items-center p-6 space-x-6 bg-white rounded-xl`}>
                 
                 <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
                 

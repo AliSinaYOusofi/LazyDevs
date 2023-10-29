@@ -13,6 +13,7 @@ import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
 
 import TextToSpeech from '@/components/TextToSpeech/TextToSpeech';
+import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
 
 export default function Page() {
 
@@ -36,7 +37,6 @@ export default function Page() {
                 if (data.data === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
-                console.log(errorMessages)
             }
             catch(e) {
                 console.log("while current blog", e)
@@ -53,8 +53,8 @@ export default function Page() {
                 const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed`, {method: "GET"});
                 const data = await response.json()
                 
-                setRecentBlogs(data.data)
-                if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
+                if (data.data) setRecentBlogs(data.data)
+                else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
             catch(e) {
                 console.log("while getting recent blogs", e)
@@ -103,7 +103,7 @@ export default function Page() {
     let currentBlogErrorDiv;
     if (currentBlog === undefined) {
 
-        currentBlogErrorDiv = <div className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+        currentBlogErrorDiv = <div key="curretnBlogDivError" className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
             
             {
             
@@ -137,26 +137,26 @@ export default function Page() {
     let recentPostsDivError
 
     if (recentBlogs === undefined) {
-        recentPostsDivError = <div className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+        recentPostsDivError = <div key="recentPostsDivError" className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
             
             {
-            
-            errorMessages?.recentBlogsFetchError ? <div className=" flex items-center justify-center flex-col text-center  mx-auto text-4xl font-semibold mb-10 text-black ">
-            
-                    <div className="p-2  rounded-md flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
-                    
-                        <RecentPostsError error={errorMessages?.recentBlogsFetchError} />
-                    
-                        <button onClick={handleRetryRecentPosts} className="mt-10 flex group items-center justify-center  px-2 py-1 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
-                    
-                            <span className="mr-2">Try again</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 group group-hover:animate-spin">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                            </svg>
-                        </button>
+                errorMessages?.recentBlogsFetchError ? <div className=" flex items-center justify-center flex-col text-center  mx-auto text-4xl font-semibold mb-10 text-black ">
+                
+                        <div className="p-2  rounded-md flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
+                        
+                            <RecentPostsError error={errorMessages?.recentBlogsFetchError} />
+                        
+                            <button onClick={handleRetryRecentPosts} className="mt-10 flex group items-center justify-center  px-2 py-1 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
+                        
+                                <span className="mr-2">Try again</span>
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 group group-hover:animate-spin">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            : <div className="border-t-transparent border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
+                : <div className="border-t-transparent border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
             }
         </div>
     }
@@ -180,7 +180,7 @@ export default function Page() {
                     
                     <ReadingTime paragraphs={currentBlog?.body}/>
 
-                    <TextToSpeech text={currentBlog?.body}/>
+                    {/* <TextToSpeech text={currentBlog?.body}/> */}
                     
                     <hr className="mt-10"/>
                     {currentBlogErrorDiv}
@@ -213,6 +213,12 @@ export default function Page() {
 
                     {recentPostsDivError}
                     
+                    {
+                        recentBlogs && recentBlogs.length > 0
+                        ? <SearchBlogsBasedProps blogs={recentBlogs} size="tre"/>
+                        : null
+                    }
+
                     {
                         recentBlogs && recentBlogs.length > 0
                             ? recentBlogs?.map(blog => <BlogCard viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null

@@ -31,7 +31,6 @@ export default function CommentParent({post_id}) {
         if (comment.length < 1) return toast.error("can't post an empty comment", {pauseOnHover: true});
 
         setCommentSuccessful(prev => !prev);
-        return
         try {
 
             const data = {
@@ -77,8 +76,6 @@ export default function CommentParent({post_id}) {
                 
                 const data = await response.json()
                 
-                console.log(data, 'from comments')
-
                 if (data?.data?.length === 0) setPostComments([])
                 else if (data.status === "success") {
                     const extractedComments = data.data.map(comms => comms.comment).flat();
