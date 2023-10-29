@@ -3,6 +3,7 @@ import React from 'react'
 import { useState } from 'react'
 import FetchPostError from '../Error/FetchPostError/FetchPostError'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 export default function SearchBlogsBasedProps({blogs}) {
 
@@ -20,20 +21,27 @@ export default function SearchBlogsBasedProps({blogs}) {
         else if (searchFlag === 'Most occurring') SearchByMostOccuring()
     }
 
+    function escapeRegExp(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     const searchByTitle = (text) => {
         
         if (text) {
             
-            const searchRegex = new RegExp(text, 'i'); // 'i' for case-insensitive match
+            const escapeSpecailChars = escapeRegExp(text)
+            const searchRegex = new RegExp(escapeSpecailChars, 'i'); 
             const matchingBlogs = blogs.filter((blog) => searchRegex.test(blog.title));
         
             if (matchingBlogs.length > 0) {
+                console.log(matchingBlogs)
                 blogs.filter((blog) => !matchingBlogs.includes(blog)).forEach(blog => document.getElementById(blog._id).style.display = "none")
                 setResult(matchingBlogs.length)
             } 
             
             else {
                 console.log('No matching blogs found');
+                setResult(0)
             }
 
         } 
@@ -65,7 +73,12 @@ export default function SearchBlogsBasedProps({blogs}) {
         return () => {
           document.removeEventListener('keydown', handleCtrlK);
         }
-      }, [])
+    }, [])
+
+    const handleClickonSearchButton = () => {
+        if (!searchText) return toast.info("Enter something to search for.")
+        document.getElementById("searchResult")?.scrollIntoView({"behavior": "smooth"})
+    }
     return (
 
         <>
@@ -94,13 +107,13 @@ export default function SearchBlogsBasedProps({blogs}) {
             
                 </div>
                 
-                <div onClick={handleCharacterChange} className="bg-gray-800 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                <div onClick={handleClickonSearchButton} className="bg-gray-800 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                     <span>Search</span>
                 </div>
             </div>
 
             {  
-                searchText.length > 0
+                searchText?.length > 0
                 ?
                 (
 
@@ -108,9 +121,9 @@ export default function SearchBlogsBasedProps({blogs}) {
                     ? 
                     <div className="mt-4">
                         <h1 className="md:text-5xl text-3xl  font-bold tracking-wide mt-10 md:mt-0"> Search Results </h1>
-                        <p className="mt-2 "> {result} results found for "{searchText}" keyword(s) </p>
+                        <p className="mt-2 " id="searchResult"> {result} result(s) found for "{searchText}" keyword(s). </p>
                     </div>
-                    : <div className="mt-4"> <FetchPostError error={"No result"} /> </div>
+                    : <div className="mt-4"> <FetchPostError error={"The term you searched returned zero results"} /> </div>
                 ):
                     null
 

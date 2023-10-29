@@ -4,6 +4,8 @@ import EditProfile from '@/components/EditProfile/EditProfile'
 import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
 import React, {useState, useEffect} from 'react'
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Page() {
     
@@ -39,18 +41,21 @@ export default function Page() {
     }, [])
 
     return (
-        <div className="w-full h-full gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
-            
-            <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0">
+        <>
+            <div className="w-full h-full gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
                 
-                <ul className="">
-                    {menuItems}
-                </ul>
+                <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0">
+                    
+                    <ul className="">
+                        {menuItems}
+                    </ul>
+                </div>
+                
+                <div className="md:w-[70%] w-full ">
+                    {currentComponent}
+                </div>
             </div>
-            
-            <div className="md:w-[70%] w-full ">
-                {currentComponent}
-            </div>
-        </div>
+            <ToastContainer />  
+        </>
   )
 }
