@@ -24,7 +24,7 @@ export default function PostOfUserBasedId({author}) {
                 setPosts(data.data)
             }catch(e) {
                 console.log('error in while getting feeds');
-                setErrorMessages("failed to fetch posts")
+                setErrorMessages("failed to fetch your posts")
             }
         }
 

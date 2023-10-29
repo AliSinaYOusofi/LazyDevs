@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import ReadingTime from '@/components/ReadingTime/ReadingTime';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
-import NotLoggedInCard from '@/components/NotLoggedCard/NotLoggedInCard';
+
 import TextToSpeech from '@/components/TextToSpeech/TextToSpeech';
 
 export default function Page() {
@@ -22,6 +22,7 @@ export default function Page() {
     const [errorMessages, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
+    const [sortedBy, setSortedBy] = useState(false)
 
     const {currentUser} = useAppContext();
     
@@ -218,7 +219,8 @@ export default function Page() {
                     }
                 </div>
 
-            </div>  
+            </div>
+            
         </>
     )
 }
