@@ -235,7 +235,7 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
 
     if (post_id) {
 
-        let post_likes = await Likes.findOne({'post_id': post_id}).lean().exec();
+        let post_likes = await PostView.find({'post_id': post_id}).lean().exec();
         let commentCount = await Comment.find({'post': post_id}).lean().exec();
            
         if (post_likes) {

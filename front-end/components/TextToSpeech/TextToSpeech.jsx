@@ -32,7 +32,7 @@ export default function TextToSpeech({ text }) {
             // Clear the interval when not playing
             clearInterval(intervalIdRef.current);
         }
-    }, [isPlaying]);
+    }, [isPlaying, text]);
     
     const speak = () => {
         if (isPlaying) {
@@ -64,7 +64,7 @@ export default function TextToSpeech({ text }) {
             setIsPlaying(true);
         }
     };
-
+    
     return (
         <>
             <div className="w-full h-fit flex items-center justify-between shadow-gray-200 shadow-md outline-none border-none rounded-sm p-4">

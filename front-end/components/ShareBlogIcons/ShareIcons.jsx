@@ -2,15 +2,18 @@
 import React, {useState, useEffect} from 'react'
 import Link from 'next/link';
 import { moveToId } from '@/functions/movtToId';
+import FetchPostError from '../Error/FetchPostError/FetchPostError';
 
 
 export default function SocialIcons({post_id}) {
 
     // const [liked, setLiked] = useState(false);
     
-    const [likeCount, setLikeCount] = useState(0);
-    const [commentCount, setCommentCount] = useState(0);
+    const [viewCount, setViewCount] = useState(undefined);
+    const [commentCount, setCommentCount] = useState(undefined);
     const [currentUrl, setCurrentUrl] = useState("")
+    const [errorMessage, setErrorMessages] = useState('')
+    const [retryFetchPostViewCount, setRetryFetchPostViewCount] = useState(false)
 
     // const handleLikes = async () => {
     
@@ -50,21 +53,49 @@ export default function SocialIcons({post_id}) {
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/get_likes_comments_count/:${post_id}`, {method: "GET"});
                 const data = await response.json()
-                setLikeCount(data.likeCount)
-                setCommentCount(data.commentCount ?  data.commentCount.length : 0)
+                console.log(data, 'response from view count')
+
+                if (data.status === "success") {
+                    setViewCount(data.likeCount?.length)
+                    setCommentCount(data.commentCount ?  data.commentCount.length : 0)
+                }
+
+                else if (data.status === "failed") setErrorMessages("Failed to get post comments and view")
             }
             catch(e) {
                 console.log("error while fetching likes and comments count", e)
+                setErrorMessages("Failed to get post comments and view")
+                setCommentCount(undefined)
             }
         }
 
         if (window) setCurrentUrl(window.location.href)
         likesCommentsCount();   
-    }, [post_id])
+    }, [post_id, retryFetchPostViewCount])
 
+    const hanldeRetryFetch = () => {
+        setRetryFetchPostViewCount(prev => !prev)
+        setErrorMessages("")
+    }
+    let fetchErrorDiv
+    
+    if (commentCount === undefined) {
+        
+        fetchErrorDiv = errorMessage ? <div className="mt-4 px-4 flex flex-col  items-center justify-center">
+            
+            <svg onClick={hanldeRetryFetch} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+            
+            <FetchPostError error={errorMessage}/>  
+            </div> 
+            
+            :
+            <div className="border-t-transparent mt-4 border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
+
+    }
     return (
         <div className="flex md:ml-4 ml-0 md:flex-col flex-row items-center justify-center socials md:mt-0 mt-4 gap-4 mr-4 md:mr-0">
-            
             <div className=" md:p-2 rounded-full flex flex-col items-center justify-center">
                 
                 <div className="p-2 shadow-black/50 mt-4 z-[99] shadow-sm bg-white rounded-full w-fit">
@@ -73,7 +104,7 @@ export default function SocialIcons({post_id}) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
-                <span className="text-xl">{likeCount ? likeCount.likes : "0"}</span>
+                <span className="text-xl">{viewCount ? viewCount : "0"}</span>
             </div>
 
             <div onClick={() => moveToId("comments")} className=" md:p-2 rounded-full flex flex-col items-center justify-center cursor-pointer">

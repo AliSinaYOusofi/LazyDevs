@@ -23,7 +23,7 @@ export default function PostOfUserBasedId({author}) {
                 const data = await response.json()
                 setPosts(data.data)
             }catch(e) {
-                console.log('error in while getting feeds');
+                console.log('error in while getting your posts');
                 setErrorMessages("failed to fetch your posts")
             }
         }
@@ -39,8 +39,8 @@ export default function PostOfUserBasedId({author}) {
 
     let noPostDiv = 
         <div className="mx-auto w-full"> 
-            <h1 className="text-5xl font-extrabold"> You have No Posts</h1>
-            <Link className="mt-10 " href="/create_post"> Make Post</Link>
+            <h1 className="text-5xl font-extrabold mb-10 "> You have No Posts</h1>
+            <Link className="mt-10 text-gray-600 hover:text-black" href="/create_post"> Make Post</Link>
         </div>
 
     const handleRetryFetchingPosts = () => {
