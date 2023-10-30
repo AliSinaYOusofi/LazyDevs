@@ -6,24 +6,26 @@ import React, {useState, useEffect} from 'react'
 
 export default function Page() {
   
-  const [blogs, setBlogs] = useState([])
+  const [relevantBlogs, setRelevantBlogs] = useState([])
   const [errorMessage, setErrorMessages] = useState('')
   const [retryPosts, setRetryPosts] = useState(false)
   const [sortedBy, setSortedBy] = useState(true)
+  const [blogType, setBlogType] = useState("")
 
   useEffect( () => {
-    async function getBlogs() {
-        try {
-          const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
-          const data = await response.json()
-          setBlogs(data.data)
-        }catch(e) {
-            console.log('error in while getting feeds');
-            setErrorMessages("There was a problem fetching posts!")
-            setBlogs([])
-        }
+    async function getRelevantBlogs() {
+      try {
+        const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
+        const data = await response.json()
+        setRelevantBlogs(data.data)
+      } 
+      catch(e) {
+        console.log('error in while getting feeds');
+        setErrorMessages("There was a problem fetching posts!")
+        setRelevantBlogs([])
+      }
     }
-    getBlogs()
+    getRelevantBlogs()
   }, [retryPosts])
 
   const handleRetryFetchingPosts = () => {
@@ -31,7 +33,10 @@ export default function Page() {
     setErrorMessages("")
   }
 
-  if (! blogs?.length) return <div className="h-screen w-screen flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+  const componentList = ["Relevant", "Top", "Latest"]
+  const currentComponent = []
+
+  if (! relevantBlogs?.length) return <div className="h-screen w-screen flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
     {
       errorMessage ? <div className="h-screen w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
       <div className="shadow-white shadow-sm p-2  rounded-md  w-1/2 h-1/2 flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
@@ -49,22 +54,34 @@ export default function Page() {
   </div>
 
   const handleSortedBy = () => {
-    setBlogs([...blogs].reverse())
+    setRelevantBlogs([...relevantBlogs].reverse())
     setSortedBy(prev => ! prev)
   }
+
+
+  /* 
+    adding the top, latest and relevant options
+    when clicked on when one of them then the blogs should also.
+  */
   return (
     <div className="w-full bg-white/30 mx-auto z-[999]">
       <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
 
         {
+          
           errorMessage ?
+          
           null :
+          
           <div className={`flex items-center justify-start mt-4 gap-x-4 `}>
+           
             <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
+           
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
               </svg>
             </div>
+           
             <span className={` mt-4`}> Sorted By: {sortedBy ? "By most viewed" : "By less viewd"}</span>
           </div>
         }
@@ -72,7 +89,7 @@ export default function Page() {
         <div className="md:max-w-2xl max-w-[28rem]">
 
           {
-            blogs.map(blog => <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+            relevantBlogs.map(blog => <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
           }
         </div>
       </div>
