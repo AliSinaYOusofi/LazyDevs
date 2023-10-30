@@ -5,6 +5,7 @@ const SignedUpUser = require("../models/Register");
 const Comment = require("../models/Comments");
 const Likes = require("../models/postLikes");
 const PostView = require("../models/PostViews");
+const { formatDistanceToNow, getYear, formatDistanceStrict, formatDistanceToNowStrict } = require("date-fns");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
@@ -21,6 +22,7 @@ router.get("/newsfeed", async (req, res) => {
             blog.profileUrl = authorData[index].profileUrl;
             blog.username = authorData[index].username;
             blog.viewCount = 0
+            blog.distance = formatDistanceToNowStrict(new Date(blog.createdAt), {addSuffix: true}).replace("about", "")
             return blog;
         });
 
@@ -38,6 +40,51 @@ router.get("/newsfeed", async (req, res) => {
   
     } catch (e) {  
         console.log(e, "fetching blogs");
+        res.status(200).json({
+            status: "failed"
+        });  
+    }     
+});
+
+
+router.get("/top", async (req, res) => {
+     
+    /* this gets the most viewed blog first
+    // then we set the threshold
+    // and filter based on that threshold */
+    try {
+        const blogs = await Post.find().lean().exec();
+    
+        const authorIds = blogs.map(blog => blog.author);
+        const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+        const authorData = await Promise.all(authorDataPromises);
+    
+        const completeBlogData = blogs.map((blog, index) => {
+            blog.profileUrl = authorData[index].profileUrl;
+            blog.username = authorData[index].username;
+            blog.distance = formatDistanceToNow(blog.createdAt, {addSuffix: true}).replace("about", "")
+            blog.viewCount = 0
+            return blog;
+        });
+
+        for (const blog of completeBlogData) {
+            const views = await PostView.find({post_id: blog._id}).lean().exec()    
+            blog.viewCount = views.length
+        }
+
+        const mostViewdBlogs = completeBlogData.reduce( (pre, curr) => pre.viewCount > curr.viewCount ? pre : curr)
+        const viewCountThreshold = mostViewdBlogs.viewCount - 2
+
+        let filterBlogsBasedOnMostViewBlogs = completeBlogData.filter( a => a.viewCount >= viewCountThreshold)
+        filterBlogsBasedOnMostViewBlogs.sort( (a, b) => b.viewCount - a.viewCount);
+    
+        return res.status(200).json({
+            status: "success",
+            data: filterBlogsBasedOnMostViewBlogs
+        });
+  
+    } catch (e) {  
+        console.log(e, "fetching top blogs");
         res.status(200).json({
             status: "failed"
         });  
