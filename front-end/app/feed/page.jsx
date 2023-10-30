@@ -3,94 +3,47 @@
 import BlogCard from '@/components/BlogCard/BlogCard';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import React, {useState, useEffect} from 'react'
+import RelevantFeeds from './RelevantFeeds';
+import TopFeed from './TopFeed';
+import LatestFeed from './LatestFeed';
 
 export default function Page() {
   
-  const [relevantBlogs, setRelevantBlogs] = useState([])
-  const [errorMessage, setErrorMessages] = useState('')
-  const [retryPosts, setRetryPosts] = useState(false)
-  const [sortedBy, setSortedBy] = useState(true)
-  const [blogType, setBlogType] = useState("")
-
-  useEffect( () => {
-    async function getRelevantBlogs() {
-      try {
-        const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
-        const data = await response.json()
-        setRelevantBlogs(data.data)
-      } 
-      catch(e) {
-        console.log('error in while getting feeds');
-        setErrorMessages("There was a problem fetching posts!")
-        setRelevantBlogs([])
-      }
-    }
-    getRelevantBlogs()
-  }, [retryPosts])
-
-  const handleRetryFetchingPosts = () => {
-    setRetryPosts(prev => ! prev)
-    setErrorMessages("")
-  }
-
-  const componentList = ["Relevant", "Top", "Latest"]
-  const currentComponent = []
-
-  if (! relevantBlogs?.length) return <div className="h-screen w-screen flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
-    {
-      errorMessage ? <div className="h-screen w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
-      <div className="shadow-white shadow-sm p-2  rounded-md  w-1/2 h-1/2 flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
-          <FetchPostError error={errorMessage} />
-          <button onClick={handleRetryFetchingPosts} className="mt-10 flex group items-center justify-center  px-5 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
-            <span className="mr-2 pb-2">Try again</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 group group-hover:animate-spin">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-          </button>
-      </div>
-  </div>
-      : <div className="border-t-transparent border-solid animate-spin rounded-full border-black border-2 h-7 w-7"></div>
-    }
-  </div>
-
-  const handleSortedBy = () => {
-    setRelevantBlogs([...relevantBlogs].reverse())
-    setSortedBy(prev => ! prev)
-  }
-
-
+  const [blogType, setBlogType] = useState("Relevant")
+  
+  const menutItems = ["Relevant", "Top", "Latest"]
+  const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />]
+  const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
   /* 
     adding the top, latest and relevant options
     when clicked on when one of them then the blogs should also.
   */
+
+  const liItemStyle = 'bg-gray-100 px-4 py-1 rounded-sm   transition-all duration-300'
+  
+  const handleLiItemsClick = (e) => {
+    setBlogType(e.target.textContent.trim())
+    setCurrentComponent(components[menutItems.indexOf(e.target.textContent.trim())])
+  }
+
+  const menutItemsHTML = menutItems.map( li => {
+    return (
+      <ul >
+        <li onClick={handleLiItemsClick} key={li} className={`${blogType === li ? liItemStyle : "cursor-pointer px-4 py-1 rounded-sm"}`}> {li} </li>
+      </ul>
+    )
+  })
+
   return (
     <div className="w-full bg-white/30 mx-auto z-[999]">
+      
       <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
-
-        {
-          
-          errorMessage ?
-          
-          null :
-          
-          <div className={`flex items-center justify-start mt-4 gap-x-4 `}>
-           
-            <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
-           
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-              </svg>
-            </div>
-           
-            <span className={` mt-4`}> Sorted By: {sortedBy ? "By most viewed" : "By less viewd"}</span>
-          </div>
-        }
-
-        <div className="md:max-w-2xl max-w-[28rem]">
-
-          {
-            relevantBlogs.map(blog => <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
-          }
+        <div className="flex flex-row gap-x-10 justify-start items-start w-full mt-10">
+          {menutItemsHTML}
+        </div>
+        
+        <div className="md:max-w-2xl max-w-[28rem]">  
+          {currentComponent}
         </div>
       </div>
     </div>
