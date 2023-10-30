@@ -50,9 +50,9 @@ export default function Login() {
     }
 
     return (
-        <div className="h-screen flex flex-col items-center justify-center gap-x-10">
+        <div className="h-screen flex flex-col items-center justify-center gap-x-10 md:px-0">
 
-            <div className="w-full md:max-w-7xl md:mx-auto md:flex md:flex-col md:items-center md:justify-center md:gap-x-10">
+            <div className="w-full md:max-w-7xl md:px-0 px-2 md:mx-auto md:flex md:flex-col md:items-center md:justify-center md:gap-x-10">
                 <p className="text-center mt-2 font-bold">Sign in to access your account</p>
 
                 <div className="mt-5 mx-auto md:w-3/5 w-full max-w-md">
