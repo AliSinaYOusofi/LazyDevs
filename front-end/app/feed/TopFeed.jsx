@@ -10,6 +10,7 @@ export default function TopFeed() {
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
+    const [sorteByDate, setSortedByDate] = useState(false)
 
     useEffect( () => {
         
@@ -18,14 +19,14 @@ export default function TopFeed() {
                 const response = await fetch('http://localhost:3001/blogRoutes/top', {method: "GET"});
                 const data = await response.json()
                 
-                if (data.status === "success") setRelevantBlogs(data.data)
+                if (data.status === "success") setTopBlogs(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
                 
                 else setErrorMessages("server error while fethcing posts")
             } 
             catch(e) {
-                console.log('error in while getting feeds');
+                console.log('error in while getting feeds', e);
                 setErrorMessages("There was a problem fetching posts!")
                 setTopBlogs([])
             }
@@ -39,8 +40,14 @@ export default function TopFeed() {
     }
 
     const handleSortedBy = () => {
-        setTopBlogs([...topBlogs].reverse())
+        
         setSortedBy(prev => ! prev)
+
+        sortedBy 
+        ?
+            setTopBlogs(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
+        :
+            setTopBlogs(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
     }
 
     if (! topBlogs?.length) return <div className="flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
@@ -64,6 +71,21 @@ export default function TopFeed() {
         }
     </div>
 
+    const handleSortPostsByDate = () => {
+        
+        setSortedByDate(prev => ! prev)
+
+        setTopBlogs( topBlogs => {
+            
+            const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
+                const firstDate = a.createAt
+                const secondDate = b.createdAt
+                return sorteByDate ? firstDate > secondDate : secondDate > firstDate
+            })
+
+            return sortedByDatePosts
+        })
+    }
     return (
         <>
             {
@@ -72,7 +94,7 @@ export default function TopFeed() {
                 
                 null :
                 
-                <div className={`flex items-center justify-start mt-4 gap-x-4 `}>
+                <div className={`flex items-center justify-start mt-4 gap-x-4 md:ml-0 ml-2`}>
                 
                     <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
                 
@@ -82,7 +104,12 @@ export default function TopFeed() {
                     </div>
                 
                     <span className={` mt-4`}> Sorted By: {sortedBy ? "By most viewed" : "By less viewd"}</span>
-                    <button> SortByDate</button>
+                    <button
+                        type="button" 
+                        className={`${sorteByDate ? "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-800 text-white transition-all text-lg": "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-500 text-white transition-all text-lg"}`}
+                        onClick={handleSortPostsByDate}
+                    > SortByDate
+                    </button>
                 </div>
             }
             {

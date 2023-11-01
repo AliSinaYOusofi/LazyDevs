@@ -11,7 +11,7 @@ export default function RelevantFeeds() {
     const [relevantBlogs, setRelevantBlogs] = useState([])
     const [errorMessage, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
-    const [sortedBy, setSortedBy] = useState(false)
+    const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
     
     useEffect( () => {
@@ -46,9 +46,9 @@ export default function RelevantFeeds() {
         
         sortedBy 
         ?
-            setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => b.viewCount > a.viewCount))
-        :
             setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => a.viewCount > b.viewCount))
+        :
+            setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => b.viewCount > a.viewCount))
 
     }
     
@@ -73,11 +73,9 @@ export default function RelevantFeeds() {
         }
     </div>
 
-    const handleSortPosts = () => {
+    const handleSortPostsByDate = () => {
         
         setSortedByDate(prev => ! prev)
-        
-        console.log("what the fuck")
 
         setRelevantBlogs( date => {
             const blogsSortedByDate = date.slice().sort( (a, b) => {
@@ -98,7 +96,7 @@ export default function RelevantFeeds() {
                 
                 null :
                 
-                <div className={`flex items-center justify-start mt-4 gap-x-4 `}>
+                <div className={`flex items-center justify-start mt-4 gap-x-4 md:ml-0 ml-2`}>
                 
                     <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
                 
@@ -112,7 +110,7 @@ export default function RelevantFeeds() {
                     <button
                         type="button" 
                         className={`${sorteByDate ? "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-800 text-white transition-all text-lg": "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-500 text-white transition-all text-lg"}`}
-                        onClick={handleSortPosts}
+                        onClick={handleSortPostsByDate}
                     > SortByDate
                     </button>
                 </div>
