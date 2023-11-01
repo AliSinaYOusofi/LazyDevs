@@ -47,6 +47,48 @@ router.get("/newsfeed", async (req, res) => {
 });
 
 
+router.get("/recent", async (req, res) => {
+     
+    // get thre recent posts only
+    // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
+    // or something
+    
+    try {
+        const blogs = await Post.find().lean().exec();
+    
+        const authorIds = blogs.map(blog => blog.author);
+        const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+        const authorData = await Promise.all(authorDataPromises);
+    
+        const completeBlogData = blogs.map((blog, index) => {
+            blog.profileUrl = authorData[index].profileUrl;
+            blog.username = authorData[index].username;
+            blog.viewCount = 0
+            blog.distance = formatDistanceToNowStrict(new Date(blog.createdAt), {addSuffix: true}).replace("about", "")
+            return blog;
+        });
+
+        for (const blog of completeBlogData) {
+            const views = await PostView.find({post_id: blog._id}).lean().exec()    
+            blog.viewCount = views.length
+        }
+
+        completeBlogData.sort( (a, b) => b.viewCount - a.viewCount);
+    
+        return res.status(200).json({
+            status: "success",
+            data: completeBlogData
+        });
+  
+    } catch (e) {  
+        console.log(e, "fetching blogs");
+        res.status(200).json({
+            status: "failed"
+        });  
+    }     
+});
+
+
 router.get("/top", async (req, res) => {
      
     /* this gets the most viewed blog first

@@ -25,11 +25,11 @@ export default function Avatar({profileUrl}) {
 
             </Link>
             
-            <Link href="/my_account" className="cursor-pointer">
+            <Link href="/my_account" className="cursor-pointer rounded-full h-10 w-10">
                 <img
                     src={profileUrl}
                     alt="user profile image"
-                    className="object-contain w-16 h-16   md:w-10 md:h-10 md:shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
+                    className="object-contain bg-cover w-10 h-10 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
                 />
             </Link>
         </div>
