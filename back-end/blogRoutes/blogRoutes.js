@@ -5,7 +5,7 @@ const SignedUpUser = require("../models/Register");
 const Comment = require("../models/Comments");
 const Likes = require("../models/postLikes");
 const PostView = require("../models/PostViews");
-const { formatDistanceToNow, getYear, formatDistanceStrict, formatDistanceToNowStrict } = require("date-fns");
+const { formatDistanceToNow, formatDistanceToNowStrict, parseISO, subDays, differenceInDays, parse } = require("date-fns");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
@@ -52,7 +52,7 @@ router.get("/recent", async (req, res) => {
     // get thre recent posts only
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
-    
+
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -73,11 +73,23 @@ router.get("/recent", async (req, res) => {
             blog.viewCount = views.length
         }
 
-        completeBlogData.sort( (a, b) => b.viewCount - a.viewCount);
-    
+        let latestBlogPostedThreshold = completeBlogData.reduce( (latest, blog) => {
+            if (!latest || blog.createdAt > latest.createdAt) return blog
+            return latest
+        }, null)
+        
+        latestBlogPostedThreshold = new Date(latestBlogPostedThreshold)
+        console.log(latestBlogPostedThreshold, 'threshold')
+
+        const latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
+            const blogDate = new Date(blog.createdAt)
+            return differenceInDays(latestBlogPostedThreshold, blogDate) <= 15
+        })
+
+        console.log('posted 15 days before', latestBlogPostedThreshold, latestBlogs15DaysAfterLatestBlog)
         return res.status(200).json({
             status: "success",
-            data: completeBlogData
+            data: latestBlogs15DaysAfterLatestBlog
         });
   
     } catch (e) {  
