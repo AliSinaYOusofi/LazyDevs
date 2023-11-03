@@ -176,7 +176,7 @@ export default function Page() {
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">
                     
-                    <UserCard email={currentBlog?.email} date={currentBlog?.joined} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
+                    <UserCard email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
                     
                     <ReadingTime paragraphs={currentBlog?.body}/>
 

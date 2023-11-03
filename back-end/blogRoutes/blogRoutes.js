@@ -5,7 +5,7 @@ const SignedUpUser = require("../models/Register");
 const Comment = require("../models/Comments");
 const Likes = require("../models/postLikes");
 const PostView = require("../models/PostViews");
-const { formatDistanceToNow, formatDistanceToNowStrict, parseISO, subDays, differenceInDays, parse } = require("date-fns");
+const { formatDistanceToNow, formatDistanceToNowStrict, parseISO, subDays, differenceInDays, parse, intervalToDuration, formatISO } = require("date-fns");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
 
@@ -78,18 +78,19 @@ router.get("/recent", async (req, res) => {
             return latest
         }, null)
         
-        latestBlogPostedThreshold = new Date(latestBlogPostedThreshold)
-        console.log(latestBlogPostedThreshold, 'threshold')
+        latestBlogPostedThreshold = new Date(latestBlogPostedThreshold.createdAt)
 
         const latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
+            
             const blogDate = new Date(blog.createdAt)
-            return differenceInDays(latestBlogPostedThreshold, blogDate) <= 15
+            const timeDifference = latestBlogPostedThreshold - blogDate
+            const daysDifference = timeDifference / (1000 * 60 * 60 * 24)
+            return daysDifference <= 15
         })
 
-        console.log('posted 15 days before', latestBlogPostedThreshold, latestBlogs15DaysAfterLatestBlog)
         return res.status(200).json({
             status: "success",
-            data: latestBlogs15DaysAfterLatestBlog
+            data: latestBlogs15DaysAfterLatestBlog.reverse()
         });
   
     } catch (e) {  
@@ -376,4 +377,34 @@ router.post("/save_new_visitor", async (req, res) => {
     return res.status(200).json({ status: "failed", data: "post not found" });
 })
 
+
+// the following is for deleting blogs:
+
+router.get("/delete_post/:post_id", async (req, res) => {
+    
+    const {post_id} = req.params
+
+    try {
+        const blogExists = await Blogs.findById({post_id}).lean().exec()
+
+        if (blogExists) {
+
+            
+            return res.status(200).json({
+                status: "success",
+            })
+        } else {
+            return res.status(200).json({
+                status: "failed",
+                reason: "post not found"
+            })
+        }
+    } catch (e) {
+        console.log("exception happened while deleting a post => ", e)
+        return res.status(200).json({
+            status: "failed",
+            reason: "server"
+        })
+    }
+})
 module.exports = router
