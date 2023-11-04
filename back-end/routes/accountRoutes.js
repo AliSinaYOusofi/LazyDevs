@@ -1,3 +1,4 @@
+const { formatDistanceToNow } = require("date-fns");
 const Post = require("../models/Blogs");
 const PostView = require("../models/PostViews");
 const SignedUpUser = require("../models/Register");
@@ -20,6 +21,7 @@ router.get("/my_posts/:author", async (req, res) => {
         for (let post of Posts) {
             const views = await PostView.find({post_id: post._id}).lean().exec()
             post.viewCount = views.length
+            post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
         }
 
         Posts.sort( (a, b) => b.viewCount - a.viewCount)
