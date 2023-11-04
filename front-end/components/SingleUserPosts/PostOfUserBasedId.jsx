@@ -13,6 +13,7 @@ export default function PostOfUserBasedId({author}) {
     const [errorMessages, setErrorMessages] = useState('')
     const [sortedBy, setSortedBy] = useState(true)
     const [retryPosts, setRetryPosts] = useState(false)
+    const [deletePost, setDeletePost] = useState(false)
 
     useEffect( () => {
         async function getUserBlogsBasedOnAuthorOfTheUser() {
@@ -29,7 +30,7 @@ export default function PostOfUserBasedId({author}) {
 
         getUserBlogsBasedOnAuthorOfTheUser()
 
-    }, [author, retryPosts])
+    }, [author, retryPosts, deletePost])
 
     const reversePosts = () => {
         setPosts([...posts].reverse())
@@ -106,7 +107,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <SingleUserPostBlogTemplate dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }
