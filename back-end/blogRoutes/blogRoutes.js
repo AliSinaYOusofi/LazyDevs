@@ -351,7 +351,7 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
 router.post("/save_new_visitor", async (req, res) => {
     
     let { post_id, user_id } = req.body; 
-    
+
     if (post_id) {
 
         try {
@@ -380,19 +380,22 @@ router.post("/save_new_visitor", async (req, res) => {
 
 // the following is for deleting blogs:
 
-router.get("/delete_post/:post_id", async (req, res) => {
+router.delete("/delete_post/:post_id", async (req, res) => {
     
-    const {post_id} = req.params
+    let {post_id} = req.params
+    post_id = post_id.split(":")[1]
 
     try {
-        const blogExists = await Blogs.findById({post_id}).lean().exec()
+        const blogExists = await Post.findById(post_id).lean().exec()
 
         if (blogExists) {
 
-            
+            const resultOfDeletion = await Post.findByIdAndRemove(post_id)
+
             return res.status(200).json({
                 status: "success",
             })
+
         } else {
             return res.status(200).json({
                 status: "failed",
@@ -400,7 +403,7 @@ router.get("/delete_post/:post_id", async (req, res) => {
             })
         }
     } catch (e) {
-        console.log("exception happened while deleting a post => ", e)
+        console.log("exception happened while deleting a post => () ", e)
         return res.status(200).json({
             status: "failed",
             reason: "server"

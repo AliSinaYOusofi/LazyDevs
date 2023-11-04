@@ -1,20 +1,26 @@
 import React, { useState } from 'react'
 import ModalComponent from './DeletePostOption'
+import Link from 'next/link'
 
-export default function SingleUserPostBlogTemplate({title, date, viewCount, commentCount, dateDifference, id}) {
+export default function SingleUserPostBlogTemplate({title, date, viewCount, commentCount, dateDifference, id, parentUseEffectTrigger}) {
     
     const [modal, setModal] = useState(false)
+
+    const handleOpenModal = () => {
+        setModal(prev => !prev)
+    }
 
     return (
         
         <>
-            <div className="w-full flex flex-row items-center justify-between">
-                <div>
-                    <h1 className="text-3xl  font-bold tracking-wide">{title}</h1>
+            <hr />
+            <div className="w-full flex flex-col md:flex-row md:items-center justify-between mt-3 mb-3">
+                <div className="md:w-1/2">
+                    <Link href={{ pathname:"/view_post", query: {post: id} }} className="text-3xl line-clamp-2 hover:underline  font-bold tracking-wide">{title}</Link>
                     <p className="mt-4">{date ? date.split("T")[0] : ""} <i className="text-sm text-gray-600"> ({dateDifference}) </i></p>
                 </div>
 
-                <div className="flex flex-row items-center gap-x-4">
+                <div className="flex flex-row items-center gap-x-4 md:mt-0 mt-4">
 
                     <div className="flex items-center gap-x-1">
                         
@@ -37,12 +43,15 @@ export default function SingleUserPostBlogTemplate({title, date, viewCount, comm
                 {/* options available for the post */}
                 <div>
                     <button className="h-10 px-5 m-2 text-blue-100 transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700"> Stats </button>
-                    <button onClick={() => setModal(prev => !prev)} className="h-10 px-5 m-2 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"> Delete </button>
+                    <button onClick={handleOpenModal} className="h-10 px-5 m-2 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"> Delete </button>
                 </div>
             </div>
+            <hr />
 
             {/* if postDelete pressed show the options */}
-            <ModalComponent />
+            {
+                modal ? <ModalComponent refechPosts={parentUseEffectTrigger} func={setModal} mod={modal} id={id}/> : null
+            }
         </>
     )
 }

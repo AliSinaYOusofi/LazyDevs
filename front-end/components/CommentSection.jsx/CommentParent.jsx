@@ -50,14 +50,15 @@ export default function CommentParent({post_id}) {
             let json = await response.json();
 
             if (json.data === "saved") {
-                setCommentSuccessful(prev => !prev);
-                setComment("");
                 toast.success("comment posted")
+                setComment("");
+                // window.location.reload()
             } else toast.error("failed to comment! try again")
         } catch (error) {
             console.log("Error! posting comment: %s", error);
             toast.error("failed to post comment");
         }
+        setCommentSuccessful(prev => !prev);
     }
 
     useEffect( () => {
