@@ -4,8 +4,8 @@ import React, {useEffect, useState} from 'react'
 import BlogCard from '../BlogCard/BlogCard';
 import Link from 'next/link';
 import FetchPostError from '../Error/FetchPostError/FetchPostError';
-import SearchInput from '../SearchInput/SearchInput';
 import SearchBlogsBasedProps from '../SearchInput/SearchBlogsBasedProps';
+import SingleUserPostBlogTemplate from './SingleUserPostBlogTemplate';
 
 export default function PostOfUserBasedId({author}) {
 
@@ -16,7 +16,6 @@ export default function PostOfUserBasedId({author}) {
 
     useEffect( () => {
         async function getUserBlogsBasedOnAuthorOfTheUser() {
-
             if (!author) return alert("no author id provided") 
             try {
                 const response = await fetch(`http://localhost:3001/accountRoutes/my_posts/:${author}`, {method: "GET"});
@@ -48,7 +47,9 @@ export default function PostOfUserBasedId({author}) {
         setErrorMessages("")
     }
     if (posts === undefined) {
+
         return (
+
             <div className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
             
                 {
@@ -75,6 +76,7 @@ export default function PostOfUserBasedId({author}) {
     }
 
     return (
+
         <div className="w-[70%] ml-10">
             
             {
@@ -104,7 +106,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <BlogCard viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }
