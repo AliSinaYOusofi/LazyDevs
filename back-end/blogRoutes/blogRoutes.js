@@ -1,10 +1,9 @@
-const router = require("express").Router();
-
-const Post = require("../models/Blogs");
-const SignedUpUser = require("../models/Register");
-const Comment = require("../models/Comments");
-const Likes = require("../models/postLikes");
-const PostView = require("../models/PostViews");
+const router = require("express").Router()
+const Post = require("../models/Blogs")
+const SignedUpUser = require("../models/Register")
+const Comment = require("../models/Comments")
+const Likes = require("../models/postLikes")
+const PostView = require("../models/PostViews")
 const { formatDistanceToNow, formatDistanceToNowStrict, parseISO, subDays, differenceInDays, parse, intervalToDuration, formatISO } = require("date-fns");
 
 // const { getDB } = require("../db_connection/mongoose.db.config");
@@ -22,7 +21,7 @@ router.get("/newsfeed", async (req, res) => {
             blog.profileUrl = authorData[index].profileUrl;
             blog.username = authorData[index].username;
             blog.viewCount = 0
-            blog.distance = formatDistanceToNowStrict(new Date(blog.createdAt), {addSuffix: true}).replace("about", "")
+            blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
             return blog;
         });
 
@@ -64,13 +63,15 @@ router.get("/recent", async (req, res) => {
             blog.profileUrl = authorData[index].profileUrl;
             blog.username = authorData[index].username;
             blog.viewCount = 0
-            blog.distance = formatDistanceToNowStrict(new Date(blog.createdAt), {addSuffix: true}).replace("about", "")
+            blog.commentCount = 0
+            blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
             return blog;
         });
 
         for (const blog of completeBlogData) {
-            const views = await PostView.find({post_id: blog._id}).lean().exec()    
+            const views = await PostView.find({post_id: blog._id}).lean().exec()
             blog.viewCount = views.length
+            blog.commentCount = blog.comments.length
         }
 
         let latestBlogPostedThreshold = completeBlogData.reduce( (latest, blog) => {
@@ -78,11 +79,11 @@ router.get("/recent", async (req, res) => {
             return latest
         }, null)
         
-        latestBlogPostedThreshold = new Date(latestBlogPostedThreshold.createdAt)
+        latestBlogPostedThreshold = latestBlogPostedThreshold.createdAt
 
         const latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
             
-            const blogDate = new Date(blog.createdAt)
+            const blogDate = blog.createdAt
             const timeDifference = latestBlogPostedThreshold - blogDate
             const daysDifference = timeDifference / (1000 * 60 * 60 * 24)
             return daysDifference <= 15
@@ -92,7 +93,6 @@ router.get("/recent", async (req, res) => {
             status: "success",
             data: latestBlogs15DaysAfterLatestBlog.reverse()
         });
-  
     } catch (e) {  
         console.log(e, "fetching blogs");
         res.status(200).json({

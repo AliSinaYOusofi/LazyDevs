@@ -85,7 +85,7 @@ export default function PostOfUserBasedId({author}) {
                 ?
 
                     <div className="">
-                        <h1 className="text-5xl  font-bold tracking-wide mt-10 md:mt-0"> Your Posts ({posts.length})</h1>
+                        <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0"> Your Posts ({posts.length})</h1>
                         
                         <div className="flex items-center justify-start mt-4 gap-x-4">
                             <div onClick={reversePosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
@@ -107,7 +107,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <SingleUserPostBlogTemplate parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }

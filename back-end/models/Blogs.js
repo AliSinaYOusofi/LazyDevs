@@ -44,7 +44,7 @@ const PostSchema = new mongoose.Schema({
 
     createdAt: {
         type: Date,
-        default: new Date().toISOString(),
+        default: Date.now,
         required: false
     },
 

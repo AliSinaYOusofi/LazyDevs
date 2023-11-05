@@ -215,7 +215,7 @@ export default function Page() {
                     
                     {
                         recentBlogs && recentBlogs.length > 0
-                        ? <SearchBlogsBasedProps blogs={recentBlogs} size="tre"/>
+                        ? <SearchBlogsBasedProps showTitle={true} blogs={recentBlogs} size="tre"/>
                         : null
                     }
 
