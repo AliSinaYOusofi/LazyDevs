@@ -5,7 +5,7 @@ import FetchPostError from '../Error/FetchPostError/FetchPostError'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-export default function SearchBlogsBasedProps({blogs, size}) {
+export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
 
     const [searchFlag, setSearchFlag] = useState('Title')
     const [searchText, setSearchText] = useState('')
@@ -25,19 +25,32 @@ export default function SearchBlogsBasedProps({blogs, size}) {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
+    function hideUnHideElements (display, posts) {
+        
+        posts.forEach(blog => {
+            const element = document.getElementById(blog._id)
+            if (element) element.style.display = display
+
+        })
+    }
     const searchByTitle = (text) => {
         
         if (text) {
-            
-            console.log(blogs)
             const escapeSpecailChars = escapeRegExp(text)
             const searchRegex = new RegExp(escapeSpecailChars, 'i'); 
+            
             const matchingBlogs = blogs.filter((blog) => searchRegex.test(blog.title));
-        
+            const unmatchedBlogs = blogs.filter( blog => !matchingBlogs.includes(blog))
+
+            console.log(matchingBlogs, 'matching')
+            console.log(unmatchedBlogs, 'unmatched')
+            
             if (matchingBlogs.length > 0) {
-                console.log(matchingBlogs)
-                blogs.filter((blog) => !matchingBlogs.includes(blog)).forEach(blog => document.getElementById(blog._id).style.display = "none")
+                    
+                hideUnHideElements("flex", matchingBlogs)
+                hideUnHideElements("none", unmatchedBlogs)
                 setResult(matchingBlogs.length)
+                
             } 
             
             else {
@@ -48,7 +61,7 @@ export default function SearchBlogsBasedProps({blogs, size}) {
         } 
         
         else {
-            blogs.forEach(blog => document.getElementById(blog._id).style.display = "block")
+            hideUnHideElements("flex", blogs)
         }
     }
 
@@ -83,7 +96,7 @@ export default function SearchBlogsBasedProps({blogs, size}) {
     return (
 
         <>
-            <div className={`flex md:${size ? "flex-col" : "flex-row"} flex-col items-center p-6 space-x-6 bg-white rounded-xl`}>
+            <div  className={`flex md:${size ? "flex-col" : "flex-row"} flex-col items-center p-6 space-x-6 bg-white rounded-xl`}>
                 
                 <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
                 
@@ -98,19 +111,22 @@ export default function SearchBlogsBasedProps({blogs, size}) {
                     </div>
                 </div>
                 
-                <div className="flex py-3 px-4 rounded-lg text-gray-500 font-semibold cursor-pointer">
+                {
+                    showTitle ? <div className="flex py-3 px-4 rounded-lg text-gray-500 font-semibold cursor-pointer">
                 
-                    <select className="py-3 px-4 rounded-lg border-none outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
-                        <option value="Title" selected>Title</option>
-                        <option value="Body">Body</option>
-                        <option value="Most occurring">Most occuring</option>
-                    </select>
-            
-                </div>
+                        <select defaultValue={"Title"} className="py-3 px-4 rounded-lg border-none outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
+                            <option value="Title" selected>Title</option>
+                            <option value="Body">Body</option>
+                            <option value="Most occurring">Most occuring</option>
+                        </select>
                 
-                <div onClick={handleClickonSearchButton} className="bg-gray-800 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        </div> : 
+                        null
+                }
+                
+                <button type="button" onClick={handleClickonSearchButton} className={`${showTitle ? "mt-0" : "mt-2"} bg-gray-800 md:h-10 h-8 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer`}>
                     <span>Search</span>
-                </div>
+                </button>
             </div>
 
             {  

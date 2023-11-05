@@ -21,6 +21,7 @@ router.get("/my_posts/:author", async (req, res) => {
         for (let post of Posts) {
             const views = await PostView.find({post_id: post._id}).lean().exec()
             post.viewCount = views.length
+            post.commentCount = post.comments.length
             post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
         }
 
