@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-export default function UserCard({profile, email, username, date}) {
+export default function UserCard({profile, email, username, date, difference}) {
     return (
         <address className="flex items-center mb-6 not-italic rounded-full">
             <div className="inline-flex justify-center mt-4  p-4 items-center mr-3 text-sm text-gray-900">
@@ -15,7 +15,7 @@ export default function UserCard({profile, email, username, date}) {
                         </span>
                     </p>
                     <Link href={{ pathname:"/view_user", query: {email: profile ? profile[0]?.email : ""} }} className="text-base font-light text-blue-900 hover:underline">{email ? email : "NA"}</Link>
-                    <p className="text-base font-light text-gray-900"><time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022"> posted on {date ? date.split("T")[0] : "NA"}</time></p>
+                    <p className="text-base font-light text-gray-900"><time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022"> posted on {date ? date.split("T")[0] : "NA"} <span className="md:text-sm text-xs text-gray-600">({difference})</span> </time></p>
                 </div>
             </div>
         </address>

@@ -143,7 +143,7 @@ const UserInfoForm = () => {
 
                 <Profile />
 
-                <div className="flex mt-10 gap-x-4">
+                <div className="flex  gap-x-4">
 
                     <div className="flex relative items-center border-2 py-2 px-3 rounded-md mb-4 group">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" viewBox="0 0 20 20"
