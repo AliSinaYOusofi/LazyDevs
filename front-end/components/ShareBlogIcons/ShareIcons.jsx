@@ -53,7 +53,6 @@ export default function SocialIcons({post_id}) {
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/get_likes_comments_count/:${post_id}`, {method: "GET"});
                 const data = await response.json()
-                console.log(data, 'response from view count')
 
                 if (data.status === "success") {
                     setViewCount(data.likeCount?.length)

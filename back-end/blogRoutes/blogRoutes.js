@@ -18,8 +18,8 @@ router.get("/newsfeed", async (req, res) => {
         const authorData = await Promise.all(authorDataPromises);
     
         const completeBlogData = blogs.map((blog, index) => {
-            blog.profileUrl = authorData[index].profileUrl;
-            blog.username = authorData[index].username;
+            blog.profileUrl = authorData[index].profileUrl
+            blog.username = authorData[index].username
             blog.viewCount = 0
             blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
             return blog;
@@ -46,11 +46,14 @@ router.get("/newsfeed", async (req, res) => {
 });
 
 
-router.get("/recent", async (req, res) => {
+router.get("/recent/:post_id", async (req, res) => {
      
     // get thre recent posts only
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
+
+    let {post_id} = req.params
+    post_id = post_id?.split(":")[1]
 
     try {
         const blogs = await Post.find().lean().exec();
@@ -81,14 +84,14 @@ router.get("/recent", async (req, res) => {
         
         latestBlogPostedThreshold = latestBlogPostedThreshold.createdAt
 
-        const latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
+        let latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
             
-            const blogDate = blog.createdAt
-            const timeDifference = latestBlogPostedThreshold - blogDate
-            const daysDifference = timeDifference / (1000 * 60 * 60 * 24)
-            return daysDifference <= 15
+            const blogDate = new Date(blog.createdAt)
+            return differenceInDays(blogDate, latestBlogPostedThreshold) <= 15
         })
 
+        latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.filter(blog => blog._id != post_id)
+        
         return res.status(200).json({
             status: "success",
             data: latestBlogs15DaysAfterLatestBlog.reverse()
@@ -162,7 +165,8 @@ router.post("/single_post/:post_id", async (req, res) => {
             singleBlog.username = singleBlogAuthor.username;
             singleBlog.joined = singleBlogAuthor.joined;
             singleBlog.email = singleBlogAuthor.email;
-            
+            singleBlog.distance = formatDistanceToNow(singleBlog.createdAt, {addSuffix: true}).replace("about", "")
+
             return res.status(200).json({
                 status: "success",
                 data: singleBlog

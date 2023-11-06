@@ -50,9 +50,10 @@ export default function Page() {
         
         const getRecentBlogs = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent/:${post_id}`, {method: "GET"});
                 const data = await response.json()
                 
+                console.log(data.data, 'recent posts')
                 if (data.data) setRecentBlogs(data.data)
                 else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
@@ -176,7 +177,7 @@ export default function Page() {
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">
                     
-                    <UserCard email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
+                    <UserCard difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
                     
                     <ReadingTime paragraphs={currentBlog?.body}/>
 
