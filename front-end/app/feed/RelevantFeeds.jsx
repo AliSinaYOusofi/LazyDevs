@@ -115,9 +115,11 @@ export default function RelevantFeeds() {
                     </button>
                 </div>
             }
-            {
-                relevantBlogs.map(blog => <BlogCard dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
-            }
+            <div className="md:w-fit w-screen">
+                {
+                    relevantBlogs.map(blog => <BlogCard dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                }
+            </div>
         </>
     )
 }

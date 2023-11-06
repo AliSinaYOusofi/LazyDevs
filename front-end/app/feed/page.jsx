@@ -42,7 +42,7 @@ export default function Page() {
           {menutItemsHTML}
         </div>
         
-        <div className="md:max-w-2xl max-w-[28rem]">  
+        <div className="md:max-w-2xl max-w-[50rem]">  
           {currentComponent}
         </div>
       </div>

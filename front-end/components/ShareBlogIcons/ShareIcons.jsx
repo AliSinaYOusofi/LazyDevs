@@ -56,7 +56,7 @@ export default function SocialIcons({post_id}) {
 
                 if (data.status === "success") {
                     setViewCount(data.likeCount?.length)
-                    setCommentCount(data.commentCount ?  data.commentCount.length : 0)
+                    setCommentCount(data?.commentCount ?  data.commentCount.length : 0)
                 }
 
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments and view")

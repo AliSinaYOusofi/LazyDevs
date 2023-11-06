@@ -248,6 +248,8 @@ router.post("/get_post_comments", async (req, res) => {
                 comms.comment = await Promise.all(comms.comment.map(async comment => {
                 
                     const whoCommented = await SignedUpUser.findOne({ email: comment.author }).lean().exec();
+
+                    comment.distance = formatDistanceToNow(comment.commentedOn, {addSuffix: true}).replace("about", "")
                     
                     if (whoCommented) {
                     
@@ -257,7 +259,6 @@ router.post("/get_post_comments", async (req, res) => {
                     
                     return comment;
                 }));
-                
                 return comms;
             });
               

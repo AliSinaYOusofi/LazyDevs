@@ -22,13 +22,13 @@ const replySchema = new mongoose.Schema({
     
     createdAt: {
         type: Date,
-        default: new Date().toISOString(),
+        default: Date.now,
         required: false
     },
 
     updatedAt: {
         type: Date,
-        default: new Date().toISOString(),
+        default: Date.now,
         required: false,
         immutable: false
     },
