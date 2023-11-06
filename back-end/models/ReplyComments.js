@@ -10,14 +10,14 @@ const replySchema = new mongoose.Schema({
 
     author: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Author', 
-        required: true 
+        ref: 'SignedUpUser', 
+        required: false 
     },
 
     comment: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Comment', 
-        required: true 
+        ref: 'Comments', 
+        required: false 
     },
     
     createdAt: {

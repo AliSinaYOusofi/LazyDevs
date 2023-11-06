@@ -1,13 +1,51 @@
+import { useAppContext } from '@/context/useContextProvider'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
-export default function DisplayComments({author, comment, _id, profileUrl, date, distance}) {
+export default function DisplayComments({author, comment, _id, profileUrl, date, distance, post_id}) {
     
     const [replyCommentValue, setReplyCommentValue] = useState("")
     const [replyCommentSuccessful, setReplyCommentSuccessful] = useState(false)
     const [showCommentReplyTextArea, setShowCommentReplyTextArea] = useState(false)
+    const {currentUser} = useAppContext()
 
     const handleReplyComment = async () => {
-        console.log('saving reply')
+        
+        setReplyCommentSuccessful(prev => ! prev)
+        
+        try {
+            
+            const requestData = { 
+                post_id, 
+                reply : replyCommentValue, 
+                comment_id: _id,
+                user_id: currentUser._id
+            }
+
+            const response = await fetch(`http://localhost:3001/blogRoutes/save_comment_reply`, 
+            {
+                method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                }
+                );
+                
+                const data = await response.json()
+                if (data.status === "success") {
+                    toast.success("Reply posted")
+                }
+            } 
+            
+            catch (e) {
+                console.log("failed to post reply comment")
+                console.warn(e)
+                toast.error("Failed to post reply comment") 
+            }
+            
+            setReplyCommentValue("")
+            setReplyCommentSuccessful(prev => ! prev)
     }
     return (
         <>
@@ -52,12 +90,21 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                             </textarea>
                         </div>
 
-                        <div className="mt-2">
+                        <div className="mt-2 flex">
                             
                             <button
                                 disabled={replyCommentValue.length === 0}
-                                onClick={handleReplyComment} 
-                                className={`${replyCommentValue.length ? "cursor-pointer": "cursor-not-allowed"} md:h-10 h-8 px-5 text-blue-100 outline-none border-none transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700`}> Submit </button>
+                                onClick={handleReplyComment}
+                                 
+                                className={`${replyCommentValue.length ? "cursor-pointer": "cursor-not-allowed"} flex items-center justify-center gap-x-2 md:h-10 h-8 px-5 text-blue-100 outline-none border-none transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700`}
+                            > 
+                                Submit
+                                {
+                                    replyCommentSuccessful
+                                    ? <div className="border-t-transparent border-solid animate-spin  rounded-full border-gray-400 border-2 h-5 w-5"></div>
+                                    : null
+                                } 
+                            </button>
                             
                             <button 
                                 className="md:h-10 ml-2 h-8 px-5 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-300" onClick={() => setReplyCommentValue("")}> 
