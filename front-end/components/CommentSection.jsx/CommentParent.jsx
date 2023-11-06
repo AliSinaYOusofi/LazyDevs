@@ -170,7 +170,7 @@ export default function CommentParent({post_id}) {
                     {postCommentsErrorHandler}
                     
                     {
-                        postComments?.map(comment => <DisplayComments distance={comment.distance} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
+                        postComments?.map(comment => <DisplayComments post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
                 </div>
             </div>

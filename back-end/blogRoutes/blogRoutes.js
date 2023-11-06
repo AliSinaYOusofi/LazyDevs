@@ -4,9 +4,10 @@ const SignedUpUser = require("../models/Register")
 const Comment = require("../models/Comments")
 const Likes = require("../models/postLikes")
 const PostView = require("../models/PostViews")
-const { formatDistanceToNow, formatDistanceToNowStrict, parseISO, subDays, differenceInDays, parse, intervalToDuration, formatISO } = require("date-fns");
-
-// const { getDB } = require("../db_connection/mongoose.db.config");
+const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays } = require("date-fns");
+const Comments = require("../models/Comments")
+const { default: mongoose } = require("mongoose")
+const replyComments = require("../models/ReplyComments")
 
 router.get("/newsfeed", async (req, res) => {
       
@@ -395,7 +396,7 @@ router.delete("/delete_post/:post_id", async (req, res) => {
 
         if (blogExists) {
 
-            const resultOfDeletion = await Post.findByIdAndRemove(post_id)
+            await Post.findByIdAndRemove(post_id)
 
             return res.status(200).json({
                 status: "success",
@@ -415,4 +416,49 @@ router.delete("/delete_post/:post_id", async (req, res) => {
         })
     }
 })
+
+router.post("/save_comment_reply", async (req, res) => {
+    
+    let {post_id, reply, comment_id, user_id} = req.body
+
+    if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
+    if (! post_id) return res.status(200).json({status: "failed", reason: "post not found"})
+
+    try {
+
+        const newReply = {
+            text: reply.trim(),
+            author: user_id.trim(),
+            comment: comment_id.trim()
+        }
+        // firs inserting data to replyComments and taking
+        // the id of it and saving it in comments reply field of it
+
+        let result = await replyComments.insertMany(newReply)
+
+        let ParentCommentSchema = await Comments.
+            findOneAndUpdate(
+                { post: post_id, comment: {$elemMatch: {_id: comment_id}}},
+                { $push: {replies : result[0]._id }},
+                { new: true }
+            ).
+            lean().
+            exec()
+        
+        return res.status(200).json({
+            status: "success",
+            data: ParentCommentSchema
+        })
+    }
+    catch( e ) {
+
+        console.log('failed while saving comment reply')
+        console.error(e)
+        return res.status(200).json({
+            status: "failed",
+            reason: "server"
+        })
+    }
+})
+
 module.exports = router
