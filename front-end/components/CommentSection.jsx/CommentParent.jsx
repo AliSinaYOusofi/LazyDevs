@@ -11,12 +11,13 @@ import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard';
 
 export default function CommentParent({post_id}) {
 
-    const [comment, setComment] = useState("");
-    const [commentSuccessful, setCommentSuccessful] = useState(false);
+    const [comment, setComment] = useState("")
+    const [commentSuccessful, setCommentSuccessful] = useState(false)
     const [errorMessage, setErrorMessages] = useState("")
     const [postComments, setPostComments] = useState(undefined);
     const [retryFetchComments, setRetryFetchComments] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
+    
     const {currentUser} = useAppContext(); 
 
 
@@ -51,7 +52,7 @@ export default function CommentParent({post_id}) {
 
             if (json.data === "saved") {
                 toast.success("comment posted")
-                setComment("");
+                setComment(" ");
                 // window.location.reload()
             } else toast.error("failed to comment! try again")
         } catch (error) {
@@ -142,8 +143,8 @@ export default function CommentParent({post_id}) {
                     </textarea>
                             
                     <button onClick={handleSumitComment} className="bg-neutral-50 px-6 py-3  hover:bg-neutral-300 rounded-md 
-                    flex items-center justify-center relative"
-                    disabled={commentSuccessful}>
+                        flex items-center justify-center relative"
+                        disabled={commentSuccessful}>
                         Comment
                         {
                             commentSuccessful
@@ -156,6 +157,7 @@ export default function CommentParent({post_id}) {
                         }
                     </button>
                 </div>
+
                 <div>
                     <h1 className="text-3xl font-bold tracking-wide mt-10"> Comments </h1>
                     {
@@ -164,12 +166,15 @@ export default function CommentParent({post_id}) {
                         <h1 className="text-3xl font-bold tracking-wide mt-10 text-gray-300"> No Comments Yet. Post a comment to start a conversation </h1>
                         : null
                     }
+
                     {postCommentsErrorHandler}
+                    
                     {
-                        postComments?.map(comment => <DisplayComments key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
+                        postComments?.map(comment => <DisplayComments distance={comment.distance} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
                 </div>
             </div>
+
             <div id="login" className="">
                 {
                     showNotLoggedInCard ?

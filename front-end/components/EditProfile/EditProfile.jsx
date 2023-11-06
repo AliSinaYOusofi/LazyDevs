@@ -125,25 +125,25 @@ const UserInfoForm = () => {
     return (
         <div className="shadow-white shadow-lg">
             
-            <div className="">
+            {/* <div className="">
 
                 <button 
                     type="button"
                     onClick={() => setPreviousDetails( prev => !prev )} 
-                    className=" px-2 ml-4 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                    className=" px-2 ml-4 shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white  py-2 rounded-md  font-semibold mb-2">
                     My Previous data
                 </button>
 
                 {
                     previousDetails ? <PreviousDetailsOfUser username={currentUser.username} fullName={currentUser.fullName} education={currentUser.education} bio={currentUser.bio} work={currentUser.work} profileUrl={currentUser.profileUrl}/> : null
                 }
-            </div>
+            </div> */}
             
             <form onSubmit={handleSubmit} className="flex flex-col mx-auto justify-center items-center w-full md:px-2 px-2">
 
                 <Profile />
 
-                <div className="flex  gap-x-4">
+                <div className="flex  gap-x-4 mt-4">
 
                     <div className="flex relative items-center border-2 py-2 px-3 rounded-md mb-4 group">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black" viewBox="0 0 20 20"
