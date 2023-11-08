@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import DisplayReplyComments from './DisplayReplyComments'
 import HiddenReplySmallPortion from './HiddenReplySmallPortion'
+import CopyToClipBoard from './CopyToClipBoard'
 
 export default function DisplayComments({author, comment, _id, profileUrl, date, distance, post_id, commentReplies, updateComments}) {
     
@@ -73,7 +74,10 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                     <p className="ml-4 md:text-base text-sm font- font-extralight flex items-center">{date ? date.split("T")[0] : "NA"}<i className="md:text-sm  font-extralight text-xs text-gray-600 ml-1"> ({distance}) </i></p>
                 </div>
 
-                <p className="ml-4 mt-4">{comment}</p>
+                <div className="w-full flex items-center justify-between">
+                    <p className="ml-4 mt-4">{comment}</p>
+                    <CopyToClipBoard content={comment}/>
+                </div>
             </div>
 
             <div className="flex items-center justify-start">
@@ -91,7 +95,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
     
                 </button>
 
-                <div onClick={handleReplyCommentValue} className="mt-3 cursor-pointer">
+                <div onClick={handleReplyCommentValue} className="mt-3 cursor-pointer ml-3">
                     {
                         replyHidden
                         ?
@@ -105,6 +109,12 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                             </svg>
                     }
                 </div>
+
+                {/* <div >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                    </svg>
+                </div> */}
             </div>
 
             {/* the text area for reply */}
