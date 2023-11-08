@@ -87,7 +87,7 @@ export default function CommentParent({post_id}) {
                 }
                 
                 else if (data.status === "success") {
-                    const extractedComments = data.data.map(comms => comms.comment).flat()
+                    const extractedComments = data.data.map(comms => comms.comment).flat().reverse()
                     const extractedReplies = data.data.map(reps => reps.replies).flat()
                     setCommentReplies(extractedReplies)
                     setPostComments(extractedComments)
@@ -182,7 +182,7 @@ export default function CommentParent({post_id}) {
                     {postCommentsErrorHandler}
                     
                     {
-                        postComments?.map(comment => <DisplayComments updateComments={commentReplyPosted} commentReplies={commentReplies} post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
+                        postComments?.map(comment => <DisplayComments updateComments={setCommentReplyPosted} commentReplies={commentReplies} post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
 
                 </div>

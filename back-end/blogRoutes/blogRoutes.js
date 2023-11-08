@@ -488,4 +488,69 @@ router.post("/save_comment_reply", async (req, res) => {
     }
 })
 
+// making a new route for the latest posts
+// how to determine the latest posts ???
+
+router.get("/recent_posts", async (req, res) => {
+    
+    try {
+        // first getting the latest post from db
+        // Get the latest post
+        const latestPostPosted = await Post.find()
+            .sort({ createdAt: -1 })
+            .limit(1)
+            .lean()
+            .exec();
+
+        if (latestPostPosted.length > 0) {
+            
+            let allPostesPosted = await Post.find().lean().exec()
+            let postsInLast15Days = allPostesPosted.filter(post => {
+                let postDate = new Date(post.createdAt)
+                return differenceInDays(postDate, latestPostPosted[0].createdAt) <= 15
+            })
+
+            const authorIds = postsInLast15Days.map(blog => blog.author);
+            const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+            const authorData = await Promise.all(authorDataPromises);
+            
+            postsInLast15Days = postsInLast15Days.map((blog, index) => {
+                
+                blog.profileUrl = authorData[index].profileUrl;
+                blog.username = authorData[index].username;
+                blog.viewCount = 0
+                blog.commentCount = 0
+                blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                return blog;
+            })
+
+            for (const blog of postsInLast15Days) {
+                const views = await PostView.find({post_id: blog._id}).lean().exec()
+                blog.viewCount = views.length
+                blog.commentCount = blog.comments.length
+            }
+
+            return res.status(200).json({
+                status: "success",
+                data: postsInLast15Days 
+            })
+            
+        } 
+        else {
+            return res.status(200).json({
+                status: "failed",
+                reason: "no latest post found"
+            })
+        }
+    }    
+    catch( e ) {
+        
+        console.error("error fetching recent post: => ", e)
+        
+        return res.status(200).json({
+            status: "failed",
+            reason: "server"
+        })
+    }
+})
 module.exports = router
