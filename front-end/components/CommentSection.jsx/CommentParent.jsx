@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import DisplayComments from './DisplayComments';
 import RecentPostsError from '../Error/RecentPostsError/RecentPostError';
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard';
+import DisplayReplyComments from './DisplayReplyComments';
 
 export default function CommentParent({post_id}) {
 
@@ -17,6 +18,8 @@ export default function CommentParent({post_id}) {
     const [postComments, setPostComments] = useState(undefined);
     const [retryFetchComments, setRetryFetchComments] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
+    const [commentReplies, setCommentReplies] = useState("")
+    const [commentReplyPosted, setCommentReplyPosted] = useState(false)
     
     const {currentUser} = useAppContext(); 
 
@@ -78,13 +81,20 @@ export default function CommentParent({post_id}) {
                 
                 const data = await response.json()
                 
-                if (data?.data?.length === 0) setPostComments([])
+                if (data?.data?.length === 0) {
+                    setPostComments([])
+                    setCommentReplies([])
+                }
+                
                 else if (data.status === "success") {
-                    const extractedComments = data.data.map(comms => comms.comment).flat();
-                    setPostComments(extractedComments);
-                    console.log(postComments, 'post comments')
+                    const extractedComments = data.data.map(comms => comms.comment).flat()
+                    const extractedReplies = data.data.map(reps => reps.replies).flat()
+                    setCommentReplies(extractedReplies)
+                    setPostComments(extractedComments)
                 } 
+                
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments")
+                
                 else if (data.data === "blogNotFound") setErrorMessages("Blog not found")
             }
             
@@ -92,12 +102,14 @@ export default function CommentParent({post_id}) {
                 console.log("error while fetching comments", e)
                 setErrorMessages("failed to get post comments")
             }
+
+            console.log(commentReplies)
         }
 
         getPostComments();
 
         return () => setNotLoggedInCard(false)
-    }, [commentSuccessful, post_id, retryFetchComments])
+    }, [commentSuccessful, post_id, retryFetchComments, commentReplyPosted])
 
     const handleRetryFetchPostComments = () => {
         setRetryFetchComments(prev => !prev)
@@ -170,8 +182,9 @@ export default function CommentParent({post_id}) {
                     {postCommentsErrorHandler}
                     
                     {
-                        postComments?.map(comment => <DisplayComments post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
+                        postComments?.map(comment => <DisplayComments updateComments={commentReplyPosted} commentReplies={commentReplies} post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
                     }
+
                 </div>
             </div>
 
