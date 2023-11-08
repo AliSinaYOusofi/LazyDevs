@@ -257,16 +257,42 @@ router.post("/get_post_comments", async (req, res) => {
                         comment.profileUrl = whoCommented?.profileUrl;
                         comment.username = whoCommented?.username;
                     }
+
+                    // for the replies part
+                    
                     
                     return comment;
                 }));
+                
+                comms.replies = await Promise.all(comms.replies.map( async reps => {
+
+                    const repliesFromReplyCommentsSchema = await replyComments.findById(reps._id)
+                    
+                    const theUserWhoReplied = await SignedUpUser.findById(repliesFromReplyCommentsSchema.author).lean().exec()
+                    
+                    const theRepliedDistanceToNow = formatDistanceToNow(repliesFromReplyCommentsSchema.createdAt, {addSuffix: true}).replace("about", "")
+                    
+                    const repliesObjectDataOfEachUser = {}
+
+                    if (theUserWhoReplied) {
+                
+                        repliesObjectDataOfEachUser._id = theUserWhoReplied._id
+                        repliesObjectDataOfEachUser.username = theUserWhoReplied.username
+                        repliesObjectDataOfEachUser.profileUrl = theUserWhoReplied.profileUrl
+                        repliesObjectDataOfEachUser.distanceToNow = theRepliedDistanceToNow
+                        repliesObjectDataOfEachUser.date = repliesFromReplyCommentsSchema.createdAt
+                        repliesObjectDataOfEachUser.body = repliesFromReplyCommentsSchema.text
+                        repliesObjectDataOfEachUser.commen_id = repliesFromReplyCommentsSchema.comment
+                    }
+
+                    return repliesObjectDataOfEachUser;
+                
+                }))
                 return comms;
             });
               
               // Wait for all the mapping operations to complete
             comments = await Promise.all(comments);
-
-            
 
             return res.status(200).json({
                 status: "success",
@@ -276,6 +302,7 @@ router.post("/get_post_comments", async (req, res) => {
         
         catch(e) {
 
+            console.error(e, 'while getting comments')
             return res.status(200).json({
                 status: "failed",
                 data: "server error"
