@@ -1,11 +1,11 @@
 "use client"
 
-import BlogCard from '@/components/BlogCard/BlogCard';
-import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import React, {useState, useEffect} from 'react'
 import RelevantFeeds from './RelevantFeeds';
 import TopFeed from './TopFeed';
 import LatestFeed from './LatestFeed';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Page() {
   
@@ -14,6 +14,7 @@ export default function Page() {
   const menutItems = ["Relevant", "Top", "Latest"]
   const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />]
   const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
+
   /* 
     adding the top, latest and relevant options
     when clicked on when one of them then the blogs should also.
@@ -35,17 +36,20 @@ export default function Page() {
   })
 
   return (
-    <div className="w-full bg-white/30 mx-auto z-[999]">
-      
-      <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
-        <div className="flex flex-row gap-x-10 justify-start items-start w-full mt-10">
-          {menutItemsHTML}
-        </div>
+    <>
+      <div className="w-full bg-white/30 mx-auto z-[999]">
         
-        <div className="md:max-w-2xl max-w-[50rem]">  
-          {currentComponent}
+        <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
+          <div className="flex flex-row gap-x-10 justify-start items-start w-full mt-10">
+            {menutItemsHTML}
+          </div>
+          
+          <div className="md:max-w-2xl max-w-[50rem]">  
+            {currentComponent}
+          </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
+    </>
   )
 }
