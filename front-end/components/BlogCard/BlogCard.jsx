@@ -1,23 +1,31 @@
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReadingTime from '../ReadingTime/ReadingTime'
 import { useAppContext } from '@/context/useContextProvider'
 import { toast } from 'react-toastify'
+import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 
-export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance}) {
+export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved}) {
     
-    const {currentUser} = useAppContext()
     const [savedToAccount, setSavedToAccount] = useState(false)
+    const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
+    const {currentUser} = useAppContext()
     // so when clicked on the Links we will go to the sing_post_view page
     // with passing the id as they query.
 
     // in the single_post_view page we get the id. search the database for that
     // id and view all the results in the single_post_view page.
-
-
     
+    useEffect( () => {
+        setSavedToAccount(saved)
+    }, [])
+
+
     const saveBlogToAccount = async () => {
         
+        if (!currentUser) return setNotLoggedInCard(prev => ! prev)
+        
+
         try {
 
             const response = await fetch(`http://localhost:3001/blogRoutes/save_post`, 
@@ -111,6 +119,18 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                         <span className="font-bold text-black/80">{username}</span>
                     </div>
                 </div>
+            </div>
+            
+            <div id="login" className="">
+                {
+                    showNotLoggedInCard ?
+                    <>
+                        <div className="blurry-background flex items-center justify-center">
+                            <NotLoggedInCard clicked={showNotLoggedInCard} onClose={setNotLoggedInCard}/> 
+                        </div>
+                    </>
+                    : null
+                }
             </div>
         </>
     )
