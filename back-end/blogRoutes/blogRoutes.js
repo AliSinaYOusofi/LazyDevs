@@ -8,6 +8,7 @@ const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays } = req
 const Comments = require("../models/Comments")
 const { default: mongoose } = require("mongoose")
 const replyComments = require("../models/ReplyComments")
+const Saved = require("../models/PostsSavedToAccount")
 
 router.get("/newsfeed", async (req, res) => {
       
@@ -546,6 +547,51 @@ router.get("/recent_posts", async (req, res) => {
     catch( e ) {
         
         console.error("error fetching recent post: => ", e)
+        
+        return res.status(200).json({
+            status: "failed",
+            reason: "server"
+        })
+    }
+})
+
+router.post("/save_post", async (req, res) => {
+
+    const {user_id, post_id} = req.body 
+    
+    if (! user_id ) {
+        return res.status(200).json({
+            status: "failed",
+            reason: "user_id required"
+        })
+    }
+
+    else if (! post_id) {
+        return res.status(200).json({
+            status: "failed",
+            reason: "post_id required"
+        })
+    }
+
+    try {
+        
+        const alreadySaved = await Saved.find({user: user_id, post: post_id}).lean().exec()
+
+        if (alreadySaved?.length > 0) {
+            await Saved.deleteOne({user: user_id, post: post_id})
+            return res.status(200).json({message: "deleted"})
+        } else {
+            let saveNewPostToAccount = new Saved({
+                user: user_id,
+                post: post_id
+            })
+            await saveNewPostToAccount.save()
+            return res.status(200).json({message: "saved"})
+        }
+    }
+    catch (e) {
+        
+        console.error("error saving post to account: => ", e)
         
         return res.status(200).json({
             status: "failed",
