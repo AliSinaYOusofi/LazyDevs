@@ -48,14 +48,16 @@ router.get("/newsfeed", async (req, res) => {
 });
 
 
-router.get("/recent/:post_id", async (req, res) => {
+router.get("/recent", async (req, res) => {
      
     // get thre recent posts only
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
 
-    let {post_id} = req.params
+    let {post_id, user_id} = req.query
+    
     post_id = post_id?.split(":")[1]
+    user_id = user_id?.split(":")[1]
 
     try {
         const blogs = await Post.find().lean().exec();
@@ -75,6 +77,10 @@ router.get("/recent/:post_id", async (req, res) => {
 
         for (const blog of completeBlogData) {
             const views = await PostView.find({post_id: blog._id}).lean().exec()
+            if (user_id) {
+                const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                blog.saved = alreadySaved.length > 0
+            }
             blog.viewCount = views.length
             blog.commentCount = blog.comments.length
         }
@@ -109,9 +115,15 @@ router.get("/recent/:post_id", async (req, res) => {
 
 router.get("/top", async (req, res) => {
      
+    console.log(req.query)
     /* this gets the most viewed blog first
     // then we set the threshold
     // and filter based on that threshold */
+
+    // need the id for checking if user has saved the post
+    // and chaning the UI accordingly
+    let {user_id} = req.query
+    user_id =  user_id?.split(":")[1]
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -128,7 +140,14 @@ router.get("/top", async (req, res) => {
         });
 
         for (const blog of completeBlogData) {
-            const views = await PostView.find({post_id: blog._id}).lean().exec()    
+            
+            const views = await PostView.find({post_id: blog._id}).lean().exec()
+            
+            if (user_id) {
+                const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                blog.saved = alreadySaved.length > 0
+            }    
+            
             blog.viewCount = views.length
         }
 
@@ -151,10 +170,10 @@ router.get("/top", async (req, res) => {
     }     
 });
   
-router.post("/single_post/:post_id", async (req, res) => {
+router.get("/single_post/:post_id", async (req, res) => {
     
-    let { post_id } = req.params;
-    post_id = String(post_id).split(":")[1];
+    let { post_id } = req.params
+    post_id = String(post_id).split(":")[1]
 
     if (post_id) {
         
@@ -492,8 +511,12 @@ router.post("/save_comment_reply", async (req, res) => {
 // making a new route for the latest posts
 // how to determine the latest posts ???
 
-router.get("/recent_posts", async (req, res) => {
+router.get("/recent_posts/", async (req, res) => {
     
+    let {user_id} = req.query
+
+    if (user_id) user_id = user_id?.split(":")[1]
+
     try {
         // first getting the latest post from db
         // Get the latest post
@@ -527,6 +550,11 @@ router.get("/recent_posts", async (req, res) => {
 
             for (const blog of postsInLast15Days) {
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
+
+                if (user_id) {
+                    const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                    blog.saved = alreadySaved.length > 0
+                }
                 blog.viewCount = views.length
                 blog.commentCount = blog.comments.length
             }

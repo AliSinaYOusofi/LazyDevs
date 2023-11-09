@@ -11,8 +11,6 @@ import { useSearchParams } from 'next/navigation';
 import ReadingTime from '@/components/ReadingTime/ReadingTime';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
-
-import TextToSpeech from '@/components/TextToSpeech/TextToSpeech';
 import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
 
 export default function Page() {
@@ -25,13 +23,14 @@ export default function Page() {
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
     const [sortedBy, setSortedBy] = useState(false)
 
-    const {currentUser} = useAppContext();
+    const {currentUser} = useAppContext()
     
+    console.log(currentUser)
     useEffect( () => {
         
         const getCurrentBlog = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/:${post_id}`, {method: "POST"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/:${post_id}`, {method: "GET"});
                 const data = await response.json()
                 setCurrentBlog(data.data)
                 if (data.data === undefined) {
@@ -50,10 +49,9 @@ export default function Page() {
         
         const getRecentBlogs = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent/:${post_id}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser._id : null}`, {method: "GET"});
                 const data = await response.json()
                 
-                console.log(data.data, 'recent posts')
                 if (data.data) setRecentBlogs(data.data)
                 else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
@@ -222,7 +220,7 @@ export default function Page() {
 
                     {
                         recentBlogs && recentBlogs.length > 0
-                            ? recentBlogs?.map(blog => <BlogCard dateDistance={blog.distance} viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
+                            ? recentBlogs?.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
                     }
                 </div>
 

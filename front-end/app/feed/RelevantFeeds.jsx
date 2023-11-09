@@ -2,6 +2,7 @@
 
 import BlogCard from '@/components/BlogCard/BlogCard'
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError'
+import { useAppContext } from '@/context/useContextProvider'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
@@ -13,11 +14,12 @@ export default function RelevantFeeds() {
     const [retryPosts, setRetryPosts] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
-    
+    const {currentUser} = useAppContext()
+
     useEffect( () => {
         async function getRelevantBlogs() {
             try {
-                const response = await fetch('http://localhost:3001/blogRoutes/newsfeed', {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
 
                 if (data.status === "success") setRelevantBlogs(data.data)

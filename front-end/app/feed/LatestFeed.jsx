@@ -1,5 +1,6 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError'
+import { useAppContext } from '@/context/useContextProvider'
 import React, { useEffect, useState } from 'react'
 
 export default function LatestFeed() {
@@ -9,12 +10,13 @@ export default function LatestFeed() {
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
+    const {currentUser} = useAppContext()
 
     useEffect( () => {
         
         async function getTopBlogs() {
             try {
-                const response = await fetch('http://localhost:3001/blogRoutes/recent_posts', {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent_posts?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
                 console.log(data)
                 if (data.status === "success") setTopBlogs(data.data)
@@ -112,7 +114,7 @@ export default function LatestFeed() {
             }
             <div className="md:max-w-2xl w-screen">
                 {
-                    topBlogs.map(blog => <BlogCard dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    topBlogs.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

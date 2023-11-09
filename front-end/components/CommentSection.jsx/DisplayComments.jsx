@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import DisplayReplyComments from './DisplayReplyComments'
 import HiddenReplySmallPortion from './HiddenReplySmallPortion'
 import CopyToClipBoard from './CopyToClipBoard'
+import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 
 export default function DisplayComments({author, comment, _id, profileUrl, date, distance, post_id, commentReplies, updateComments}) {
     
@@ -11,9 +12,12 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
     const [replyCommentSuccessful, setReplyCommentSuccessful] = useState(false)
     const [showCommentReplyTextArea, setShowCommentReplyTextArea] = useState(false)
     const [replyHidden, setReplyHidden] = useState(false)
+    const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
     const {currentUser} = useAppContext()
 
     const handleReplyComment = async () => {
+
+        if (!currentUser) return alert("not logged in ")
         
         setReplyCommentSuccessful(prev => ! prev)
         
@@ -64,6 +68,14 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
         }
     }
 
+    const handleShowReplyTextArea = () => {
+
+        if (!currentUser) {
+            setNotLoggedInCard(prev => ! prev)
+        } else {
+            setShowCommentReplyTextArea(true)
+        }
+    }
     return (
         <>
             <div key={_id} className="max-w-2xl mt-10  rounded-md p-4 shadow-[rgba(7,_65,_210,_0.1)_0px_3px_10px]">
@@ -83,7 +95,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
             <div className="flex items-center justify-start">
 
                 <button 
-                    onClick={() => setShowCommentReplyTextArea(true)}
+                    onClick={handleShowReplyTextArea}
                     className="mt-2 gap-x-2 flex items-center md:h-10 h-8 px-3 outline-none border-none transition-colors duration-150 hover:bg-gray-800 hover:text-white rounded-md"
                 > 
                     <span>
@@ -190,6 +202,18 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
             {
                 replyHidden ? <HiddenReplySmallPortion body={"replies hidden"}/> : null
             }
+
+            <div id="login" className="">
+                {
+                    showNotLoggedInCard ?
+                    <>
+                        <div className="blurry-background flex items-center justify-center">
+                            <NotLoggedInCard clicked={showNotLoggedInCard} onClose={setNotLoggedInCard}/> 
+                        </div>
+                    </>
+                    : null
+                }
+            </div>
         </>
     )
 }
