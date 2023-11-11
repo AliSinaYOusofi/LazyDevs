@@ -1,6 +1,12 @@
 "use client"
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import EditProfile from '@/components/EditProfile/EditProfile'
+import AnalyticsIcon from '@/components/SVG/AnalyticsIcon'
+import EditProfileIcon from '@/components/SVG/EditProfile'
+import FollowersIcon from '@/components/SVG/Followers'
+import PostsIcon from '@/components/SVG/PostsIcon'
+import ProfileIcon from '@/components/SVG/ProfileIcon'
+import SavedPostIcon from '@/components/SVG/SavedPostIcon'
 import SavedPosts from '@/components/SavedPosts/SavedPosts'
 import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
@@ -16,6 +22,7 @@ export default function Page() {
     const {currentUser} = useAppContext();
 
     let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Analytics", "Followers"]
+    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <AnalyticsIcon />, <FollowersIcon />]
     let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />]
 
     const handleListItemClick = (index) => {
@@ -23,13 +30,15 @@ export default function Page() {
         setCurrentComponent(components[index])
     }
 
+    const similarClass = "flex items-center justify-start transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 px-2 rounded-r-md mt-2 gap-x-2"
     const menuItems = liArray.map( (li, index) => 
         <li 
-            className={`${activeListItem === index  ? "shadow-sm border-l-4 border-l-black shadow-white border-r-black border-b-4 pl-2 rounded-md list-none py-2 mt-2 transition-all duration-200 cursor-pointer hover:translate-x-2": "transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 mt-2  list-none border-b-black border-b-[1px]"}`} 
+            className={`${activeListItem === index  ? `${similarClass} shadow-inner border-l-2 border-blue-500`: `${similarClass}`}`} 
             
             key={index} 
             
             onClick={() => handleListItemClick(index)}>
+            {liIconMapping[index]}
             {li}
         </li> 
     );
@@ -44,7 +53,7 @@ export default function Page() {
         <>
             <div className="w-full relative h-full gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
                 
-                <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0">
+                <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0 ">
                     
                     <ul className="">
                         {menuItems}

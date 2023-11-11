@@ -23,7 +23,6 @@ export default function SavedPosts() {
                 const response = await fetch(`http://localhost:3001/blogRoutes/posts_saved?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
                 
-                console.log(data)
                 if (data.message === "success") {
                     setSavedPosts(data.data)
 
@@ -57,6 +56,7 @@ export default function SavedPosts() {
     let noSavedPosts = 
         <div className="mx-auto w-full"> 
             <h1 className="text-5xl font-extrabold mb-10 "> You haven't saved a post yet</h1>
+            <p> Some posts you had saved might have been deleted by their owners.</p>
             <Link className="mt-10 text-gray-600 hover:text-black" href={"/feed"}> See posts </Link>
         </div>
 
