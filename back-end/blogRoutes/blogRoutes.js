@@ -56,9 +56,8 @@ router.get("/recent", async (req, res) => {
 
     let {post_id, user_id} = req.query
     
-    post_id = post_id?.split(":")[1]
-    user_id = user_id?.split(":")[1]
-
+    console.log(req.query)
+    console.log(post_id, user_id, 'from query')
     try {
         const blogs = await Post.find().lean().exec();
     

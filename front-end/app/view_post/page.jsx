@@ -12,6 +12,7 @@ import ReadingTime from '@/components/ReadingTime/ReadingTime';
 import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
 import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 export default function Page() {
 
@@ -25,7 +26,6 @@ export default function Page() {
 
     const {currentUser} = useAppContext()
     
-    console.log(currentUser)
     useEffect( () => {
         
         const getCurrentBlog = async () => {
@@ -49,7 +49,8 @@ export default function Page() {
         
         const getRecentBlogs = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser._id : null}`, {method: "GET"});
+
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
                 
                 if (data.data) setRecentBlogs(data.data)

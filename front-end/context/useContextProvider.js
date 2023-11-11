@@ -5,7 +5,7 @@ export const lazyContext = createContext("");
 
 export const LazyContextProvider = ({children}) => {
     const [profileUrl, setProfileUrl] = useState();
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState();
     return (
         <lazyContext.Provider 
             value={
