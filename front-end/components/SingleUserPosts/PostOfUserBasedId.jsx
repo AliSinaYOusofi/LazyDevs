@@ -47,6 +47,7 @@ export default function PostOfUserBasedId({author}) {
         setRetryPosts(prev => !prev)
         setErrorMessages("")
     }
+    
     if (posts === undefined) {
 
         return (
