@@ -1,10 +1,10 @@
 import { useAppContext } from "@/context/useContextProvider";
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 
 function useCurrentUser() {
     const {currentUser, setCurrentUser} = useAppContext()
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         
         if (localStorage.getItem("currentUser")) {
             setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));

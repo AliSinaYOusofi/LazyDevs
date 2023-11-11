@@ -115,7 +115,6 @@ router.get("/recent", async (req, res) => {
 
 router.get("/top", async (req, res) => {
      
-    console.log(req.query)
     /* this gets the most viewed blog first
     // then we set the threshold
     // and filter based on that threshold */
@@ -123,7 +122,7 @@ router.get("/top", async (req, res) => {
     // need the id for checking if user has saved the post
     // and chaning the UI accordingly
     let {user_id} = req.query
-    user_id =  user_id?.split(":")[1]
+    
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -515,8 +514,6 @@ router.get("/recent_posts/", async (req, res) => {
     
     let {user_id} = req.query
 
-    if (user_id) user_id = user_id?.split(":")[1]
-
     try {
         // first getting the latest post from db
         // Get the latest post
@@ -617,6 +614,85 @@ router.post("/save_post", async (req, res) => {
             return res.status(200).json({message: "saved"})
         }
     }
+    catch (e) {
+        
+        console.error("error saving post to account: => ", e)
+        
+        return res.status(200).json({
+            status: "failed",
+            reason: "server"
+        })
+    }
+})
+
+router.get("/posts_saved", async (req, res) => {
+    
+    const {user_id} = req.query 
+    
+    if (! user_id ) {
+        return res.status(200).json({
+            status: "failed",
+            reason: "user_id required"
+        })
+    }
+
+    try {
+        
+        let postsSaved = await Saved.find({user: user_id}).lean().exec()
+
+        if (postsSaved?.length > 0) {
+
+            // getting user details
+            const detailsOfUserWhoSavedPost = await SignedUpUser.findById(user_id).lean().exec();
+
+            postsSaved = await Promise.all(postsSaved.map(async (post) => {
+                
+                const currentSavedPost = await Post.findById(post.post).lean().exec();
+
+                if (currentSavedPost) {
+                
+                    const views = await PostView.find({ post_id: currentSavedPost._id }).lean().exec();
+                
+                    return {
+                        ...currentSavedPost,
+                        profileUrl: detailsOfUserWhoSavedPost.profileUrl,
+                        username: detailsOfUserWhoSavedPost.username,
+                        distance: formatDistanceToNowStrict(currentSavedPost.createdAt, { addSuffix: true }).replace("about", ""),
+                        viewCount: views.length,
+                        saved: true,
+                        savedAtDifference: formatDistanceToNowStrict(post.savedAt, { addSuffix: true }).replace("about", ""),
+                        savedAt: post.savedAt
+                    };
+                }
+                return post;
+            }));
+
+            postsSaved = postsSaved.sort( (a, b) => {
+                const dateA = new Date(a.savedAt).getTime()
+                const dateB = new Date(b.savedAt).getTime()
+                return dateB - dateA
+            })
+
+            const isSortedByViewCount = postsSaved.every((post, index, array) => {
+                if (index < array.length - 1) {
+                    return post.viewCount >= array[index + 1].viewCount;
+                }
+                return true;
+            });
+            
+            return res
+                .status(200)
+                .json( {
+                    message: "success",
+                    data: postsSaved,
+                    isSortedByViewCount: isSortedByViewCount
+                })
+        } 
+        else {
+            return res.status(200).json({message: "zeroSaved"})
+        }
+    }
+    
     catch (e) {
         
         console.error("error saving post to account: => ", e)

@@ -19,10 +19,8 @@ export default function Sidebar({sidebar}) {
 
     return (
         <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 shadow-black/10 shadow-sm bg-gray-100 top-0 left-0 flex-col h-screen w-64  text-black`}>
-            <div className="flex flex-col items-center justify-center h-16 bg-white">
-                <h1 className="text-2xl font-bold invisible">LazyDevs Community</h1>
-            </div>
-            <nav className="flex-grow w-full mt-">
+            
+            <nav className="flex-grow w-full mt-12">
                 <ul className="flex flex-col justify-center items-start gap-y-3 w-full">
                     <li className="w-full p-1">
                         <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/" ? "bg-white" : ""}`}  href="/">

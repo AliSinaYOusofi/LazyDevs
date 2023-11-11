@@ -5,7 +5,7 @@ import { useAppContext } from '@/context/useContextProvider'
 import { toast } from 'react-toastify'
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 
-export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved}) {
+export default function SavedToAccountPostCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, savedAt, savedDifference, refechSavedListRefreshFunction}) {
     
     const [savedToAccount, setSavedToAccount] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
@@ -17,7 +17,6 @@ export default function BlogCard({content, title, username, profileUrl, date, id
     // id and view all the results in the single_post_view page.
     
     useEffect( () => {
-        console.log(saved, 'saved status')
         setSavedToAccount(saved)
     }, [])
 
@@ -26,7 +25,6 @@ export default function BlogCard({content, title, username, profileUrl, date, id
         
         if (!currentUser) return setNotLoggedInCard(prev => ! prev)
         
-
         try {
 
             const response = await fetch(`http://localhost:3001/blogRoutes/save_post`, 
@@ -53,6 +51,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
             console.error("while savin to account => " + e)
             toast.error("failed to save! try again")
         }
+        refechSavedListRefreshFunction( prev => ! prev)
     }
 
     return (
@@ -61,9 +60,11 @@ export default function BlogCard({content, title, username, profileUrl, date, id
             <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg mt-4`} id={id}>
                 
                 <div className="flex items-center justify-between ">
-                
-                    <span className="text-sm font-light text-black">{date ? date?.split("T")[0] : ""} <i className="text-sm text-gray-600">({dateDistance})</i></span>
-                
+
+                    <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-black">Posted: {date ? date?.split("T")[0] : ""} <i className="text-sm text-gray-600">({dateDistance})</i></span>
+                        <p className="text-sm font-semibold text-black"> Saved: {savedAt ? savedAt?.split("T")[0]: ""} <date> <span className="text-sm text-gray-600"> ({savedDifference}) </span></date></p>
+                    </div>
                     <div className="flex items-center justify-center gap-x-1 bg-gray-50 p-1 rounded-md">
                 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
