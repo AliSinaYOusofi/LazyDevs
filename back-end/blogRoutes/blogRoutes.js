@@ -667,6 +667,9 @@ router.get("/posts_saved", async (req, res) => {
                 return post;
             }));
 
+            // some users might delete the posts which are saved in another account
+            // so i should filter thos posts which are deleted
+            console.log(postsSaved)
             postsSaved = postsSaved.sort( (a, b) => {
                 const dateA = new Date(a.savedAt).getTime()
                 const dateB = new Date(b.savedAt).getTime()
@@ -679,6 +682,8 @@ router.get("/posts_saved", async (req, res) => {
                 }
                 return true;
             });
+
+            postsSaved = postsSaved.filter( post => post.comments ? post : null)
             
             return res
                 .status(200)
