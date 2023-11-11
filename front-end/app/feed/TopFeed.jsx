@@ -80,8 +80,8 @@ export default function TopFeed() {
         setTopBlogs( topBlogs => {
             
             const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
-                const firstDate = a.createAt
-                const secondDate = b.createdAt
+                const firstDate = new Date(a.createdAt)
+                const secondDate = new Date(b.createdAt)
                 return sorteByDate ? firstDate > secondDate : secondDate > firstDate
             })
 

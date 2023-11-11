@@ -1,41 +1,20 @@
 import React from 'react';
 
 const SavedPostIcon = () => (
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-7 h-7"
-        >
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-            <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-            <path
-                d="M8 12H9M16 12H12"
-                stroke="#1C274C"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-            ></path>
-            <path
-                d="M16 8H15M12 8H8"
-                stroke="#1C274C"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-            ></path>
-            <path
-                d="M8 16H13"
-                stroke="#1C274C"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-            ></path>
-            <path
-                d="M3 14V10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C20.4816 3.82476 20.7706 4.69989 20.8985 6M21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3.51839 20.1752 3.22937 19.3001 3.10149 18"
-                stroke="#1C274C"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-            ></path>
-            </g>
-        </svg>
+    <svg 
+        className="w-7 h-7"
+        viewBox="0 0 24 24" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+    >
+    <path
+      d="M19 19.2674V7.84496C19 5.64147 17.4253 3.74489 15.2391 3.31522C13.1006 2.89493 10.8994 2.89493 8.76089 3.31522C6.57467 3.74489 5 5.64147 5 7.84496V19.2674C5 20.6038 6.46752 21.4355 7.63416 20.7604L10.8211 18.9159C11.5492 18.4945 12.4508 18.4945 13.1789 18.9159L16.3658 20.7604C17.5325 21.4355 19 20.6038 19 19.2674Z"
+      stroke="#363853"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
 );
 
 export default SavedPostIcon;
