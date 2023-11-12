@@ -12,17 +12,19 @@ import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import customMarkdownParser from '@/functions/previewRender';
+import { useAppContext } from '@/context/useContextProvider';
 
 
 export default function CreatePost({content}) { 
 
+    const [spinner, setSpinner] = useState(false);
+    
+    const [postContent, setPostContent] = useState({content: ""});
+    const {currentUser} = useAppContext()
     
     const handleImagePreview = () => {}
     
     
-    const [spinner, setSpinner] = useState(false);
-    
-    const [postContent, setPostContent] = useState({content: ""});
     
     
 
@@ -80,25 +82,31 @@ export default function CreatePost({content}) {
         setSpinner(true);
         // saving post to db.
         
-        if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");
-        
-        const token = document.cookie.split("=")[1];   
+        if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");   
 
         try {
-            const res = await axios.post("http://localhost:3001/user/save_post", {
+
+            const requestData = {
                 content: postContent.content,
-                token: token
+                user_id: currentUser ? currentUser._id : null
+            }
+            const res = await fetch("http://localhost:3001/user/save_post", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData),
             });  
 
-            console.log(res.data)
-            if (res.data.message === "success") toast.success("post created successfully");
-            else if (res.data.message === "serverError") toast.success("Server Error");
+            const json = await res.json();
+            if (json.message === "success") toast.success("post created successfully");
+            else if (json.message === "serverError") toast.success("Server Error");
             else toast.error("Failed to post !")
  
             setPostContent({content: ""})
         } catch(err) {
             toast.error("failed to create post");
-            console.log(err);
+            console.error(err);
         }
         setSpinner(false);
     }

@@ -6,10 +6,112 @@
 
 @layer base {
     .editor h1 {
-        @apply text-3xl font-bold
+        display: block;
+        font-size: 2em;
+        margin-top: 0.67em;
+        margin-bottom: 0.67em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
     }
     .editor h2 {
-        @apply text-2xl font-semibold
+        display: block;
+        font-size: 1.5em;
+        margin-top: 0.83em;
+        margin-bottom: 0.83em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+    .editor h3 {
+        display: block;
+        font-size: 1.17em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+    .editor h4 {
+        display: block;
+        font-size: 1em;
+        margin-top: 1.33em;
+        margin-bottom: 1.33em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+    .editor h5 {
+        display: block;
+        font-size: .83em;
+        margin-top: 1.67em;
+        margin-bottom: 1.67em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+    .editor h6 {
+        display: block;
+        font-size: .67em;
+        margin-top: 2.33em;
+        margin-bottom: 2.33em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
+
+    .editor ol {
+        display: block;
+        list-style-type: decimal;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 40px;
+    }
+
+    .editor p {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .editor pre {
+        display: block;
+        font-family: monospace;
+        white-space: pre;
+        margin: 1em 0;
+    }
+
+    .editor strong {
+        font-weight: bold;
+    }
+
+    .editor table {
+        display: table;
+        border-collapse: separate;
+        border-spacing: 2px;
+        border-color: gray;
+    }
+
+    .editor u {
+        text-decoration: underline;
+    }
+
+    .editor ul {
+        display: block;
+        list-style-type: disc;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 40px;
     }
 
     .editor ul {

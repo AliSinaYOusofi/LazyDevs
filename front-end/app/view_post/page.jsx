@@ -13,6 +13,7 @@ import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
 import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
 import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import MarkdownToHtml from '@/components/MarkDown/MarDownToHtml';
 
 export default function Page() {
 
@@ -36,6 +37,7 @@ export default function Page() {
                 if (data.data === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
+                console.log('markdown result', data.data)
             }
             catch(e) {
                 console.log("while current blog", e)
@@ -185,11 +187,9 @@ export default function Page() {
                     <hr className="mt-10"/>
                     {currentBlogErrorDiv}
                     
-                    <h1 className="mt-4 mb-4 headerBlog ml-6 text-xl   font-extrabold  leading-tight text-gray-900 lg:mb-6 lg:text-2xl">{currentBlog ? currentBlog.title : ""}</h1>
+                    {/* <h1 className="mt-4 mb-4 headerBlog ml-6 text-xl   font-extrabold  leading-tight text-gray-900 lg:mb-6 lg:text-2xl">{currentBlog ? currentBlog.title : ""}</h1> */}
                     
-                    {
-                        currentBlog ? currentBlog.body?.split("\n").map( (line, index) => line.startsWith("![]") ? <img src={line} alt=""  /> : <PostText key={index}  text={line}/>) : ""
-                    }
+                    <MarkdownToHtml content={currentBlog ? currentBlog?.body : ""} />
                     <CommentParent post_id={post_id}/>
                 </div>
 
