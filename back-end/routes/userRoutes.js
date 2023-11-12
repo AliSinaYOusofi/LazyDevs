@@ -71,20 +71,17 @@ router.post("/check_user_login", async (req, res) => {
 
 router.post("/save_post", async (req, res) => {
 
-    const {content, token} = req.body;
+    const {content, user_id} = req.body;
 
-    const randomIdForPost = crypto.randomBytes(16).toString("hex");
-
-    let pureToken = token.replace(";", "");
-    pureToken = pureToken.split(" ")[0];   
-
-    const {email = null, _id} = jwt.decode(pureToken);
+    console.log(content)
+    console.log(user_id)
+    const randomIdForPost = crypto.randomBytes(16).toString("hex");   
     
-    if (!token) email = "test@gmail.com"
- 
+    if (!user_id) return res.status(200).json({message: "user_id required"});
+    
     let newPost = new Post({
         post_id: randomIdForPost,   
-        author: _id,
+        author: user_id,
         title: content.split("\n")[0],
         body: content,
         comments: [],
@@ -95,7 +92,7 @@ router.post("/save_post", async (req, res) => {
         return res.status(200).json({message: "success"}); 
     }         
     catch(error) {
-        console.log("Error saving post", error);
+        console.error("Error saving post", error);
         return res.status(200).json({message: "serverError"});
     }        
 })
