@@ -55,20 +55,25 @@ export default function Page() {
             try {
                 
                 console.log(currentUser, 'current user')
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, 
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }   
+                );
                 const data = await response.json()
                 
                 if (data.data) setRecentBlogs(data.data)
                 else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
             catch(e) {
-                console.log("while getting recent blogs", e)
+                console.error("while getting recent blogs", e)
                 setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
                 setRecentBlogs(undefined)
             }
         }
         getRecentBlogs()
-    }, [post_id, retryPosts])
+    }, [post_id, retryRecentPosts])
 
     useEffect( () => {
         

@@ -12,8 +12,7 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 
 
 export default function page() {
-  
-  const currentUser = useCurrentUser()
+  const curretnUser = useCurrentUser()
   const stepsComponentRef = React.useRef(null);
 
   return (

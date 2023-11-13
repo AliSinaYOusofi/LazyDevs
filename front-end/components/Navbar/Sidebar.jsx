@@ -21,6 +21,7 @@ export default function Sidebar({sidebar}) {
         <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 shadow-black/10 shadow-sm bg-gray-100 top-0 left-0 flex-col h-screen w-64  text-black`}>
             
             <nav className="flex-grow w-full mt-12">
+                <p className="font-bold tracking-wide text-gray-900 text-3xl mb-3 ml-2">Links</p>
                 <ul className="flex flex-col justify-center items-start gap-y-3 w-full">
                     <li className="w-full p-1">
                         <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/" ? "bg-white" : ""}`}  href="/">

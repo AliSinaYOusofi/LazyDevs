@@ -8,7 +8,7 @@ export default function CommunityInfo() {
     
     return (
         <div className="mt-10">
-            <p className="font-bold ml-2">Other</p>
+            <p className="font-bold tracking-wide text-gray-900 text-3xl mb-3 ml-2">Other</p>
             <ul>
                 <li className="w-full p-1" id="bu-users-accordion">
                     <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/code_of_conduct" ? "bg-white" : ""}`}  href="/code_of_conduct">
