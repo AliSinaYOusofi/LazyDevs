@@ -28,25 +28,30 @@ export default function Login() {
 
     const handleSubmit = async () => {
         
-        let response = await handleLoginSubmit(email, password);
+        try {
+            let response = await handleLoginSubmit(email, password);
 
-        console.log(response, 'login')
+            if (!response) return toast.error("Network Error")
 
-        if (!response) return toast.error("Network Error")
+            if (response.data === "Invalid")  toast.error("Invalid email or password")
 
-        if (response.data === "Invalid")  toast.error("Invalid email or password")
-
-        else if (response.data === "Server Error")  toast.error("Server Error");
+            else if (response.data === "Server Error")  toast.error("Server Error");
+            
+            else if (response.data) {
+                
+                localStorage.setItem("currentUser", JSON.stringify(response.data))
+                setCurrentUser(response.data)
+                router.push("/feed");
+            }
+            else if (response === "failed") setSpinner(false)    
+        } 
         
-        else if (response.data) {
-            localStorage.setItem("currentUser", JSON.stringify(response.data))
-            setCurrentUser(JSON.parse(localStorage.getItem("currentUser")))
-            console.log(JSON.parse(localStorage.getItem("currentUser")))
-            console.log(response.data)
-            router.push("/feed");
+        catch(e) {
+            console.error("error while loggin user in =>", e)
+        } 
+        finally {
+            setSpinner(false)
         }
-        else if (response === "failed") setSpinner(false)    
-        setSpinner(false)
     }
 
     return (

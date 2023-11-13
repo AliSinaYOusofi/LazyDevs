@@ -11,7 +11,7 @@ export default function ModalComponent({id, func, mod, refechPosts}) {
         setSpiner(prev => ! prev)
 
         try {
-            const response = await fetch(`http://localhost:3001/blogRoutes/delete_post/:${id}`, 
+            const response = await fetch(`http://localhost:3001/blogRoutes/delete_post?post_id=${id}`, 
                 {
                     method: "DELETE",
                     headers: {

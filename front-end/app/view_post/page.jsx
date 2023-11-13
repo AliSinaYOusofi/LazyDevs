@@ -24,20 +24,22 @@ export default function Page() {
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
     const [sortedBy, setSortedBy] = useState(false)
-
-    const {currentUser} = useAppContext()
+    const currentUser = useCurrentUser()
     
     useEffect( () => {
         
         const getCurrentBlog = async () => {
+            
             try {
+                
                 const response = await fetch(`http://localhost:3001/blogRoutes/single_post/:${post_id}`, {method: "GET"});
                 const data = await response.json()
+                
                 setCurrentBlog(data.data)
+                
                 if (data.data === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
-                console.log('markdown result', data.data)
             }
             catch(e) {
                 console.log("while current blog", e)
@@ -51,7 +53,8 @@ export default function Page() {
         
         const getRecentBlogs = async () => {
             try {
-
+                
+                console.log(currentUser, 'current user')
                 const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
                 

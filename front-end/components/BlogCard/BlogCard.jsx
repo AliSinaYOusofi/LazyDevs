@@ -17,7 +17,6 @@ export default function BlogCard({content, title, username, profileUrl, date, id
     // id and view all the results in the single_post_view page.
     
     useEffect( () => {
-        console.log(saved, 'saved status')
         setSavedToAccount(saved)
     }, [])
 
