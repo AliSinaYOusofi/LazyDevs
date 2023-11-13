@@ -40,7 +40,7 @@ router.get("/newsfeed", async (req, res) => {
         });
   
     } catch (e) {  
-        console.log(e, "fetching blogs");
+        console.log(e, "fetching recent blogs path =>", req.path);
         res.status(200).json({
             status: "failed"
         });  
@@ -55,9 +55,10 @@ router.get("/recent", async (req, res) => {
     // or something
 
     let {post_id, user_id} = req.query
-    
-    console.log(req.query)
-    console.log(post_id, user_id, 'from query')
+    console.log(req.signedCookies )
+    console.log(user_id)
+
+    if (! user_id ) return res.status(404).send().json({"message: ": "user nto found"})
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -104,7 +105,7 @@ router.get("/recent", async (req, res) => {
             data: latestBlogs15DaysAfterLatestBlog.reverse()
         });
     } catch (e) {  
-        console.log(e, "fetching blogs");
+        console.log(e, "fetching recent posts, path => ", req.path);
         res.status(200).json({
             status: "failed"
         });  
@@ -431,10 +432,11 @@ router.post("/save_new_visitor", async (req, res) => {
 
 // the following is for deleting blogs:
 
-router.delete("/delete_post/:post_id", async (req, res) => {
+router.delete("/delete_post", async (req, res) => {
     
-    let {post_id} = req.params
-    post_id = post_id.split(":")[1]
+    let {post_id} = req.query
+    console.log(post_id) 
+    if (! post_id) return res.status(200).json({status: "failed", reason: "post_id not provided"})
 
     try {
         const blogExists = await Post.findById(post_id).lean().exec()
