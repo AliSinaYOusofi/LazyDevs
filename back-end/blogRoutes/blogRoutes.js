@@ -6,9 +6,9 @@ const Likes = require("../models/postLikes")
 const PostView = require("../models/PostViews")
 const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays } = require("date-fns");
 const Comments = require("../models/Comments")
-const { default: mongoose } = require("mongoose")
 const replyComments = require("../models/ReplyComments")
 const Saved = require("../models/PostsSavedToAccount")
+const json = require("jsonwebtoken");
 
 router.get("/newsfeed", async (req, res) => {
       
@@ -54,11 +54,19 @@ router.get("/recent", async (req, res) => {
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
 
-    let {post_id, user_id} = req.query
-    console.log(req.signedCookies )
-    console.log(user_id)
+    let {post_id} = req.query
+    
+    let user_id
+    
+    const token = req.cookies.accessToken
+    const refreshToken = req.cookies.refreshToken
 
-    if (! user_id ) return res.status(404).send().json({"message: ": "user nto found"})
+    console.log(req.cookies)
+    
+    // if (! token || ! refreshToken) return res.status(300).send().json({'message': 'unathorized access'})
+
+    // if (! user_id ) return res.status(404).send().json({"message: ": "user nto found"})
+    
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -104,6 +112,7 @@ router.get("/recent", async (req, res) => {
             status: "success",
             data: latestBlogs15DaysAfterLatestBlog.reverse()
         });
+        
     } catch (e) {  
         console.log(e, "fetching recent posts, path => ", req.path);
         res.status(200).json({
