@@ -154,7 +154,7 @@ export default function CommentParent({post_id}) {
                         placeholder="your comment..." >
                     </textarea>
                             
-                    <button onClick={handleSumitComment} className="bg-neutral-50 px-6 py-3  hover:bg-neutral-300 rounded-md 
+                    <button onClick={handleSumitComment} className="bg-gray-800 px-5 py-3  hover:bg-gray-900 text-white rounded-lg h-8 md:h-10 
                         flex items-center justify-center relative"
                         disabled={commentSuccessful}>
                         Comment
@@ -163,9 +163,7 @@ export default function CommentParent({post_id}) {
                             ?
                             <div className="border-t-transparent border-solid animate-spin ml-1  rounded-full border-gray-400 border-2 h-5 w-5"></div>
                             :
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 ml-2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                            </svg>
+                            null
                         }
                     </button>
                 </div>

@@ -153,7 +153,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                                 disabled={replyCommentValue.length === 0}
                                 onClick={handleReplyComment}
                                  
-                                className={`${replyCommentValue.length ? "cursor-pointer": "cursor-not-allowed"} flex items-center justify-center gap-x-2 md:h-10 h-8 px-5 text-blue-100 outline-none border-none transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700`}
+                                className={`${replyCommentValue.length ? "cursor-pointer": "cursor-not-allowed"} flex items-center justify-center gap-x-2 md:h-10 h-8 px-5 text-white outline-none border-none transition-colors duration-150 bg-gray-800 rounded-lg  hover:bg-gray-900`}
                             > 
                                 Submit
                                 {

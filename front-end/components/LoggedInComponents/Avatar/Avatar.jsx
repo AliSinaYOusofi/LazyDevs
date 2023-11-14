@@ -4,7 +4,7 @@ import React from 'react'
 export default function Avatar({profileUrl}) {
 
     return (
-        <div className="flex items-center justify-center gap-x-2 ml-2">
+        <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">
 
             {/* <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -29,7 +29,7 @@ export default function Avatar({profileUrl}) {
                 <img
                     src={profileUrl}
                     alt="user profile image"
-                    className="object-contain bg-cover w-10 h-10 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
+                    className="object-contain mt-1 md:mt-0 bg-cover md:w-10 md:h-10 w-8 h-8 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
                 />
             </Link>
         </div>

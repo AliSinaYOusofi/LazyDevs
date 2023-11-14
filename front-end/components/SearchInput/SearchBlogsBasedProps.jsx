@@ -41,13 +41,10 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
             
             const matchingBlogs = blogs.filter((blog) => searchRegex.test(blog.title));
             const unmatchedBlogs = blogs.filter( blog => !matchingBlogs.includes(blog))
-
-            console.log(matchingBlogs, 'matching')
-            console.log(unmatchedBlogs, 'unmatched')
             
             if (matchingBlogs.length > 0) {
                     
-                hideUnHideElements("flex", matchingBlogs)
+                hideUnHideElements("block", matchingBlogs)
                 hideUnHideElements("none", unmatchedBlogs)
                 setResult(matchingBlogs.length)
                 
@@ -55,13 +52,14 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
             
             else {
                 console.log('No matching blogs found');
+                hideUnHideElements("none", unmatchedBlogs)
                 setResult(0)
             }
 
         } 
         
         else {
-            hideUnHideElements("flex", blogs)
+            hideUnHideElements("block", blogs)
         }
     }
 

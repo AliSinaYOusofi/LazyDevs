@@ -4,6 +4,8 @@ import ReadingTime from '../ReadingTime/ReadingTime'
 import { useAppContext } from '@/context/useContextProvider'
 import { toast } from 'react-toastify'
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
+import SavedPostIconBlog from '../SVG/SavedPostBlogIcon'
+import UnsavedPostBlogIcon from '../SVG/UnsavedPostIcon'
 
 export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved}) {
     
@@ -88,21 +90,9 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                             {
                                 ! savedToAccount
                                 ?
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="h-7 w-7"
-                                        >
-                                        <path d="M16 2H8a3.003 3.003 0 00-3 3v16.5a.5.5 0 00.75.434l6.25-3.6 6.25 3.6A.5.5 0 0019 21.5V5a3.003 3.003 0 00-3-3zm2 18.635l-5.75-3.312a.51.51 0 00-.5 0L6 20.635V5a2.003 2.003 0 012-2h8a2.003 2.003 0 012 2v15.635z" />
-                                    </svg>
+                                    <UnsavedPostBlogIcon />
                                 :
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-7 h-7"
-                                        >
-                                        <path d="M16 2H8C6.3 2 5 3.3 5 5v16c0 .2 0 .3.1.5.3.5.9.6 1.4.4l5.5-3.2 5.5 3.2c.2.1.3.1.5.1.6 0 1-.4 1-1V5c0-1.7-1.3-3-3-3z" />
-                                    </svg>
+                                    <SavedPostIconBlog />
                             }
                         </div>
                     
