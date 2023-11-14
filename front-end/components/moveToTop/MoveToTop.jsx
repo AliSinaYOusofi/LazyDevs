@@ -22,16 +22,19 @@ export default function MoveToTop() {
 
         return () => window.removeEventListener("scroll", scrollHandler);
     }, []);
+
     return (
-        <img
-            src="https://cdn-icons-png.flaticon.com/512/892/892692.png"
-            alt="arrow"
-            className="hidden top-[90%] right-[5%] 
-                w-12 h-12 shadow-black/10 p-1 rounded-full shadow-md cursor-pointer
-                transition-all duration-300 hover:-translate-y-2
-            "
-            onClick={handleMovePage}
+        <svg
             ref={iconRef}
-        />
+            onClick={handleMovePage} 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            strokeWidth={1.5} 
+            stroke="currentColor" 
+            className="w-10 h-10 top-[90%] right-[5%] hidden shadow-sm shadow-black/50 cursor-pointer rounded-full p-2"
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+        </svg>
     )
 }

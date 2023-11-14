@@ -34,9 +34,9 @@ export default function Footer () {
                     </div>
                 </div>
                 <div className="space-y-2 text-sm">
-                    <p className="text-base font-bold tracking-wide text-gray-900">
-                    Contacts
-                    </p>
+                    <h1 className="text-3xl font-bold tracking-wide text-gray-900">
+                        Contacts
+                    </h1>
                     <div className="flex">
                     <p className="mr-1 text-gray-800">Phone:</p>
                     <a
@@ -78,11 +78,11 @@ export default function Footer () {
                 
             </div>
             
-            <div className="flex flex-col-reverse justify-between pt-5 pb-10 border-t lg:flex-row">
+            <div className="flex flex-col-reverse mt-3 justify-between pt-5 pb-10 border-t lg:flex-row">
                 <p className="text-sm text-gray-600">
                     © Copyright {new Date().getFullYear()} LazyDevs Inc. All rights reserved.
                 </p>
-                <ul className="flex gap-y-2 flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
+                <ul className=" hidden gap-y-2 flex-col mb-3 space-y-2 lg:mb-0 sm:space-y-0 sm:space-x-5 sm:flex-row">
                     <li>
                         <a
                             href="/"
