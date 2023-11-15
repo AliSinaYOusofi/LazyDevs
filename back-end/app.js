@@ -10,7 +10,7 @@ const { getDB } = require("./db_connection/mongoose.db.config");
 
 require("dotenv").config();
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", 
     methods: ["GET", "POST", "DELETE"],
     credentials: true, // allows us to use cookies or authorization tokens
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods']

@@ -126,14 +126,19 @@ export default function CommentParent({post_id}) {
             
                     <div className="p-2  rounded-md flex flex-col justify-center items-center mx-auto mb-10 tex-black    ">
                     
-                        <RecentPostsError error={errorMessage} />
-                    
-                        <button onClick={handleRetryFetchPostComments} className="mt-10 flex group items-center justify-center  px-2 py-1 text-lg text-gray-100 transition-colors duration-150 bg-gray-700 rounded-sm focus:shadow-outline hover:bg-gray-800"> 
-                    
-                            <span className="mr-2">Try again</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 group group-hover:animate-spin">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        <button 
+                            type="button" 
+                            className="py-1 h-8 text-lg font-light md:h-10 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
+                            onClick={handleRetryFetchPostComments}
+                        >
+                            <svg
+                                viewBox="0 0 512 512"
+                                fill="currentColor"
+                                className='w-7 h-7'
+                                >
+                                <path d="M256 48C141.31 48 48 141.32 48 256c0 114.86 93.14 208 208 208 114.69 0 208-93.31 208-208 0-114.87-93.13-208-208-208zm94 219a94 94 0 11-94-94h4.21l-24-24L256 129.2l59.8 59.8-59.8 59.8-19.8-19.8 27.92-27.92c-2.4-.08-5.12-.08-8.12-.08a66 66 0 1066 66v-14h28z" />
                             </svg>
+                            Retry
                         </button>
                     </div> 
                 </div>
