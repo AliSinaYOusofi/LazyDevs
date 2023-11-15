@@ -3,7 +3,7 @@ import React from 'react'
 export default function Social() {
     return (
         <div>
-            <span className="font-bold mt-10 tracking-wide text-gray-900 text-3xl mb-3">
+            <span className="font-bold mt-10 tracking-wide text-gray-900 text-xl md:text-3xl mb-3">
                 Social
             </span>
             <div className="flex items-center mt-1 space-x-3">
