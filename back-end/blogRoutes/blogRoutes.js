@@ -41,7 +41,7 @@ router.get("/newsfeed", async (req, res) => {
         });
   
     } catch (e) {  
-        console.log(e, "fetching recent blogs path =>", req.path);
+        console.error(e, "fetching recent blogs path =>", req.path);
         res.status(200).json({
             status: "failed"
         });  
@@ -115,7 +115,7 @@ router.get("/recent", async (req, res) => {
         });
         
     } catch (e) {  
-        console.log(e, "fetching recent posts, path => ", req.path);
+        console.error(e, "fetching recent posts, path => ", req.path);
         res.status(200).json({
             status: "failed"
         });  
@@ -172,18 +172,29 @@ router.get("/top", async (req, res) => {
         });
   
     } catch (e) {  
-        console.log(e, "fetching top blogs");
+        console.error(e, "fetching top blogs");
         res.status(200).json({
             status: "failed"
         });  
     }     
 });
   
-router.get("/single_post/:post_id", async (req, res) => {
+router.get("/single_post", async (req, res) => {
     
-    let { post_id } = req.params
-    post_id = String(post_id).split(":")[1]
+    let { post_id = null, user_id = null } = req.query
 
+    console.log(post_id, user_id, req.query)
+
+    user_id = user_id === 'null' ? null : user_id;
+    post_id = post_id === 'null' ? null : post_id;
+
+    user_id = user_id === undefined ? null : user_id;
+    post_id = post_id === undefined ? null : post_id;
+    
+    if (! user_id) return res.status(401).json({message: "unathorized"})
+ 
+    else if (! post_id) return res.status(405).json({message: "not allowed"})
+ 
     if (post_id) {
         
         try {
@@ -196,6 +207,13 @@ router.get("/single_post/:post_id", async (req, res) => {
             singleBlog.joined = singleBlogAuthor.joined;
             singleBlog.email = singleBlogAuthor.email;
             singleBlog.distance = formatDistanceToNow(singleBlog.createdAt, {addSuffix: true}).replace("about", "")
+            singleBlog.alreadyFollows = false
+            const isUserFollowingThisUser = await FollowingUser.findOne({
+                user_id: user_id,
+                "follows.user": singleBlogAuthor._id
+            }, {_id: 1})
+
+            if (isUserFollowingThisUser) singleBlog.alreadyFollows = true
 
             return res.status(200).json({
                 status: "success",
@@ -255,7 +273,7 @@ router.post("/comment", async (req, res) => {
         } 
         
         catch (e ) {
-            console.log(e, "saving comment");
+            console.error(e, "saving comment");
             return res.status(200).json({status: "failed", data: "server error"})
         }
     }
@@ -445,7 +463,6 @@ router.post("/save_new_visitor", async (req, res) => {
 router.delete("/delete_post", async (req, res) => {
     
     let {post_id} = req.query
-    console.log(post_id) 
     if (! post_id) return res.status(200).json({status: "failed", reason: "post_id not provided"})
 
     try {
@@ -466,7 +483,7 @@ router.delete("/delete_post", async (req, res) => {
             })
         }
     } catch (e) {
-        console.log("exception happened while deleting a post => () ", e)
+        console.error("exception happened while deleting a post => () ", e)
         return res.status(200).json({
             status: "failed",
             reason: "server"
@@ -509,7 +526,7 @@ router.post("/save_comment_reply", async (req, res) => {
     }
     catch( e ) {
 
-        console.log('failed while saving comment reply')
+        console.error('failed while saving comment reply')
         console.error(e)
         return res.status(200).json({
             status: "failed",
@@ -680,7 +697,7 @@ router.get("/posts_saved", async (req, res) => {
 
             // some users might delete the posts which are saved in another account
             // so i should filter thos posts which are deleted
-            console.log(postsSaved)
+            
             postsSaved = postsSaved.sort( (a, b) => {
                 const dateA = new Date(a.savedAt).getTime()
                 const dateB = new Date(b.savedAt).getTime()
@@ -731,27 +748,60 @@ router.get("/follow", async (req, res) => {
     try {
         const followingUser = await FollowingUser.findOne({user_id: user_id}).lean().exec()
 
-        console.log(followingUser, 'follow user result')
+        if (followingUser) {
 
-        if (followingUser) { // if already follows then unfollow
+            const alreadyFollowingTheUser = followingUser.follows.some(
+                user => user.user.toString() === to_followed_user.toString()
+            )
 
-            followingUser.follows = followingUser.follows.filter( user => user._id !== to_followed_user)
-            
-            await followingUser.save()
-            return res.status(200).json({message: "unfollowing"})
+            if (alreadyFollowingTheUser) {
+
+                const alreadyFollowingThenUPdate = await FollowingUser.findOneAndUpdate(
+                    {user_id: user_id},
+                    {
+                        $pull: {
+                            follows: {
+                                user: to_followed_user
+                            }
+                        }
+                    },
+                    {
+                        new: true,
+                    }
+                )
+                return res.status(200).json({message: "unfollowing", data: alreadyFollowingThenUPdate})
+            }
+
+            // then follow the user
+            else {
+                const followNewUser = await FollowingUser.findOneAndUpdate(
+                    {user_id: user_id},
+                    {
+                        $push: {
+                            follows: {
+                                user: to_followed_user
+                            }
+                        }
+                    },
+                    {
+                        new: true, 
+                        upsert: true
+                    }
+                )
+                return res.status(200).json({message: "following", data: followNewUser})
+            }
+
+        } // the user is new, he/she is not following anyone so create a new document instead
+        else {
+            const newUserTobeFollowed = new FollowingUser({
+                user_id: user_id,
+                follows: [{user: to_followed_user}]
+            })
+
+            await newUserTobeFollowed.save()
+            return res.status(200).json({message: "new", data: newUserTobeFollowed})
         }
 
-        const newUserToBeFollowed = {
-            user_id: user_id,
-            follows: [
-                {
-                    user: to_followed_user
-                }
-            ]
-        }
-
-        followingUser.follows.push(newUserToBeFollowed)
-        return res.status(200).json({message: "following"})
     }
     catch(e) {
         console.error("error while following user: => ", e, req.path)

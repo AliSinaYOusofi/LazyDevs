@@ -37,7 +37,7 @@ router.get("/my_posts/:author", async (req, res) => {
 
     } catch(e) {
         
-        console.log(e, 'while fetching user based blogs, accountRoutes');
+        console.error(e, 'while fetching user based blogs, accountRoutes');
         
         return res.
             status(200).
@@ -104,7 +104,7 @@ router.post("/update_account", async (req, res) => {
         }
     }
     catch (e) {
-        console.log(e)
+        console.error(e)
         return res.
             status(200).
             json({

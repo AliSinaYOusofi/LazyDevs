@@ -16,9 +16,10 @@ export default function LatestFeed() {
         
         async function getTopBlogs() {
             try {
+                
                 const response = await fetch(`http://localhost:3001/blogRoutes/recent_posts?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
                 const data = await response.json()
-                console.log(data)
+
                 if (data.status === "success") setTopBlogs(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
@@ -26,7 +27,7 @@ export default function LatestFeed() {
                 else setErrorMessages("server error while fethcing posts")
             } 
             catch(e) {
-                console.log('error in while getting feeds', e);
+                console.error('error in while getting feeds', e);
                 setErrorMessages("There was a problem fetching posts!")
                 setTopBlogs([])
             }

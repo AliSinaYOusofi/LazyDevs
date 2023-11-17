@@ -37,9 +37,9 @@ export default function Signup() {
         setSpinner(true);
 
         try {
+            
             let response = await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
             
-            console.log(response);
             if (response === "saved") {
                 await sleep(1000);
                 router.push("/login");
@@ -50,7 +50,7 @@ export default function Signup() {
 
             setSpinner(false);
         } catch (error) {
-            console.log("Error in signup comp", error);
+            console.error("Error in signup comp", error);
             toast.error("Server error try again later !");
         }
     }

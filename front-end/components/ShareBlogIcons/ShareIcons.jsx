@@ -64,7 +64,7 @@ export default function SocialIcons({post_id}) {
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments and view")
             }
             catch(e) {
-                console.log("error while fetching likes and comments count", e)
+                console.error("error while fetching likes and comments count", e)
                 setErrorMessages("Failed to get post comments and view")
                 setCommentCount(undefined)
             }
@@ -99,7 +99,7 @@ export default function SocialIcons({post_id}) {
         <div className="flex md:ml-4 ml-0 md:flex-col flex-row items-center justify-center socials md:mt-0 mt-4 gap-4 mr-4 md:mr-0">
             <div className=" md:p-2 rounded-full flex flex-col items-center justify-center">
                 
-                <div className=" mt-4 z-[99] w-fit">
+                <div className="mt-3 md:mt-4 z-[99] w-fit">
                     <EyeView />
                 </div>
                 <span className="text-xl">{viewCount ? viewCount : "0"}</span>

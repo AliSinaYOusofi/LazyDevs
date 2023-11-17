@@ -5,7 +5,7 @@ const getDatabaseStats = async () => {
         const response = await axios.get("http://localhost:3001/database/stats");
         return await response.data.statsArray;
     } catch (error) {
-        console.log("Error While Fetching Database Stats: %s", error);
+        console.error("Error While Fetching Database Stats: %s", error);
         return null;
     }
 }

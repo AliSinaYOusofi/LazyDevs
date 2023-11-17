@@ -29,7 +29,7 @@ export default function Page() {
             
             try {
                 
-                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/:${post_id}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/?post_id=${post_id}&user_id=${currentUser ? currentUser._id : null}`, {method: "GET"});
                 const data = await response.json()
                 
                 setCurrentBlog(data.data)
@@ -37,9 +37,11 @@ export default function Page() {
                 if (data.data === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
+
+                console.debug(data)
             }
             catch(e) {
-                console.log("while current blog", e)
+                console.error("while current blog", e)
                 setErrorMessages(previousMessages => ({...previousMessages, "currentBlogFetchError": "was a problem fetching this post!"}))
             }
         }
@@ -51,7 +53,6 @@ export default function Page() {
         const getRecentBlogs = async () => {
             try {
                 
-                console.log(currentUser, 'current user')
                 const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, 
                     {
                         method: "GET",
@@ -92,7 +93,7 @@ export default function Page() {
                 });
             }
             catch(e) {
-                console.log("error while fetching data", e)
+                console.error("error while fetching data", e)
             }
         }
         saveNewViewer()
@@ -192,7 +193,7 @@ export default function Page() {
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">
                     
-                    <UserCard author={currentBlog?.author} difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
+                    <UserCard isFollowing={currentBlog?.alreadyFollows} author={currentBlog?.author} difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
                     <ReadingTime paragraphs={currentBlog?.body}/>
 
                     {/* <TextToSpeech text={currentBlog?.body}/> */}

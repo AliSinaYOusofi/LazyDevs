@@ -33,28 +33,11 @@ app.use(cookieParser());
 
 // middlwares should be before router handlers
 // or it will never get called.
-// app.use((req, res, next) => {
-    
-//     const accessToken = req.cookies.accessToken;
-//     const refreshToken = req.cookies.refreshToken;
+app.use((req, res, next) => {
 
-//     const safeRoutes = ["/user/check_user_login", "/user/save_user", "/user/save_post"]
-//     console.log(req.path, safeRoutes.includes(req.path))
-//     if (safeRoutes.includes(req.path)) return next();
-
-//     jwt.verify(accessToken, process.env.JWT_SECRET, (error) => {
-//         if (error) {
-//             jwt.verify(refreshToken, process.env.JWT_SECRET, (error, decoded) => {
-//                 if(error) return res.status(200).json("refreshTokenInvalid");
-//                 const newAccessToken = jwt.sign(decoded, process.env.JWT_SECRET, {expiresIn: "15m"});
-//                 res.cookie('accessToken', newAccessToken, {maxAge: 900000, sameSite: "Lax"});
-//                 next();
-//             })
-//         }
-//         next();
-//     })
-
-// });
+    // to handle the no current logged in user_id
+    next()
+});
 
 app.use( async (req, res, next) => {
     await getDB()

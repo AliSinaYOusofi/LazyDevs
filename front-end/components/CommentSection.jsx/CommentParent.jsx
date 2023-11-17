@@ -59,7 +59,7 @@ export default function CommentParent({post_id}) {
                 // window.location.reload()
             } else toast.error("failed to comment! try again")
         } catch (error) {
-            console.log("Error! posting comment: %s", error);
+            console.error("Error! posting comment: %s", error);
             toast.error("failed to post comment");
         }
         setCommentSuccessful(prev => !prev);
@@ -99,11 +99,9 @@ export default function CommentParent({post_id}) {
             }
             
             catch(e) {
-                console.log("error while fetching comments", e)
+                console.error("error while fetching comments", e)
                 setErrorMessages("failed to get post comments")
             }
-
-            console.log(commentReplies)
         }
 
         getPostComments();

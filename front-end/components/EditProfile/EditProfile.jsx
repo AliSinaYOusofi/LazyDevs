@@ -113,7 +113,7 @@ const UserInfoForm = () => {
         catch(error) {
             if (error.code === "ECONNABORTED") toast.error("Request Timed out. Try again later !");
             else toast.error("Server error Try again later");
-            console.log(error, "error while updating user info");
+            console.error(error, "error while updating user info");
         }
         
         finally{
