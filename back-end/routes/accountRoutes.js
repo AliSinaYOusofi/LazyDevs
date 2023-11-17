@@ -7,13 +7,11 @@ const router = require("express").Router();
 
 
 // get account credentials
-router.get("/my_posts/:author", async (req, res) => {
+router.get("/my_posts", async (req, res) => {
 
-    let {author} = req.params;
+    let author = req.user_id;
 
     if (!author) return res.status(200).json({message : "no author id provied"})
-
-    author = String(author).split(":")[1];
 
     try {
         const Posts = await Post.find({author}).lean().exec()

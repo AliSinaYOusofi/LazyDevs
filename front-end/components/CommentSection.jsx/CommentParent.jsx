@@ -48,7 +48,8 @@ export default function CommentParent({post_id}) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: "include"
             });
 
             let json = await response.json();
@@ -76,6 +77,7 @@ export default function CommentParent({post_id}) {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({post_id: post_id}),
+                        credentials: "include"
                     },
                 );
                 

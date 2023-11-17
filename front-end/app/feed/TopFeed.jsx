@@ -12,13 +12,12 @@ export default function TopFeed() {
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
-    const {currentUser} = useAppContext()
 
     useEffect( () => {
         
         async function getTopBlogs() {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/top?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET", credentials: "include"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/top`, {method: "GET", credentials: "include"});
                 const data = await response.json()
                 
                 if (data.status === "success") setTopBlogs(data.data)

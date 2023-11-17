@@ -36,7 +36,31 @@ app.use(cookieParser());
 app.use((req, res, next) => {
 
     // to handle the no current logged in user_id
-    next()
+    const {accessToken = null, refreshToken = null} = req.cookies
+    
+    // this part of the code must redirect user if there is no cookie
+    // if (! accessToken || ! refreshToken) {
+    //     return res.redirect(302, "http://localhost:3000/login")
+    // }
+
+    const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
+    const verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
+
+    console.log(verifyAccessToken, 'verfiy ')
+    if (verifyAccessToken) {
+        req.user_id = verifyAccessToken._id
+        console.log('access token is okay: ', req.user_id)
+        next()
+    } 
+    
+    else if (verifyRefreshToken) {
+        req.user_id = verifyRefreshToken.user_id
+        console.log('refresh token is okay: ', req.user_id)
+        next() 
+    }
+    else {
+        next()
+    }
 });
 
 app.use( async (req, res, next) => {

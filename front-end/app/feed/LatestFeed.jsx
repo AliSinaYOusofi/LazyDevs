@@ -17,7 +17,12 @@ export default function LatestFeed() {
         async function getTopBlogs() {
             try {
                 
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent_posts?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent_posts`, 
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
+                );
                 const data = await response.json()
 
                 if (data.status === "success") setTopBlogs(data.data)

@@ -96,6 +96,7 @@ export default function CreatePost({content}) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(requestData),
+                credentials: "include"
             });  
 
             const json = await res.json();
