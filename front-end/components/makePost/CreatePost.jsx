@@ -43,7 +43,7 @@ export default function CreatePost({content}) {
             
             await onSuccess(secure_url);
         } 
-        catch (error) { toast.error("failed to upload image"); console.log(error)}
+        catch (error) { toast.error("failed to upload image"); console.error(error)}
     }
 
     const anOptions = useMemo(() => {

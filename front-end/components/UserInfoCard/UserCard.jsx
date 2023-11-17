@@ -10,12 +10,14 @@ export default function UserCard({profile, email, username, date, difference, is
     
     const {currentUser} = useAppContext()
 
+    console.log(isFollowing)
     useEffect( () => {
         // check if the user follows
-        setAlreadyFollows(isFollowing)
-    }, [])
+        if (isFollowing) setAlreadyFollows(isFollowing)
+    }, [isFollowing])
 
     const handleFollowButton = async () => {
+
         setSpinner(true)
         try {
             const response = await fetch(`http://localhost:3001/blogRoutes/follow?user_id=${currentUser ? currentUser?._id : null}&to_followed_user=${author}`, 
@@ -26,7 +28,7 @@ export default function UserCard({profile, email, username, date, difference, is
             const data = await response.json()
             console.log(data)
 
-            if (data.message === "following") {
+            if (data.message === "following" || data.message === "new") {
                 setAlreadyFollows(true)
             } else if (data.message === "unfollowing") {
                 setAlreadyFollows(false)
@@ -39,6 +41,8 @@ export default function UserCard({profile, email, username, date, difference, is
             setSpinner(false)
         }
     }
+
+    console.debug(username, 'username')
     return (
         <>
             <address className="flex justify-between items-center mb-6 not-italic">
@@ -57,7 +61,7 @@ export default function UserCard({profile, email, username, date, difference, is
                         type="button" 
                         className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900" 
                         onClick={handleFollowButton}
-                        disabled={spinner}
+                        disabled={spinner || !username}
                         >
                         {
                             alreadyFollows

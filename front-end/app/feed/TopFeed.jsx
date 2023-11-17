@@ -18,7 +18,7 @@ export default function TopFeed() {
         
         async function getTopBlogs() {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/top?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/top?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET", credentials: "include"});
                 const data = await response.json()
                 
                 if (data.status === "success") setTopBlogs(data.data)
@@ -28,7 +28,7 @@ export default function TopFeed() {
                 else setErrorMessages("server error while fethcing posts")
             } 
             catch(e) {
-                console.log('error in while getting feeds', e);
+                console.error('error in while getting feeds', e);
                 setErrorMessages("There was a problem fetching posts!")
                 setTopBlogs([])
             }

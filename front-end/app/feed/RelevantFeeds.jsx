@@ -25,11 +25,9 @@ export default function RelevantFeeds() {
                 if (data.status === "success") setRelevantBlogs(data.data)
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
                 else setErrorMessages("server error while fethcing posts")
-
-                console.log(data.data)
             } 
             catch(e) {
-                console.log('error in while getting feeds');
+                console.error('error in while getting feeds');
                 setErrorMessages("There was a problem fetching posts!")
                 setRelevantBlogs([])
             }

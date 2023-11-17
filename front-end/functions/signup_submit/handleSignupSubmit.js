@@ -44,7 +44,7 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
         else return "error"
     
     } catch(error) {
-        console.log(error);
+        console.error(error);
         return error;
     }
     

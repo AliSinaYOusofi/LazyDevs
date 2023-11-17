@@ -23,7 +23,7 @@ export default function PostOfUserBasedId({author}) {
                 const data = await response.json()
                 setPosts(data.data)
             }catch(e) {
-                console.log('error in while getting your posts');
+                console.error('error in while getting your posts');
                 setErrorMessages("failed to fetch your posts")
             }
         }

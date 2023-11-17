@@ -10,7 +10,7 @@ export const saveImageToCloudinaryAnReturnSecureURL = async (imageToUpload) => {
         return await response.data.secure_url;
     }
     catch(error) { 
-        console.log("Error while saving to cloudinary: %s", error);
+        console.error("Error while saving to cloudinary: %s", error);
         return "https://cdn-icons-png.flaticon.com/512/4202/4202831.png";
     }
 }

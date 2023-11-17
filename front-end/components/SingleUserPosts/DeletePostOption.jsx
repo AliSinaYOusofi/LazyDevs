@@ -22,7 +22,6 @@ export default function ModalComponent({id, func, mod, refechPosts}) {
             
             const data = await response.json()
             
-            console.log(data)
             if (data.status === "success") {
                 toast.success("Post deleted")
                 refechPosts(true)
@@ -31,7 +30,7 @@ export default function ModalComponent({id, func, mod, refechPosts}) {
         } 
         
         catch (e) {
-            console.log("error while deleteing post", e)
+            console.error("error while deleteing post", e)
             toast.error("Internal server error !")
         }
         setSpiner(false)

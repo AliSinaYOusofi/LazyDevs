@@ -32,7 +32,7 @@ router.post("/save_user", async (req, res) => {
         return res.status(200).send("UserSaved");
 
     }catch(error) {
-        console.log(error, "error while saving data");
+        console.error(error, "error while saving data");
         return res.status(500).send("serverError");
     }
 });
@@ -48,15 +48,27 @@ router.post("/check_user_login", async (req, res) => {
         let isUserRegistered = await SignedUpUser.emailAlreadyExists(email);
 
         if (isUserRegistered ) {
+            
             let currentUserData = await SignedUpUser.authenticateUser(password, email);
             
             if (currentUserData) {
 
-                const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "15m"});
-                const refreshToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "7d"});
+                const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "1d"});
+                const refreshToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "2d"});
                 
-                res.cookie('accessToken', accessToken, {maxAge: 900000, sameSite: "Lax"});
-                res.cookie('refreshToken', refreshToken, {maxAge: 604800000,  sameSite: "Lax"});
+                res.cookie('accessToken', accessToken, 
+                    {
+                        maxAge: 86400000, 
+                        sameSite: "Lax"
+                    }
+                );
+                
+                res.cookie('refreshToken', refreshToken, 
+                    {
+                        maxAge: 604800000,  
+                        sameSite: "Lax"
+                    }
+                );
 
                 return res.status(200).send(currentUserData);
             }
@@ -64,7 +76,7 @@ router.post("/check_user_login", async (req, res) => {
         return res.status(200).send("Invalid");
  
     } catch (error) {
-        console.log("Error Login route", error);
+        console.error("Error Login route", error);
         return res.status(200).send("Server Error");
     }
 });
@@ -73,8 +85,6 @@ router.post("/save_post", async (req, res) => {
 
     const {content, user_id} = req.body;
 
-    console.log(content)
-    console.log(user_id)
     const randomIdForPost = crypto.randomBytes(16).toString("hex");   
     
     if (!user_id) return res.status(200).json({message: "user_id required"});
