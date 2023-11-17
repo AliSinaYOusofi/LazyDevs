@@ -37,6 +37,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({user_id: currentUser._id, post_id: id}),
+                    credentials: "include"
                 },
             );
 

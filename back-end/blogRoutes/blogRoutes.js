@@ -56,17 +56,11 @@ router.get("/recent", async (req, res) => {
     // or something
 
     let {post_id} = req.query
-    
-    let user_id
-    
-    const token = req.cookies.accessToken
-    const refreshToken = req.cookies.refreshToken
+    post_id = post_id !== 'null' ? post_id : null
+    let user_id = req.user_id
 
-    console.log(req.cookies)
-    
-    // if (! token || ! refreshToken) return res.status(300).send().json({'message': 'unathorized access'})
-
-    // if (! user_id ) return res.status(404).send().json({"message: ": "user nto found"})
+    if (! user_id ) return res.status(404).send().json({"message: ": "user not found"})
+    else if (! post_id ) return res.status(404).send().json({"message: ": "no post id"})
     
     try {
         const blogs = await Post.find().lean().exec();
@@ -131,7 +125,7 @@ router.get("/top", async (req, res) => {
 
     // need the id for checking if user has saved the post
     // and chaning the UI accordingly
-    let {user_id} = req.query
+    let {user_id} = req.user_id
     
     try {
         const blogs = await Post.find().lean().exec();
@@ -181,9 +175,8 @@ router.get("/top", async (req, res) => {
   
 router.get("/single_post", async (req, res) => {
     
-    let { post_id = null, user_id = null } = req.query
-
-    console.log(post_id, user_id, req.query)
+    let { post_id = null } = req.query
+    let user_id = req.user_id
 
     user_id = user_id === 'null' ? null : user_id;
     post_id = post_id === 'null' ? null : post_id;
@@ -430,7 +423,8 @@ router.get("/get_likes_comments_count/:post_id", async (req, res) => {
 
 router.post("/save_new_visitor", async (req, res) => {
     
-    let { post_id, user_id } = req.body; 
+    let { post_id } = req.body;
+    let user_id = req.user_id 
 
     if (post_id) {
 
@@ -493,7 +487,8 @@ router.delete("/delete_post", async (req, res) => {
 
 router.post("/save_comment_reply", async (req, res) => {
     
-    let {post_id, reply, comment_id, user_id} = req.body
+    let {post_id, reply, comment_id} = req.body
+    let user_id = req.user_id
 
     if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
     if (! post_id) return res.status(200).json({status: "failed", reason: "post not found"})
@@ -538,9 +533,9 @@ router.post("/save_comment_reply", async (req, res) => {
 // making a new route for the latest posts
 // how to determine the latest posts ???
 
-router.get("/recent_posts/", async (req, res) => {
+router.get("/recent_posts", async (req, res) => {
     
-    let {user_id} = req.query
+    let {user_id} = req.user_id
 
     try {
         // first getting the latest post from db
@@ -655,7 +650,7 @@ router.post("/save_post", async (req, res) => {
 
 router.get("/posts_saved", async (req, res) => {
     
-    const {user_id} = req.query 
+    let user_id = req.user_id
     
     if (! user_id ) {
         return res.status(200).json({
@@ -739,8 +734,9 @@ router.get("/posts_saved", async (req, res) => {
 
 router.get("/follow", async (req, res) => {
 
-    let {user_id = null, to_followed_user = null} = req.query
-
+    let {to_followed_user = null} = req.query
+    let user_id = req.user_id
+    
     if (! user_id) return res.status(401).json({message: "unathorized"})
 
     else if (! to_followed_user) res.status(405).json({message: "not allowed"})

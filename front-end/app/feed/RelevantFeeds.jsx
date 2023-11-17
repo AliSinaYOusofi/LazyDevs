@@ -19,7 +19,14 @@ export default function RelevantFeeds() {
     useEffect( () => {
         async function getRelevantBlogs() {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed?user_id=${currentUser ? currentUser?._id : null}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed?user_id=${currentUser ? currentUser?._id : null}`, 
+                    {
+                        method: "GET",
+                        headers: {
+                            "Access-Control-Allow-Origin": "http://localhost:3000"
+                        }
+                    }
+                );
                 const data = await response.json()
 
                 if (data.status === "success") setRelevantBlogs(data.data)

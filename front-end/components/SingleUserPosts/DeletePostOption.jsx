@@ -16,7 +16,8 @@ export default function ModalComponent({id, func, mod, refechPosts}) {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    credentials: "include"
                 }
             );
             

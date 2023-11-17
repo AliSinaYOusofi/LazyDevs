@@ -34,6 +34,7 @@ export default function SavedToAccountPostCard({content, title, username, profil
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({user_id: currentUser._id, post_id: id}),
+                    credentials: "include"
                 },
             );
 

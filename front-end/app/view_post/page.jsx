@@ -29,7 +29,12 @@ export default function Page() {
             
             try {
                 
-                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/?post_id=${post_id}&user_id=${currentUser ? currentUser._id : null}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/single_post/?post_id=${post_id}`, 
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
+                );
                 const data = await response.json()
                 
                 setCurrentBlog(data.data)
@@ -53,7 +58,7 @@ export default function Page() {
         const getRecentBlogs = async () => {
             try {
                 
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}&user_id=${currentUser ? currentUser?._id : null}`, 
+                const response = await fetch(`http://localhost:3001/blogRoutes/recent?post_id=${post_id}`, 
                     {
                         method: "GET",
                         credentials: "include"
@@ -89,7 +94,8 @@ export default function Page() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(dataToSend)
+                    body: JSON.stringify(dataToSend),
+                    credentials: "include"
                 });
             }
             catch(e) {

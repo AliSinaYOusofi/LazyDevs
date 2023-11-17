@@ -96,7 +96,8 @@ const UserInfoForm = () => {
                     "Content-Type": "application/json"
                 },
                 method: "POST",
-                body: requestToUpdateData
+                body: requestToUpdateData,
+                credentials: "include"
             })
 
             if (response.ok) {

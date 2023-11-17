@@ -31,14 +31,15 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
             }
 
             const response = await fetch(`http://localhost:3001/blogRoutes/save_comment_reply`, 
-            {
-                method: "POST",
+                {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(requestData)
+                    body: JSON.stringify(requestData),
+                    credentials: "include"
                 }
-                );
+            );
                 
                 const data = await response.json()
                 
@@ -46,15 +47,15 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                     toast.success("Reply posted")
                     updateComments(prev => !prev)
                 }
-            } 
+        } 
             
-            catch (e) {
-                console.warn(e)
-                toast.error("Failed to post reply comment") 
-            }
-            
-            setReplyCommentValue("")
-            setReplyCommentSuccessful(prev => ! prev)
+        catch (e) {
+            console.warn(e)
+            toast.error("Failed to post reply comment") 
+        }
+        
+        setReplyCommentValue("")
+        setReplyCommentSuccessful(prev => ! prev)
     }
 
     const handleReplyCommentValue = () => {
