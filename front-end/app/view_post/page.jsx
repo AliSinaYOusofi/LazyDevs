@@ -5,12 +5,9 @@ import SocialIcons from '@/components/ShareBlogIcons/ShareIcons';
 import BlogCard from '@/components/BlogCard/BlogCard';
 import CommentParent from '@/components/CommentSection.jsx/CommentParent';
 import { moveToId } from '@/functions/movtToId';
-import { useAppContext } from '@/context/useContextProvider';
-import PostText from '@/components/PostText/PostText';
 import { useSearchParams } from 'next/navigation';
 import ReadingTime from '@/components/ReadingTime/ReadingTime';
-import FetchPostError from '@/components/Error/FetchPostError/FetchPostError';
-import RecentPostsError from '@/components/Error/RecentPostsError/RecentPostError';
+
 import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import MarkdownToHtml from '@/components/MarkDown/MarDownToHtml';
@@ -195,8 +192,7 @@ export default function Page() {
                 
                 <div className="p-10 w-full md:max-w-[50%] mx-auto border-[1px] border-gray-100 overflow-hidden overflow-ellipsis">
                     
-                    <UserCard difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
-                    
+                    <UserCard author={currentBlog?.author} difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
                     <ReadingTime paragraphs={currentBlog?.body}/>
 
                     {/* <TextToSpeech text={currentBlog?.body}/> */}

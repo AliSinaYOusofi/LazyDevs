@@ -1,23 +1,78 @@
 import Link from 'next/link'
 import React from 'react'
+import { useAppContext } from '@/context/useContextProvider'
+import { useEffect, useState } from 'react'
 
-export default function UserCard({profile, email, username, date, difference}) {
+export default function UserCard({profile, email, username, date, difference, isFollowing, author}) {
+
+    const [alreadyFollows, setAlreadyFollows] = useState()
+    const [spinner, setSpinner] = useState(false);
+    
+    const {currentUser} = useAppContext()
+
+    useEffect( () => {
+        // check if the user follows
+        setAlreadyFollows(isFollowing)
+    }, [])
+
+    const handleFollowButton = async () => {
+        setSpinner(true)
+        try {
+            const response = await fetch(`http://localhost:3001/blogRoutes/follow?user_id=${currentUser ? currentUser?._id : null}&to_followed_user=${author}`, 
+                {
+                    method: "GET"
+                }   
+            );
+            const data = await response.json()
+            console.log(data)
+
+            if (data.message === "following") {
+                setAlreadyFollows(true)
+            } else if (data.message === "unfollowing") {
+                setAlreadyFollows(false)
+            }
+        }
+        catch(e) {
+            console.error("Error!! following a user", e)
+        }
+        finally {
+            setSpinner(false)
+        }
+    }
     return (
-        <address className="flex items-center mb-6 not-italic rounded-full">
-            <div className="inline-flex justify-center mt-4  p-4 items-center mr-3 text-sm text-gray-900">
-                <img className="mr-4 w-16 h-16 rounded-full object-cover shadow-white shadow-lg" src={profile ? profile : "https://stackdiary.com/140x100.png"} alt="" />
-                <div>
-                    <p className="text-xl font-bold text-gray-900 flex flex-row items-center justify-start">{username ? username : "username"}
-                        <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="ml-1 w-4 h-4 mt-2 text-blue-500">
-                                <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                            </svg>
-                        </span>
-                    </p>
-                    <Link href={{ pathname:"/view_user", query: {email: profile ? profile[0]?.email : ""} }} className="text-base font-light text-blue-900 hover:underline">{email ? email : "NA"}</Link>
-                    <p className="text-base font-light text-gray-900"><time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022"> posted on {date ? date.split("T")[0] : "NA"} <span className="md:text-sm text-xs text-gray-600">({difference})</span> </time></p>
+        <>
+            <address className="flex justify-between items-center mb-6 not-italic">
+                <div className="inline-flex justify-center mt-4  p-4 items-center mr-3 text-sm text-gray-900">
+                    <img className="mr-4 w-16 h-16 rounded-full object-cover shadow-white shadow-lg" src={profile ? profile : "https://stackdiary.com/140x100.png"} alt="" />
+                    <div>
+                        <p className="text-xl font-bold text-gray-900 flex flex-row items-center justify-start">{username ? username : "username"}
+                            
+                        </p>
+                        <Link href={{ pathname:"/view_user", query: {email: profile ? profile[0]?.email : ""} }} className="text-base font-light text-blue-900 hover:underline">{email ? email : "NA"}</Link>
+                        <p className="text-base font-light text-gray-900"><time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022"> posted on {date ? date.split("T")[0] : "NA"} <span className="md:text-sm text-xs text-gray-600">({difference})</span> </time></p>
+                    </div>
                 </div>
-            </div>
-        </address>
+                <div>
+                    <button 
+                        type="button" 
+                        className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900" 
+                        onClick={handleFollowButton}
+                        disabled={spinner}
+                        >
+                        {
+                            alreadyFollows
+                            ? "Unfollow"
+                            : "Follow"
+                        }
+                        {
+                            spinner 
+                            ?
+                            <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-6 w-6"></div>
+                            : null
+                        }
+                    </button>
+                </div>
+            </address>
+        </>
     )
 }
