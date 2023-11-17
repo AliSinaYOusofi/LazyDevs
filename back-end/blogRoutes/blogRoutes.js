@@ -9,6 +9,7 @@ const Comments = require("../models/Comments")
 const replyComments = require("../models/ReplyComments")
 const Saved = require("../models/PostsSavedToAccount")
 const json = require("jsonwebtoken");
+const FollowingUser = require("../models/FollowingUsers")
 
 router.get("/newsfeed", async (req, res) => {
       
@@ -187,8 +188,8 @@ router.get("/single_post/:post_id", async (req, res) => {
         
         try {
 
+            //Todo: handle if posts are deleted
             let singleBlog = await Post.findById(post_id).lean().exec();
-
             let singleBlogAuthor = await SignedUpUser.findById(singleBlog.author).lean().exec();
             singleBlog.profileUrl = singleBlogAuthor.profileUrl;
             singleBlog.username = singleBlogAuthor.username;
@@ -203,7 +204,7 @@ router.get("/single_post/:post_id", async (req, res) => {
         } 
         
         catch (e ) {
-            console.log(e, "fetching single blog");
+            console.error(e, "fetching single blog");
             return res.status(200).json({message: "failed"})
         }
     }
@@ -716,6 +717,45 @@ router.get("/posts_saved", async (req, res) => {
             status: "failed",
             reason: "server"
         })
+    }
+})
+
+router.get("/follow", async (req, res) => {
+
+    let {user_id = null, to_followed_user = null} = req.query
+
+    if (! user_id) return res.status(401).json({message: "unathorized"})
+
+    else if (! to_followed_user) res.status(405).json({message: "not allowed"})
+
+    try {
+        const followingUser = await FollowingUser.findOne({user_id: user_id}).lean().exec()
+
+        console.log(followingUser, 'follow user result')
+
+        if (followingUser) { // if already follows then unfollow
+
+            followingUser.follows = followingUser.follows.filter( user => user._id !== to_followed_user)
+            
+            await followingUser.save()
+            return res.status(200).json({message: "unfollowing"})
+        }
+
+        const newUserToBeFollowed = {
+            user_id: user_id,
+            follows: [
+                {
+                    user: to_followed_user
+                }
+            ]
+        }
+
+        followingUser.follows.push(newUserToBeFollowed)
+        return res.status(200).json({message: "following"})
+    }
+    catch(e) {
+        console.error("error while following user: => ", e, req.path)
+        return res.status(500).json({message: "server error"})
     }
 })
 module.exports = router
