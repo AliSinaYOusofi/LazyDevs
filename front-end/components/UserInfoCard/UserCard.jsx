@@ -10,7 +10,6 @@ export default function UserCard({profile, email, username, date, difference, is
     
     const {currentUser} = useAppContext()
 
-    console.log(isFollowing)
     useEffect( () => {
         // check if the user follows
         if (isFollowing) setAlreadyFollows(isFollowing)
@@ -22,7 +21,8 @@ export default function UserCard({profile, email, username, date, difference, is
         try {
             const response = await fetch(`http://localhost:3001/blogRoutes/follow?user_id=${currentUser ? currentUser?._id : null}&to_followed_user=${author}`, 
                 {
-                    method: "GET"
+                    method: "GET",
+                    credentials: "include"
                 }   
             );
             const data = await response.json()
@@ -41,8 +41,7 @@ export default function UserCard({profile, email, username, date, difference, is
             setSpinner(false)
         }
     }
-
-    console.debug(username, 'username')
+    
     return (
         <>
             <address className="flex justify-between items-center mb-6 not-italic">

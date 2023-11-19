@@ -804,4 +804,68 @@ router.get("/follow", async (req, res) => {
         return res.status(500).json({message: "server error"})
     }
 })
+
+router.get("/get_follower", async (req, res) => {
+
+    const user_id = req.user_id
+
+    if (!user_id) return res.status(200).json({message: "user not found"})
+
+    try {
+        
+        const followers = await FollowingUser
+            .find({
+                "follows.user": user_id
+            })
+            .lean()
+            .exec()
+        
+        let followedByDataArr = []
+        
+        if (followers.length) {
+            
+            await Promise.all(
+            
+                followers.map(async follower => {
+            
+                    const followersData = await SignedUpUser.findById(follower.user_id)
+            
+                    if (followersData) {
+            
+                        delete followersData.password
+                        
+                        const numberOfPosts = await Post.find({author: followersData._id}).lean().exec()
+                        const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: followersData._id}}}).lean().exec()
+                        const numberOfFollowing = await FollowingUser.findOne({user_id: followersData._id}).lean().exec()
+                        const isUserFollowingThisUser = await FollowingUser.findOne({
+                            user_id: user_id,
+                            "follows.user": followersData._id
+                        }, {_id: 1})
+
+                        followedByDataArr.push({
+                            ...followersData.toObject(),
+                            numberOfPosts: numberOfPosts.length,
+                            numberOfFollowers: numberOfFollowers.length,
+                            numberOfFollowing: numberOfFollowing.follows.length,
+                            isFollowing: isUserFollowingThisUser ? true : false
+                        })
+                    }
+                    return follower
+                })
+            )
+            
+            return res.status(200).json({message: "success", data: followedByDataArr})
+
+        } 
+        
+        else {
+
+            return res.status(200).json({message: "success", data: "zero"})
+        }
+
+    } catch( error) {
+        console.error("error while getting followers: => ", error, req.path)
+        return res.status(404).json({message: "user not found"})
+    }
+})
 module.exports = router
