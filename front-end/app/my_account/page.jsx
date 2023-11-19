@@ -1,6 +1,7 @@
 "use client"
 import AccountDetails from '@/components/AccountDetails/AccountDetails'
 import EditProfile from '@/components/EditProfile/EditProfile'
+import Followers from '@/components/Followers/Followers'
 import AnalyticsIcon from '@/components/SVG/AnalyticsIcon'
 import EditProfileIcon from '@/components/SVG/EditProfile'
 import FollowersIcon from '@/components/SVG/Followers'
@@ -21,9 +22,9 @@ export default function Page() {
 
     const {currentUser} = useAppContext();
 
-    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Analytics", "Followers"]
-    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <AnalyticsIcon />, <FollowersIcon />]
-    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />]
+    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", ""]
+    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />]
+    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)
@@ -51,7 +52,7 @@ export default function Page() {
 
     return (
         <>
-            <div className="w-full relative h-full gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
+            <div className="w-full relative md:h-screen gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">
                 
                 <div className="md:w-[20%] w-full md:ml-20 px-4 md:px-0 ">
                     
