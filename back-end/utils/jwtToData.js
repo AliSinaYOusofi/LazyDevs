@@ -5,7 +5,7 @@ function tokenToUserData (token) {
 
         json.verify(token, process.env.SECRET_KEY);
         let data = json.decode(token)
-        return data
+        return true
     } catch(error) {
         console.error("failed to verify JWT token")
         return false

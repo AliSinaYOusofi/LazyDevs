@@ -8,6 +8,7 @@ export default function Followers() {
     const [spinner, setSpinner] = useState(false)
     const [error, setError] = useState(false)
     const [retryFollowers, setRetryFollowers] =  useState(false)
+    
     useEffect( () => {
         
         async function getFollowers() {
