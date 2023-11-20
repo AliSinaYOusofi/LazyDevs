@@ -12,7 +12,6 @@ import SavedPosts from '@/components/SavedPosts/SavedPosts'
 import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
 import React, {useState, useEffect} from 'react'
-import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 
 export default function Page() {
