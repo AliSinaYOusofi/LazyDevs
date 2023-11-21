@@ -35,15 +35,9 @@ app.use(cookieParser());
 // or it will never get called.
 app.use((req, res, next) => {
 
-    // to handle the no current logged in user_id
-    
-    // this part of the code must redirect user if there is no cookie
-    // if (! accessToken || ! refreshToken) {
-        //     return res.redirect(302, "http://localhost:3000/login")
-        // }
     console.log(req.path)
 
-    const saveRoutes = ['/user/save_user', '/user/check_user_login']
+    const saveRoutes = ['/user/save_user', '/user/check_user_login', '/user/hello']
     
     if (saveRoutes.includes(req.path)) return next()
     
@@ -51,6 +45,7 @@ app.use((req, res, next) => {
     
     if (!accessToken && ! refreshToken) {
         res.redirect("/login")
+        return next()
     }
     const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
     const verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
@@ -71,10 +66,10 @@ app.use((req, res, next) => {
     }
 });
 
-app.use( async (req, res, next) => {
-    await getDB()
-    next()
-})
+// app.use( async (req, res, next) => {
+//     await getDB()
+//     next()
+// })
 
 app.use("/user", userRoutes);
 app.use("/blogRoutes", blogRoutes)
