@@ -1,5 +1,5 @@
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 export const validateImageBeforeSubmit = (imageDetails) => {
     // check image type and size before submission
@@ -17,12 +17,14 @@ export const validateImageBeforeSubmit = (imageDetails) => {
         let isImage = imageDetails.type.split("/")[0].toLowerCase();
         let imageType = imageDetails.type.split("/")[1].toLowerCase();
 
-        if (isImage !== "image") toast.error("Only images are allowed")
+        if (isImage !== "image") return false
 
-        else if (!allowedTypes.includes(imageType)) toast.error("Allowed image types: png, jepg, jpg.");
+        else if (!allowedTypes.includes(imageType)) return false
         
-        else if (imageDetails.size / 1000000 >= 6) toast.error("image size can't more than 6 MBs");
+        else if (imageDetails.size / 1000000 >= 6) return false
         
-        return flag;
+        flag = true
     }
+
+    return flag
 }
