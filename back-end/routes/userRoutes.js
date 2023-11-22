@@ -7,20 +7,6 @@ const Post = require("../models/Blogs");
 const {query, validationResult, body} = require("express-validator")
 require("dotenv").config();
 
-
-router.get('/hello', query("person").notEmpty().escape(), (req, res) => {
-
-    const result = validationResult(req)
-
-    if (result.isEmpty()) {
-        
-        res.send(`Hello, ${req.query.person}!`);
-        console.log()
-    }
-    res.send({error: result.array()});
-
-});
-
 router.post(
     "/save_user",
     body('username').notEmpty().escape().isAlpha().isString(),
