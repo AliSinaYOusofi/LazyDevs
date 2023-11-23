@@ -1,26 +1,28 @@
 import Link from 'next/link'
 import React from 'react'
 
-export default function TemplateCard({image, content, title}) {
+export default function TemplateCard({image, content, longTitle, title, number}) {
 
     return (
-        
-        <div className="max-w-sm bg-white  rounded-lg shadow-sm">
-            <a href="#">
-                <img className="rounded-t-lg" src={image} alt="blog template image" />
-            </a>
-            <div className="p-5">
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-90">{title}</h5>
-                </a>
-                <p class="mb-3 font-normal ">{content}</p>
-                <Link scroll={true} href={{pathname: "/temps", query: {title}}}  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg">
-                    Check template
-                    <svg className="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </Link>
-            </div>
+        <div className={` px-8 py-4 md:w-1/2  rounded-lg mt-4`}>
+            <h1 className="text-2xl font-bold px-3 mb-2 rounded-full bg-gray-50 w-fit">{number}</h1>
+            <hr />   
+
+
+            <div className="mt-2">
+                
+                <Link href={{pathname: "/temps", query: {title}}} className="overflow-ellipsis line-clamp-1 text-2xl font-bold hover:underline">{longTitle}</Link> 
+            
+                <p className={`  overflow-ellipsis mt-2 mb-4 text-black/90`}>{content}</p>
+            </div> 
+            
+            <Link 
+                href={{pathname: "/temps", query: {title}}}
+                className=" relative w-1/3 duration-300 hover:text-white md:mt-4 cursor-pointer  rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900 py-1 h-8 md:h-10 px-4 mt-2 text-lg font-ligh "
+            >
+                Check
+            </Link>
+            <hr className="mt-3"/>
         </div>
     )
 }
