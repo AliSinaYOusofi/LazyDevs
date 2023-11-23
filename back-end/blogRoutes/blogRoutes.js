@@ -10,6 +10,7 @@ const replyComments = require("../models/ReplyComments")
 const Saved = require("../models/PostsSavedToAccount")
 const json = require("jsonwebtoken");
 const FollowingUser = require("../models/FollowingUsers")
+const { body, validationResult, query } = require("express-validator")
 
 router.get("/newsfeed", async (req, res) => {
       
@@ -49,72 +50,81 @@ router.get("/newsfeed", async (req, res) => {
 });
 
 
-router.get("/recent", async (req, res) => {
+router.get(
+    "/recent",
+    query('post_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
+    {
      
     // get thre recent posts only
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
 
-    let {post_id} = req.query
-    post_id = post_id !== 'null' ? post_id : null
-    let user_id = req.user_id
+        const result = validationResult(req)
 
-    if (! user_id ) return res.status(404).send().json({"message: ": "user not found"})
-    else if (! post_id ) return res.status(404).send().json({"message: ": "no post id"})
-    
-    try {
-        const blogs = await Post.find().lean().exec();
-    
-        const authorIds = blogs.map(blog => blog.author);
-        const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
-        const authorData = await Promise.all(authorDataPromises);
-    
-        const completeBlogData = blogs.map((blog, index) => {
-            blog.profileUrl = authorData[index].profileUrl;
-            blog.username = authorData[index].username;
-            blog.viewCount = 0
-            blog.commentCount = 0
-            blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
-            return blog;
-        });
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-        for (const blog of completeBlogData) {
-            const views = await PostView.find({post_id: blog._id}).lean().exec()
-            if (user_id) {
-                const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
-                blog.saved = alreadySaved.length > 0
+        let {post_id} = req.query
+        post_id = post_id !== 'null' ? post_id : null
+        let user_id = req.user_id
+
+        if (! user_id ) return res.status(404).send().json({"message: ": "user not found"})
+        else if (! post_id ) return res.status(404).send().json({"message: ": "no post id"})
+        
+        try {
+            const blogs = await Post.find().lean().exec();
+        
+            const authorIds = blogs.map(blog => blog.author);
+            const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+            const authorData = await Promise.all(authorDataPromises);
+        
+            const completeBlogData = blogs.map((blog, index) => {
+                blog.profileUrl = authorData[index].profileUrl;
+                blog.username = authorData[index].username;
+                blog.viewCount = 0
+                blog.commentCount = 0
+                blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                return blog;
+            });
+
+            for (const blog of completeBlogData) {
+                const views = await PostView.find({post_id: blog._id}).lean().exec()
+                if (user_id) {
+                    const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                    blog.saved = alreadySaved.length > 0
+                }
+                blog.viewCount = views.length
+                blog.commentCount = blog.comments.length
             }
-            blog.viewCount = views.length
-            blog.commentCount = blog.comments.length
-        }
 
-        let latestBlogPostedThreshold = completeBlogData.reduce( (latest, blog) => {
-            if (!latest || blog.createdAt > latest.createdAt) return blog
-            return latest
-        }, null)
-        
-        latestBlogPostedThreshold = latestBlogPostedThreshold.createdAt
-
-        let latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
+            let latestBlogPostedThreshold = completeBlogData.reduce( (latest, blog) => {
+                if (!latest || blog.createdAt > latest.createdAt) return blog
+                return latest
+            }, null)
             
-            const blogDate = new Date(blog.createdAt)
-            return differenceInDays(blogDate, latestBlogPostedThreshold) <= 15
-        })
+            latestBlogPostedThreshold = latestBlogPostedThreshold.createdAt
 
-        latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.filter(blog => blog._id != post_id)
-        
-        return res.status(200).json({
-            status: "success",
-            data: latestBlogs15DaysAfterLatestBlog.reverse()
-        });
-        
-    } catch (e) {  
-        console.error(e, "fetching recent posts, path => ", req.path);
-        res.status(200).json({
-            status: "failed"
-        });  
-    }     
-});
+            let latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
+                
+                const blogDate = new Date(blog.createdAt)
+                return differenceInDays(blogDate, latestBlogPostedThreshold) <= 15
+            })
+
+            latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.filter(blog => blog._id != post_id)
+            
+            return res.status(200).json({
+                status: "success",
+                data: latestBlogs15DaysAfterLatestBlog.reverse()
+            });
+            
+        } catch (e) {  
+            console.error(e, "fetching recent posts, path => ", req.path);
+            res.status(200).json({
+                status: "failed"
+            });  
+        }     
+    }
+);
 
 
 router.get("/top", async (req, res) => {
@@ -173,188 +183,214 @@ router.get("/top", async (req, res) => {
     }     
 });
   
-router.get("/single_post", async (req, res) => {
+router.get(
+    "/single_post",
+    query('post_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
     
-    let { post_id = null } = req.query
-    let user_id = req.user_id
+    {
+        const result = validationResult(req)
 
-    user_id = user_id === 'null' ? null : user_id;
-    post_id = post_id === 'null' ? null : post_id;
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    user_id = user_id === undefined ? null : user_id;
-    post_id = post_id === undefined ? null : post_id;
+        let { post_id = null } = req.query
+        let user_id = req.user_id
+
+        user_id = user_id === 'null' ? null : user_id;
+        post_id = post_id === 'null' ? null : post_id;
+
+        user_id = user_id === undefined ? null : user_id;
+        post_id = post_id === undefined ? null : post_id;
+        
+        if (! user_id) return res.status(401).json({message: "unathorized"})
     
-    if (! user_id) return res.status(401).json({message: "unathorized"})
- 
-    else if (! post_id) return res.status(405).json({message: "not allowed"})
- 
-    if (post_id) {
-        
-        try {
+        else if (! post_id) return res.status(405).json({message: "not allowed"})
+    
+        if (post_id) {
+            
+            try {
 
-            //Todo: handle if posts are deleted
-            let singleBlog = await Post.findById(post_id).lean().exec();
-            let singleBlogAuthor = await SignedUpUser.findById(singleBlog.author).lean().exec();
-            singleBlog.profileUrl = singleBlogAuthor.profileUrl;
-            singleBlog.username = singleBlogAuthor.username;
-            singleBlog.joined = singleBlogAuthor.joined;
-            singleBlog.email = singleBlogAuthor.email;
-            singleBlog.distance = formatDistanceToNow(singleBlog.createdAt, {addSuffix: true}).replace("about", "")
-            singleBlog.alreadyFollows = false
-            const isUserFollowingThisUser = await FollowingUser.findOne({
-                user_id: user_id,
-                "follows.user": singleBlogAuthor._id
-            }, {_id: 1})
+                //Todo: handle if posts are deleted
+                let singleBlog = await Post.findById(post_id).lean().exec();
+                let singleBlogAuthor = await SignedUpUser.findById(singleBlog.author).lean().exec();
+                singleBlog.profileUrl = singleBlogAuthor.profileUrl;
+                singleBlog.username = singleBlogAuthor.username;
+                singleBlog.joined = singleBlogAuthor.joined;
+                singleBlog.email = singleBlogAuthor.email;
+                singleBlog.distance = formatDistanceToNow(singleBlog.createdAt, {addSuffix: true}).replace("about", "")
+                singleBlog.alreadyFollows = false
+                const isUserFollowingThisUser = await FollowingUser.findOne({
+                    user_id: user_id,
+                    "follows.user": singleBlogAuthor._id
+                }, {_id: 1})
 
-            if (isUserFollowingThisUser) singleBlog.alreadyFollows = true
+                if (isUserFollowingThisUser) singleBlog.alreadyFollows = true
 
-            return res.status(200).json({
-                status: "success",
-                data: singleBlog
-            })
-        } 
-        
-        catch (e ) {
-            console.error(e, "fetching single blog");
-            return res.status(200).json({message: "failed"})
+                return res.status(200).json({
+                    status: "success",
+                    data: singleBlog
+                })
+            } 
+            
+            catch (e ) {
+                console.error(e, "fetching single blog");
+                return res.status(200).json({message: "failed"})
+            }
         }
+        return res.status(200).json({message: "blog not found"})
     }
-    return res.status(200).json({message: "blog not found"})
-});
+);
 
 
-router.post("/comment", async (req, res) => {
+router.post(
+    "/comment",
+    body('post_id').notEmpty().isMongoId().escape(), 
+    body('author').notEmpty().isMongoId().escape(), 
+    body('comment').notEmpty().escape(), 
+    async (req, res) => 
     
-    let { post_id, comment, author} = req.body;
-
-
-    if (post_id) {
+    {
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
         
-        try {
+        let { post_id, comment, author} = req.body;
 
-            let singleBlog = await Post.findById(post_id);
 
-            if (! singleBlog) {
+        if (post_id) {
+            
+            try {
+
+                let singleBlog = await Post.findById(post_id);
+
+                if (! singleBlog) {
+                    return res.status(200).json({
+                        status: "failed",
+                        data: "blog not found"
+                    })
+                }
+                
+                const newComment = new Comment(
+                    {
+                        post: post_id.toString(),
+                        comment: [ {
+                            author: author,
+                            body: comment,
+                        } ]
+                    }
+                );
+
+                await newComment.save();
+
+
+
+                singleBlog.comments.push(newComment._id);
+
+                await singleBlog.save();
+
+                return res.status(200).json({
+                    status: "success",
+                    data: "saved"
+                })
+            } 
+            
+            catch (e ) {
+                console.error(e, "saving comment");
+                return res.status(200).json({status: "failed", data: "server error"})
+            }
+        }
+        return res.status(200).json({status: "failed", data: "post_id not provided"})
+    }
+);
+
+router.post(
+    "/get_post_comments",
+    body('post_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
+    {
+        
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
+
+        const {post_id} = req.body;
+        
+        if (post_id) {
+
+            try {
+
+                let comments = await Comment.find({post: post_id}).lean().exec();
+                
+                comments = comments.map(async comms => {
+                    
+                    comms.comment = await Promise.all(comms.comment.map(async comment => {
+                    
+                        const whoCommented = await SignedUpUser.findOne({ email: comment.author }).lean().exec();
+
+                        comment.distance = formatDistanceToNow(comment.commentedOn, {addSuffix: true}).replace("about", "")
+                        
+                        if (whoCommented) {
+                        
+                            comment.profileUrl = whoCommented?.profileUrl;
+                            comment.username = whoCommented?.username;
+                        }
+
+                        // for the replies part
+                        
+                        
+                        return comment;
+                    }));
+                    
+                    comms.replies = await Promise.all(comms.replies.map( async reps => {
+
+                        const repliesFromReplyCommentsSchema = await replyComments.findById(reps._id)
+                        
+                        const theUserWhoReplied = await SignedUpUser.findById(repliesFromReplyCommentsSchema.author).lean().exec()
+                        
+                        const theRepliedDistanceToNow = formatDistanceToNow(repliesFromReplyCommentsSchema.createdAt, {addSuffix: true}).replace("about", "")
+                        
+                        const repliesObjectDataOfEachUser = {}
+
+                        if (theUserWhoReplied) {
+                    
+                            repliesObjectDataOfEachUser._id = theUserWhoReplied._id
+                            repliesObjectDataOfEachUser.username = theUserWhoReplied.username
+                            repliesObjectDataOfEachUser.profileUrl = theUserWhoReplied.profileUrl
+                            repliesObjectDataOfEachUser.distanceToNow = theRepliedDistanceToNow
+                            repliesObjectDataOfEachUser.date = repliesFromReplyCommentsSchema.createdAt
+                            repliesObjectDataOfEachUser.body = repliesFromReplyCommentsSchema.text
+                            repliesObjectDataOfEachUser.commen_id = repliesFromReplyCommentsSchema.comment
+                        }
+
+                        return repliesObjectDataOfEachUser;
+                    
+                    }))
+                    return comms;
+                });
+                
+                // Wait for all the mapping operations to complete
+                comments = await Promise.all(comments);
+
+                return res.status(200).json({
+                    status: "success",
+                    data: comments
+                })
+            } 
+            
+            catch(e) {
+
+                console.error(e, 'while getting comments')
                 return res.status(200).json({
                     status: "failed",
-                    data: "blog not found"
+                    data: "server error"
                 })
             }
             
-            const newComment = new Comment(
-                {
-                    post: post_id.toString(),
-                    comment: [ {
-                        author: author,
-                        body: comment,
-                    } ]
-                }
-            );
-
-            await newComment.save();
-
-
-
-            singleBlog.comments.push(newComment._id);
-
-            await singleBlog.save();
-
-            return res.status(200).json({
-                status: "success",
-                data: "saved"
-            })
-        } 
-        
-        catch (e ) {
-            console.error(e, "saving comment");
-            return res.status(200).json({status: "failed", data: "server error"})
         }
+        return res.status(200).json({
+            status: "failed",
+            data: "blogNotFound"
+        })
     }
-    return res.status(200).json({status: "failed", data: "post_id not provided"})
-});
-
-router.post("/get_post_comments", async (req, res) => {
-    
-    const {post_id} = req.body;
-
-    
-    if (post_id) {
-
-        try {
-
-            let comments = await Comment.find({post: post_id}).lean().exec();
-            
-            comments = comments.map(async comms => {
-                
-                comms.comment = await Promise.all(comms.comment.map(async comment => {
-                
-                    const whoCommented = await SignedUpUser.findOne({ email: comment.author }).lean().exec();
-
-                    comment.distance = formatDistanceToNow(comment.commentedOn, {addSuffix: true}).replace("about", "")
-                    
-                    if (whoCommented) {
-                    
-                        comment.profileUrl = whoCommented?.profileUrl;
-                        comment.username = whoCommented?.username;
-                    }
-
-                    // for the replies part
-                    
-                    
-                    return comment;
-                }));
-                
-                comms.replies = await Promise.all(comms.replies.map( async reps => {
-
-                    const repliesFromReplyCommentsSchema = await replyComments.findById(reps._id)
-                    
-                    const theUserWhoReplied = await SignedUpUser.findById(repliesFromReplyCommentsSchema.author).lean().exec()
-                    
-                    const theRepliedDistanceToNow = formatDistanceToNow(repliesFromReplyCommentsSchema.createdAt, {addSuffix: true}).replace("about", "")
-                    
-                    const repliesObjectDataOfEachUser = {}
-
-                    if (theUserWhoReplied) {
-                
-                        repliesObjectDataOfEachUser._id = theUserWhoReplied._id
-                        repliesObjectDataOfEachUser.username = theUserWhoReplied.username
-                        repliesObjectDataOfEachUser.profileUrl = theUserWhoReplied.profileUrl
-                        repliesObjectDataOfEachUser.distanceToNow = theRepliedDistanceToNow
-                        repliesObjectDataOfEachUser.date = repliesFromReplyCommentsSchema.createdAt
-                        repliesObjectDataOfEachUser.body = repliesFromReplyCommentsSchema.text
-                        repliesObjectDataOfEachUser.commen_id = repliesFromReplyCommentsSchema.comment
-                    }
-
-                    return repliesObjectDataOfEachUser;
-                
-                }))
-                return comms;
-            });
-              
-              // Wait for all the mapping operations to complete
-            comments = await Promise.all(comments);
-
-            return res.status(200).json({
-                status: "success",
-                data: comments
-            })
-        } 
-        
-        catch(e) {
-
-            console.error(e, 'while getting comments')
-            return res.status(200).json({
-                status: "failed",
-                data: "server error"
-            })
-        }
-        
-    }
-    return res.status(200).json({
-        status: "failed",
-        data: "blogNotFound"
-    })
-});
+);
 
 
 router.post("/like_post", async (req, res) => {
@@ -403,132 +439,170 @@ router.post("/like_post", async (req, res) => {
 });
 
 
-router.get("/get_likes_comments_count/:post_id", async (req, res) => {
+router.get(
+    "/get_likes_comments_count/:post_id",
+    query('post_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
     
-    let {post_id} = req.params;     
-    post_id = String(post_id).split(":")[1];
+    {
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    if (post_id) {
+        let {post_id} = req.query;     
 
-        let post_likes = await PostView.find({'post_id': post_id}).lean().exec();
-        let commentCount = await Comment.find({'post': post_id}).lean().exec();
-           
-        if (post_likes) {
-            return res.status(200).json({status: "success", likeCount: post_likes, commentCount})
-        }
-    }
-    return res.status(200).json({status: "failed", data: "post not found"})
+        if (post_id) {
 
-});
-
-router.post("/save_new_visitor", async (req, res) => {
-    
-    let { post_id } = req.body;
-    let user_id = req.user_id 
-
-    if (post_id) {
-
-        try {
-            const userAlreadyViewed = await PostView.findOne({ post_id, viewer: user_id }).lean().exec();
-
-            if (userAlreadyViewed) {
-                return res.status(200).json({ status: "success", data: "user already viewed" });
-            } 
-
-            else {
-                const newViewer = new PostView({ post_id, viewer: user_id, viewCount: 1 }); // Save the new view
-                await newViewer.save();
-                return res.status(200).json({ status: "success", data: "new user viewed" });
+            let post_likes = await PostView.find({'post_id': post_id}).lean().exec();
+            let commentCount = await Comment.find({'post': post_id}).lean().exec();
+            
+            if (post_likes) {
+                return res.status(200).json({status: "success", likeCount: post_likes, commentCount})
             }
-        } 
-        
-        catch (e) {
-            console.error("Failed when saving view:", e);
-            return res.status(200).json({ status: "failed", data: "server error" });
         }
-    }
+        return res.status(200).json({status: "failed", data: "post not found"})
 
-    return res.status(200).json({ status: "failed", data: "post not found" });
-})
+    }
+);
+
+router.post(
+    "/save_new_visitor",
+    body('post_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
+    {
+        
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
+
+        let { post_id } = req.body;
+        let user_id = req.user_id 
+
+        if (post_id) {
+
+            try {
+                const userAlreadyViewed = await PostView.findOne({ post_id, viewer: user_id }).lean().exec();
+
+                if (userAlreadyViewed) {
+                    return res.status(200).json({ status: "success", data: "user already viewed" });
+                } 
+
+                else {
+                    const newViewer = new PostView({ post_id, viewer: user_id, viewCount: 1 }); // Save the new view
+                    await newViewer.save();
+                    return res.status(200).json({ status: "success", data: "new user viewed" });
+                }
+            } 
+            
+            catch (e) {
+                console.error("Failed when saving view:", e);
+                return res.status(200).json({ status: "failed", data: "server error" });
+            }
+        }
+
+        return res.status(200).json({ status: "failed", data: "post not found" });
+    }
+)
 
 
 // the following is for deleting blogs:
 
-router.delete("/delete_post", async (req, res) => {
+router.delete(
+    "/delete_post",
+    query('post_id').notEmpty().isMongoId().escape(),
+    async (req, res) => 
     
-    let {post_id} = req.query
-    if (! post_id) return res.status(200).json({status: "failed", reason: "post_id not provided"})
+    {
+        
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    try {
-        const blogExists = await Post.findById(post_id).lean().exec()
+        let {post_id} = req.query
+        
+        if (! post_id) return res.status(200).json({status: "failed", reason: "post_id not provided"})
 
-        if (blogExists) {
+        try {
+            const blogExists = await Post.findById(post_id).lean().exec()
 
-            await Post.findByIdAndRemove(post_id)
+            if (blogExists) {
 
-            return res.status(200).json({
-                status: "success",
-            })
+                await Post.findByIdAndRemove(post_id)
 
-        } else {
+                return res.status(200).json({
+                    status: "success",
+                })
+
+            } else {
+                return res.status(200).json({
+                    status: "failed",
+                    reason: "post not found"
+                })
+            }
+        } catch (e) {
+            console.error("exception happened while deleting a post => () ", e)
             return res.status(200).json({
                 status: "failed",
-                reason: "post not found"
+                reason: "server"
             })
         }
-    } catch (e) {
-        console.error("exception happened while deleting a post => () ", e)
-        return res.status(200).json({
-            status: "failed",
-            reason: "server"
-        })
     }
-})
+)
 
-router.post("/save_comment_reply", async (req, res) => {
+router.post(
     
-    let {post_id, reply, comment_id} = req.body
-    let user_id = req.user_id
+    "/save_comment_reply",
+    
+    body('post_id').notEmpty().isMongoId().escape(), 
+    body('comment_id').notEmpty().isMongoId().escape(), 
+    body('reply').notEmpty().escape(), 
+    
+    async (req, res) =>
+    
+    {
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
-    if (! post_id) return res.status(200).json({status: "failed", reason: "post not found"})
+        let {post_id, reply, comment_id} = req.body
+        let user_id = req.user_id
 
-    try {
+        if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
+        if (! post_id) return res.status(200).json({status: "failed", reason: "post not found"})
 
-        const newReply = {
-            text: reply.trim(),
-            author: user_id.trim(),
-            comment: comment_id.trim()
+        try {
+
+            const newReply = {
+                text: reply.trim(),
+                author: user_id.trim(),
+                comment: comment_id.trim()
+            }
+            // firs inserting data to replyComments and taking
+            // the id of it and saving it in comments reply field of it
+
+            let result = await replyComments.insertMany(newReply)
+
+            let ParentCommentSchema = await Comments.
+                findOneAndUpdate(
+                    { post: post_id, comment: {$elemMatch: {_id: comment_id}}},
+                    { $push: {replies : result[0]._id }},
+                    { new: true }
+                ).
+                lean().
+                exec()
+            
+            return res.status(200).json({
+                status: "success",
+                data: ParentCommentSchema
+            })
         }
-        // firs inserting data to replyComments and taking
-        // the id of it and saving it in comments reply field of it
+        catch( e ) {
 
-        let result = await replyComments.insertMany(newReply)
-
-        let ParentCommentSchema = await Comments.
-            findOneAndUpdate(
-                { post: post_id, comment: {$elemMatch: {_id: comment_id}}},
-                { $push: {replies : result[0]._id }},
-                { new: true }
-            ).
-            lean().
-            exec()
-        
-        return res.status(200).json({
-            status: "success",
-            data: ParentCommentSchema
-        })
+            console.error('failed while saving comment reply')
+            console.error(e)
+            return res.status(200).json({
+                status: "failed",
+                reason: "server"
+            })
+        }
     }
-    catch( e ) {
-
-        console.error('failed while saving comment reply')
-        console.error(e)
-        return res.status(200).json({
-            status: "failed",
-            reason: "server"
-        })
-    }
-})
+)
 
 // making a new route for the latest posts
 // how to determine the latest posts ???
@@ -603,50 +677,60 @@ router.get("/recent_posts", async (req, res) => {
     }
 })
 
-router.post("/save_post", async (req, res) => {
-
-    const {user_id, post_id} = req.body 
+router.post(
     
-    if (! user_id ) {
-        return res.status(200).json({
-            status: "failed",
-            reason: "user_id required"
-        })
-    }
+    "/save_post",
+    body('post_id').notEmpty().isMongoId().escape(), 
+    body('user_id').notEmpty().isMongoId().escape(), 
+    
+    async (req, res) => {
 
-    else if (! post_id) {
-        return res.status(200).json({
-            status: "failed",
-            reason: "post_id required"
-        })
-    }
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    try {
+        const {user_id, post_id} = req.body 
         
-        const alreadySaved = await Saved.find({user: user_id, post: post_id}).lean().exec()
-
-        if (alreadySaved?.length > 0) {
-            await Saved.deleteOne({user: user_id, post: post_id})
-            return res.status(200).json({message: "deleted"})
-        } else {
-            let saveNewPostToAccount = new Saved({
-                user: user_id,
-                post: post_id
+        if (! user_id ) {
+            return res.status(200).json({
+                status: "failed",
+                reason: "user_id required"
             })
-            await saveNewPostToAccount.save()
-            return res.status(200).json({message: "saved"})
+        }
+
+        else if (! post_id) {
+            return res.status(200).json({
+                status: "failed",
+                reason: "post_id required"
+            })
+        }
+
+        try {
+            
+            const alreadySaved = await Saved.find({user: user_id, post: post_id}).lean().exec()
+
+            if (alreadySaved?.length > 0) {
+                await Saved.deleteOne({user: user_id, post: post_id})
+                return res.status(200).json({message: "deleted"})
+            } else {
+                let saveNewPostToAccount = new Saved({
+                    user: user_id,
+                    post: post_id
+                })
+                await saveNewPostToAccount.save()
+                return res.status(200).json({message: "saved"})
+            }
+        }
+        catch (e) {
+            
+            console.error("error saving post to account: => ", e)
+            
+            return res.status(200).json({
+                status: "failed",
+                reason: "server"
+            })
         }
     }
-    catch (e) {
-        
-        console.error("error saving post to account: => ", e)
-        
-        return res.status(200).json({
-            status: "failed",
-            reason: "server"
-        })
-    }
-})
+)
 
 router.get("/posts_saved", async (req, res) => {
     
@@ -732,78 +816,86 @@ router.get("/posts_saved", async (req, res) => {
     }
 })
 
-router.get("/follow", async (req, res) => {
-
-    let {to_followed_user = null} = req.query
-    let user_id = req.user_id
+router.get(
+    "/follow",
+    query('to_followed_user').notEmpty().isMongoId().escape(),
+    async (req, res) => 
     
-    if (! user_id) return res.status(401).json({message: "unathorized"})
+    {
+        const result = validationResult(req)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
-    else if (! to_followed_user) res.status(405).json({message: "not allowed"})
+        let {to_followed_user = null} = req.query
+        let user_id = req.user_id
+        
+        if (! user_id) return res.status(401).json({message: "unathorized"})
 
-    try {
-        const followingUser = await FollowingUser.findOne({user_id: user_id}).lean().exec()
+        else if (! to_followed_user) res.status(405).json({message: "not allowed"})
 
-        if (followingUser) {
+        try {
+            const followingUser = await FollowingUser.findOne({user_id: user_id}).lean().exec()
 
-            const alreadyFollowingTheUser = followingUser.follows.some(
-                user => user.user.toString() === to_followed_user.toString()
-            )
+            if (followingUser) {
 
-            if (alreadyFollowingTheUser) {
-
-                const alreadyFollowingThenUPdate = await FollowingUser.findOneAndUpdate(
-                    {user_id: user_id},
-                    {
-                        $pull: {
-                            follows: {
-                                user: to_followed_user
-                            }
-                        }
-                    },
-                    {
-                        new: true,
-                    }
+                const alreadyFollowingTheUser = followingUser.follows.some(
+                    user => user.user.toString() === to_followed_user.toString()
                 )
-                return res.status(200).json({message: "unfollowing", data: alreadyFollowingThenUPdate})
-            }
 
-            // then follow the user
+                if (alreadyFollowingTheUser) {
+
+                    const alreadyFollowingThenUPdate = await FollowingUser.findOneAndUpdate(
+                        {user_id: user_id},
+                        {
+                            $pull: {
+                                follows: {
+                                    user: to_followed_user
+                                }
+                            }
+                        },
+                        {
+                            new: true,
+                        }
+                    )
+                    return res.status(200).json({message: "unfollowing", data: alreadyFollowingThenUPdate})
+                }
+
+                // then follow the user
+                else {
+                    const followNewUser = await FollowingUser.findOneAndUpdate(
+                        {user_id: user_id},
+                        {
+                            $push: {
+                                follows: {
+                                    user: to_followed_user
+                                }
+                            }
+                        },
+                        {
+                            new: true, 
+                            upsert: true
+                        }
+                    )
+                    return res.status(200).json({message: "following", data: followNewUser})
+                }
+
+            } // the user is new, he/she is not following anyone so create a new document instead
             else {
-                const followNewUser = await FollowingUser.findOneAndUpdate(
-                    {user_id: user_id},
-                    {
-                        $push: {
-                            follows: {
-                                user: to_followed_user
-                            }
-                        }
-                    },
-                    {
-                        new: true, 
-                        upsert: true
-                    }
-                )
-                return res.status(200).json({message: "following", data: followNewUser})
+                const newUserTobeFollowed = new FollowingUser({
+                    user_id: user_id,
+                    follows: [{user: to_followed_user}]
+                })
+
+                await newUserTobeFollowed.save()
+                return res.status(200).json({message: "new", data: newUserTobeFollowed})
             }
 
-        } // the user is new, he/she is not following anyone so create a new document instead
-        else {
-            const newUserTobeFollowed = new FollowingUser({
-                user_id: user_id,
-                follows: [{user: to_followed_user}]
-            })
-
-            await newUserTobeFollowed.save()
-            return res.status(200).json({message: "new", data: newUserTobeFollowed})
         }
-
+        catch(e) {
+            console.error("error while following user: => ", e, req.path)
+            return res.status(500).json({message: "server error"})
+        }
     }
-    catch(e) {
-        console.error("error while following user: => ", e, req.path)
-        return res.status(500).json({message: "server error"})
-    }
-})
+)
 
 router.get("/get_follower", async (req, res) => {
 

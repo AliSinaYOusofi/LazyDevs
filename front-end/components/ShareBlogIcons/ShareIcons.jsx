@@ -53,7 +53,12 @@ export default function SocialIcons({post_id}) {
     useEffect( () => {
         const likesCommentsCount = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/get_likes_comments_count/:${post_id}`, {method: "GET"});
+                const response = await fetch(`http://localhost:3001/blogRoutes/get_likes_comments_count?post_id=${post_id}`, 
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
+                );
                 const data = await response.json()
 
                 if (data.status === "success") {

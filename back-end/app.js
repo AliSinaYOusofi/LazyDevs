@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./blogRoutes/blogRoutes")
 const accountRoutes = require("./routes/accountRoutes")
-const { getDB } = require("./db_connection/mongoose.db.config");
 
 require("dotenv").config();
 app.use(cors({
@@ -23,8 +22,6 @@ app.use(express.json()); // convert data from request body to js object.
 app.use(cookieParser());
 
 
-
-
 // middleware to check if token is expired
 // if the token is expired we will
 // generate another token using the refresh token
@@ -37,7 +34,7 @@ app.use((req, res, next) => {
 
     console.log(req.path)
 
-    const saveRoutes = ['/user/save_user', '/user/check_user_login', '/user/hello']
+    const saveRoutes = ['/user/save_user', '/user/check_user_login', '/blogRoutes/recent']
     
     if (saveRoutes.includes(req.path)) return next()
     

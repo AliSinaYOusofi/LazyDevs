@@ -3,10 +3,9 @@ const Post = require("../models/Blogs");
 const PostView = require("../models/PostViews");
 const SignedUpUser = require("../models/Register");
 const bcrypt = require("bcrypt");
+const { body, validationResult } = require("express-validator");
 const router = require("express").Router();
 
-
-// get account credentials
 router.get("/my_posts", async (req, res) => {
 
     let author = req.user_id;
@@ -46,70 +45,83 @@ router.get("/my_posts", async (req, res) => {
     }
 })
 
-router.post("/update_account", async (req, res) => {
-    
-    const {
-        username,
-        workEducation,
-        password,
-        confirmPassword,
-        bio,
-        work,
-        profileUrl,
-        id
-    } = req.body
-    
-    try {
+router.post(
+    "/update_account",
+    body('username').notEmpty().escape().isAlpha().isString(),
+    body('workEducation').notEmpty().escape().isAlpha().isString(),
+    body('email').notEmpty().escape().trim().isEmail(),
+    body('password').notEmpty().isLength({min: 8, max: 50}).trim().escape(),
+    body('work').notEmpty().escape(),
+    body('id').notEmpty().isMongoId().escape(), 
+    async (req, res) => {
         
-        const currentUserToBeUpdated  = await SignedUpUser.findById(id)
-        const currentUserToBeUpdatedPlainObj = currentUserToBeUpdated.toObject()
+        const result = validationResult(req)
 
-        if (currentUserToBeUpdated) {
-            if (username && username?.trim() !== '') {
-                currentUserToBeUpdatedPlainObj.username = username;
-            }
-          
-            if (workEducation && workEducation?.trim() !== '') {
-                currentUserToBeUpdatedPlainObj.education = workEducation;
+        console.log(result)
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid data provided"})
+        
+        const {
+            username,
+            workEducation,
+            password,
+            bio,
+            work,
+            profileUrl,
+            id
+        } = req.body
+        
+        try {
+            
+            const currentUserToBeUpdated  = await SignedUpUser.findById(id)
+            const currentUserToBeUpdatedPlainObj = currentUserToBeUpdated.toObject()
+
+            if (currentUserToBeUpdated) {
+                if (username && username?.trim() !== '') {
+                    currentUserToBeUpdatedPlainObj.username = username;
+                }
+            
+                if (workEducation && workEducation?.trim() !== '') {
+                    currentUserToBeUpdatedPlainObj.education = workEducation;
+                }
+                
+                if ( bio && bio?.trim() !== '') {
+                    currentUserToBeUpdatedPlainObj.bio = bio;
+                }
+            
+                if ( work && work?.trim() !== '') {
+                    currentUserToBeUpdatedPlainObj.work = work;
+                }
+            
+                if ( profileUrl && profileUrl !== "https://cdn-icons-png.flaticon.com/512/4202/4202831.png") {
+                    currentUserToBeUpdatedPlainObj.profileUrl = profileUrl;
+                }
+            
+                if ( password && password?.trim() !== '') {
+                    const saltRounds = await bcrypt.genSalt(10);
+                    const hash = await bcrypt.hash(password, saltRounds);
+                    currentUserToBeUpdatedPlainObj.password = hash;
+                }
+                
+                await currentUserToBeUpdated.updateOne(currentUserToBeUpdatedPlainObj)
+                delete currentUserToBeUpdatedPlainObj.password;
+                return res.status(200).json({ message: "User information updated", status: "success", updatedData: currentUserToBeUpdatedPlainObj});
             }
             
-            if ( bio && bio?.trim() !== '') {
-                currentUserToBeUpdatedPlainObj.bio = bio;
+            else {
+                console.log("user not found error")
+                return res.status(200).json({message : "user not found", status: "not found"})
             }
-          
-            if ( work && work?.trim() !== '') {
-                currentUserToBeUpdatedPlainObj.work = work;
-            }
-          
-            if ( profileUrl && profileUrl !== "https://cdn-icons-png.flaticon.com/512/4202/4202831.png") {
-                currentUserToBeUpdatedPlainObj.profileUrl = profileUrl;
-            }
-          
-            if ( password && password?.trim() !== '') {
-                const saltRounds = await bcrypt.genSalt(10);
-                const hash = await bcrypt.hash(password, saltRounds);
-                currentUserToBeUpdatedPlainObj.password = hash;
-            }
-            
-            await currentUserToBeUpdated.updateOne(currentUserToBeUpdatedPlainObj)
-            delete currentUserToBeUpdatedPlainObj.password;
-            return res.status(200).json({ message: "User information updated", status: "success", updatedData: currentUserToBeUpdatedPlainObj});
         }
-         
-        else {
-            console.log("user not found error")
-            return res.status(200).json({message : "user not found", status: "not found"})
+        catch (e) {
+            console.error(e)
+            return res.
+                status(200).
+                json({
+                    message: "execption happened",
+                    status: "failed"
+            })
         }
     }
-    catch (e) {
-        console.error(e)
-        return res.
-            status(200).
-            json({
-                message: "execption happened",
-                status: "failed"
-        })
-    }
-})
+)
  
 module.exports = router
