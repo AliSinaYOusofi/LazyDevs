@@ -5,7 +5,7 @@ import SocialIcons from '@/components/ShareBlogIcons/ShareIcons';
 import BlogCard from '@/components/BlogCard/BlogCard';
 import CommentParent from '@/components/CommentSection.jsx/CommentParent';
 import { moveToId } from '@/functions/movtToId';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ReadingTime from '@/components/ReadingTime/ReadingTime';
 
 import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProps';
@@ -22,6 +22,7 @@ export default function Page() {
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
     const [sortedBy, setSortedBy] = useState(false)
     const currentUser = useCurrentUser()
+    const router = useRouter()
     
     useEffect( () => {
         
@@ -36,6 +37,13 @@ export default function Page() {
                     }
                 );
                 const data = await response.json()
+                
+                console.log(data)
+                if (data.redirectTo) {
+                    console.log('redirecting', data.redirectTo)
+                    const redirectTo = data.redirectTo
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
                 
                 setCurrentBlog(data.data)
                 

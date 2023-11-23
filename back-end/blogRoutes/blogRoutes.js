@@ -440,7 +440,7 @@ router.post("/like_post", async (req, res) => {
 
 
 router.get(
-    "/get_likes_comments_count/:post_id",
+    "/get_likes_comments_count",
     query('post_id').notEmpty().isMongoId().escape(), 
     async (req, res) => 
     

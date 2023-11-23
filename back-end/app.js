@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./blogRoutes/blogRoutes")
 const accountRoutes = require("./routes/accountRoutes")
+const {getDB} = require("./db_connection/mongoose.db.config")
 
 require("dotenv").config();
 app.use(cors({
@@ -34,16 +35,18 @@ app.use((req, res, next) => {
 
     console.log(req.path)
 
-    const saveRoutes = ['/user/save_user', '/user/check_user_login', '/blogRoutes/recent']
+    const saveRoutes = ['/user/save_user', '/user/check_user_login', "/userRoutes/save_post"]
     
     if (saveRoutes.includes(req.path)) return next()
     
     const {accessToken = null, refreshToken = null} = req.cookies
     
     if (!accessToken && ! refreshToken) {
-        res.redirect("/login")
-        return next()
+
+        console.log('no access || refresh token provided')
+        return res.status(302).json({redirectTo: "/login"})
     }
+
     const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
     const verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
     
@@ -57,16 +60,15 @@ app.use((req, res, next) => {
         req.user_id = verifyRefreshToken.user_id
         console.log('refresh token is okay: ', req.user_id)
         next() 
-    }
-    else {
+    } else {
         next()
     }
 });
 
-// app.use( async (req, res, next) => {
-//     await getDB()
-//     next()
-// })
+app.use( async (req, res, next) => {
+    await getDB()
+    next()
+})
 
 app.use("/user", userRoutes);
 app.use("/blogRoutes", blogRoutes)

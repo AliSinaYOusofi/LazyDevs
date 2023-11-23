@@ -13,11 +13,13 @@ import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
 import React, {useState, useEffect} from 'react'
 import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
     
     const [activeListItem, setActiveListItem] = useState(0)
     const [currentComponent, setCurrentComponent] = useState()
+    const router = useRouter()
 
     const {currentUser} = useAppContext();
 
@@ -44,11 +46,36 @@ export default function Page() {
     );
     
     useEffect( () => {
-        if (!currentComponent) setCurrentComponent(components[activeListItem])
+        
+        const checkUser = async () => {
 
+            try {
+
+                const response = await fetch(`http://localhost:3001/userRoutes/check`, 
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        credentials: "include"
+                    }
+                );
+                
+                const data = await response.json()
+    
+                if (data.redirectTo) {
+                    const redirectTo = data.redirectTo
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
+            } catch(e) {
+                console.error("error my account")
+            }
+        }
+        checkUser()
+        if (!currentComponent) setCurrentComponent(components[activeListItem])
         return () => setCurrentComponent(components[0])
     }, [])
-
+    
     return (
         <>
             <div className="w-full relative md:h-screen gap-x-4 flex flex-col md:flex-row items-start justify-center mx-uto mt-10">

@@ -6,6 +6,7 @@ import { useAppContext } from '@/context/useContextProvider'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function RelevantFeeds() {
     
@@ -15,6 +16,7 @@ export default function RelevantFeeds() {
     const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
     const {currentUser} = useAppContext()
+    const router = useRouter()
 
     useEffect( () => {
         async function getRelevantBlogs() {
@@ -24,10 +26,18 @@ export default function RelevantFeeds() {
                         method: "GET",
                         headers: {
                             "Access-Control-Allow-Origin": "http://localhost:3000"
-                        }
+                        },
+                        credentials: "include"
                     }
                 );
+
                 const data = await response.json()
+                
+                if (data.redirectTo) {
+                    console.log('redirecting', data.redirectTo)
+                    const redirectTo = data.redirectTo
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
 
                 if (data.status === "success") setRelevantBlogs(data.data)
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")

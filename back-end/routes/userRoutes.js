@@ -4,7 +4,7 @@ const crypto = require("crypto");
 // const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
 const Post = require("../models/Blogs");
-const {query, validationResult, body} = require("express-validator")
+const {validationResult, body} = require("express-validator")
 require("dotenv").config();
 
 router.post(
@@ -103,17 +103,16 @@ router.post(
 
 router.post(
     "/save_post",
-    body('user_id').trim().escape().isLength({min: 10, max: 12}),
+    body('user_id').trim().isMongoId().escape(),
     body('content').notEmpty().escape(), 
     async (req, res) => 
     {
         const result = validationResult(req)
-
+        console.log(result.array())
         if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided"})
 
-        return res.send("success")
         const {content, user_id} = req.body;
-
+        console.log(content, user_id)
         const randomIdForPost = crypto.randomBytes(16).toString("hex");   
         
         if (!user_id) return res.status(200).json({message: "user_id required"});
@@ -137,4 +136,11 @@ router.post(
     }
 )
 
+router.get(
+    "/check", 
+    async (req, res) => 
+    {
+        return res.status(200).send("dummmy")
+    }
+)
 module.exports = router; // to special object
