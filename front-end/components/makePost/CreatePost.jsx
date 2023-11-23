@@ -24,10 +24,6 @@ export default function CreatePost({content}) {
     
     const handleImagePreview = () => {}
     
-    
-    
-    
-
     const handleImageUpload = async (image, onSuccess, onError) => {
         // validating the image
         if (image.size / 1000000 >= 8) return toast.error(`${image.name} is more than 5 MB`);
@@ -71,7 +67,7 @@ export default function CreatePost({content}) {
                     day: '2-digit',
                     hour: '2-digit',
                     minute: '2-digit',
-                    },
+                },
             },
         };
     }, []);
@@ -90,6 +86,7 @@ export default function CreatePost({content}) {
                 content: postContent.content,
                 user_id: currentUser ? currentUser._id : null
             }
+            
             const res = await fetch("http://localhost:3001/user/save_post", {
                 method: "POST",
                 headers: {
@@ -100,6 +97,7 @@ export default function CreatePost({content}) {
             });  
 
             const json = await res.json();
+            console.log(json)
             if (json.message === "success") toast.success("post created successfully");
             else if (json.message === "serverError") toast.success("Server Error");
             else toast.error("Failed to post !")
