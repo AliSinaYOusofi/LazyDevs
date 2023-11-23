@@ -20,17 +20,8 @@ async function connectToCluster () {
 // using singelton pattern which ensures to that it returns the same instance
 // and ensures that a single object is shared accross the application.
 
-let db;
 
-const getDB = async () => {
-    if (!db) {
-        await connectToCluster();
-        db = mongoose.connection;
-    }
-
-    return db;
-}
 
 module.exports = {
-    getDB,
+    connectToCluster
 };
