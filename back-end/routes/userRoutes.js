@@ -108,11 +108,12 @@ router.post(
     async (req, res) => 
     {
         const result = validationResult(req)
-        console.log(result.array())
+
         if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided"})
 
-        const {content, user_id} = req.body;
-        console.log(content, user_id)
+        let {content, user_id} = req.body;
+        content = (JSON.parse(decodeURIComponent(content)))
+        
         const randomIdForPost = crypto.randomBytes(16).toString("hex");   
         
         if (!user_id) return res.status(200).json({message: "user_id required"});

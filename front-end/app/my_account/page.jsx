@@ -88,7 +88,7 @@ export default function Page() {
                     </ul>
                 </div>
                 
-                <div className="md:w-[70%] w-full ">
+                <div className="md:w-[70%] w-full h-screen">
                     {currentComponent}
                 </div>
             </div>
