@@ -11,8 +11,9 @@ import axios from 'axios';
 import OpenRingSpinner from '../Spinner/OpenRingSpinner';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import customMarkdownParser from '@/functions/previewRender';
 import { useAppContext } from '@/context/useContextProvider';
+
+
 
 
 export default function CreatePost({content}) { 
@@ -20,7 +21,7 @@ export default function CreatePost({content}) {
     const [spinner, setSpinner] = useState(false);
     
     const [postContent, setPostContent] = useState({content: ""});
-    const {currentUser} = useAppContext()
+    const {currentUser, templateContent} = useAppContext()
     
     const handleImagePreview = () => {}
     
@@ -111,20 +112,12 @@ export default function CreatePost({content}) {
     }
 
     useEffect(() => {
-        if (content) {
-          let decodedContent = decodeURIComponent(content)
-            .replace(/(?<=!)[][]+|[][\(\)]+(?!])/g, '')
-            .replace(/\[(.*?)\]/g, '$1') // Remove square brackets []
-            .replace(/"/g, '') // Remove quotation marks ""
-            .replace(/,(?=\S)/g, '')
-            .split('$') // Split at the delimiter
-            .map((item) => item.trim()) // Trim leading/trailing whitespace
-            .filter((item) => item !== '') // Remove empty entries
-            .join('\n'); // Join the array elements with line breaks
-      
-          setPostContent({
-            content: decodedContent,
-          });
+        
+        if (templateContent) {
+            
+            setPostContent({
+                content: templateContent,
+            });
         }
       }, [content]);
 
