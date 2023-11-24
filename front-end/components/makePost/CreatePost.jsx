@@ -84,7 +84,7 @@ export default function CreatePost({content}) {
         try {
 
             const requestData = {
-                content: postContent.content,
+                content: encodeURIComponent(JSON.stringify(postContent.content)),
                 user_id: currentUser ? currentUser._id : null
             }
             
@@ -135,10 +135,11 @@ export default function CreatePost({content}) {
                     value={postContent.content}
                     onChange={(value) => setPostContent({...postContent, content: value})}
                 />
-
+                {/* bg-gray-800 px-5 py-3  hover:bg-gray-900 text-white rounded-lg h-8 md:h-10 
+                        flex items-center justify-center relative */}
                 <div className="w-fit flex flex-row">
                     <button  
-                        className="py-2 px-4  gap-x-2  border-2 border-white rounded-md flex flex-row items-center justify-between   bg-black/80 text-white"
+                        className="px-5 py-3  gap-x-2 h-8 md:h-10  rounded-md flex flex-row items-center justify-between   bg-gray-800 text-white hover:bg-gray-900"
                         onClick={handlePost}
                         > 
                         
@@ -146,6 +147,16 @@ export default function CreatePost({content}) {
                         {
                             spinner ?  <OpenRingSpinner /> : null
                         }
+                    </button>
+
+                    <button
+                        type="button"
+                        disabled={postContent ? postContent.content.length === 0 : false}
+                        title="clear"
+                        onClick={() => setPostContent("")} 
+                        className="bg-white ml-4 px-5 py-3  border-2 border-gray-900 text-black rounded-lg h-8 md:h-10 
+                        flex items-center justify-center relative">
+                        Clear
                     </button>
 
                     <Link href="/templates" className="hover:text-blue-500 ml-10 flex bg-white/50 p-2 rounded-sm w-fit">

@@ -117,7 +117,7 @@ export default function PostOfUserBasedId({author}) {
                 : noPostDiv
             }
             
-            <div className="mt-10"></div>
+            <div className="mt-10 "></div>
             {   
                 posts.map
                 (blog => 
