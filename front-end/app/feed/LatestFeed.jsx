@@ -10,7 +10,6 @@ export default function LatestFeed() {
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
     const [sorteByDate, setSortedByDate] = useState(false)
-    const {currentUser} = useAppContext()
     
     useEffect( () => {
         

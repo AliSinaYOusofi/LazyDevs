@@ -35,15 +35,17 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
 
-    const saveRoutes = ['/user/save_user', '/user/check_user_login', "/userRoutes/save_post"]
+    console.log(req.path, req.cookies)
+    const saveRoutes = ['/user/save_user', '/user/check_user_login']
     
     if (saveRoutes.includes(req.path)) return next()
     
     const {accessToken = null, refreshToken = null} = req.cookies
-    
+
     if (!accessToken && ! refreshToken) {
 
         console.log('no access || refresh token provided')
+        console.log(req.path, req.cookies)
         return res.status(302).json({redirectTo: "/login"})
     }
 

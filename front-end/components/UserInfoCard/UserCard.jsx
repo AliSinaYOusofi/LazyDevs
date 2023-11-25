@@ -51,7 +51,7 @@ export default function UserCard({profile, email, username, date, difference, is
                         <p className="text-xl font-bold text-gray-900 flex flex-row items-center justify-start">{username ? username : "username"}
                             
                         </p>
-                        <Link href={{ pathname:"/view_user", query: {email: profile ? profile[0]?.email : ""} }} className="text-base font-light text-blue-900 hover:underline">{email ? email : "NA"}</Link>
+                        <Link href={{ pathname:`/account/${author}`}} className="text-base font-light text-blue-900 hover:underline">{email ? email : "NA"}</Link>
                         <p className="text-base font-light text-gray-900"><time pubdate="true" dateTime="2022-02-08" title="February 8th, 2022"> posted on {date ? date.split("T")[0] : "NA"} <span className="md:text-sm text-xs text-gray-600">({difference})</span> </time></p>
                     </div>
                 </div>
