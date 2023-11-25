@@ -1027,6 +1027,37 @@ router.get("/get_following", async (req, res) => {
     }
 })
 
+router.get("/my_profile", async (req, res) => {
+    
+    const user_id = req.user_id
 
+    if (!user_id) return res.status(200).json({message: "user not found"})
+
+    try {
+        
+        const user = await SignedUpUser.findById(user_id).lean().exec()
+        const numberOfPosts = await Post.find({author: user_id}).lean().exec()
+        const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: user_id}}}).lean().exec()
+        const numberOfFollowing = await FollowingUser.findOne({user_id: user_id}).lean().exec()
+
+        const data = {
+            user,
+            numberOfPosts: numberOfPosts.length,
+            numberOfFollowers: numberOfFollowers.length,
+            numberOfFollowing: numberOfFollowing.follows.length,
+        }
+        if (user) {
+            delete user.password
+            return res.status(200).json({message: "success", data: data})
+        }
+        else {
+            return res.status(200).json({message: "success", data: "zero"})
+        }
+
+    } catch( error) {
+        console.error("error while getting followers: => ", error, req.path)
+        return res.status(404).json({message: "user not found"})
+    }
+})
 
 module.exports = router
