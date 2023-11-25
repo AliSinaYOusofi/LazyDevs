@@ -5,7 +5,7 @@ import {cookies} from 'next/headers'
 
 // to be the server component
 
-async function getUserData ()  {
+async function getUserData (user_id)  {
     
     let isAuthenticated
 
@@ -14,9 +14,7 @@ async function getUserData ()  {
         const accessToken = cookies().get('accessToken')?.value
         const refreshToken = cookies().get('refreshToken')?.value
 
-        
-
-        const response = await fetch(`http://localhost:3001/blogRoutes/my_profile`, 
+        const response = await fetch(`http://localhost:3001/blogRoutes/my_profile?user_id=${user_id}`, 
             {
                 method: "GET",
                 credentials: "include",
@@ -45,18 +43,20 @@ async function getUserData ()  {
 
 export default async function Page({params}) {
 
-    const userData = await getUserData()
-
-    console.log("userData", userData)
+    const userData = await getUserData(params.id)
+    
     return (
         <>
             <ScreenProfile 
-                username={userData.user.username}
-                work={userData.user.work}
-                profileUrl={userData.user.profileUrl}
-                numberOfPosts={userData.numberOfPosts}
-                followers={userData.numberOfFollowers}
-                following={userData.numberOfFollowing}
+                username={userData?.user ? userData.user.username : null}
+                work={userData?.user ? userData.user.work : null} 
+                profileUrl={userData?.user ? userData.user.profileUrl : null}
+                numberOfPosts={userData?.numberOfPosts ? userData.numberOfPosts : null}
+                followers={userData?.numberOfFollowers ? userData.numberOfFollowers : null}
+                following={userData?.numberOfFollowing ? userData.numberOfFollowing : null}
+                follows={userData?.alreadyFollowingTheUser ? true : false}
+                author={userData?.user._id ? userData?.user._id : null}
+                bio={userData?.user ? userData.user.bio : null}
             />
         </>
     )

@@ -40,7 +40,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
         }
     }
     return (
-        <div className="w-fit group mt-10 flex  flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 hover:shadow-inner transition-all duration-300 shadow-sm border-2 ">
+        <div className="w-fit group mt-10 flex flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#FAFAFA] h-[20rem] py-4">
             
             <div className=" flex items-center justify-start gap-x-4">
 

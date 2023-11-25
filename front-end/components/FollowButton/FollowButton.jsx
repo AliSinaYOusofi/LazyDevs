@@ -16,7 +16,8 @@ export default function FollowButton({follows, toBeFollowed}) {
         try {
             const response = await fetch(`http://localhost:3001/blogRoutes/follow?user_id=${currentUser ? currentUser?._id : null}`, 
                 {
-                    method: "GET"
+                    method: "GET",
+                    credentials: "include",
                 }   
             );
             const data = await response.json()
