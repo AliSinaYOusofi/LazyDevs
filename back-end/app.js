@@ -48,23 +48,27 @@ app.use((req, res, next) => {
         console.log(req.path, req.cookies)
         return res.status(302).json({redirectTo: "/login"})
     }
-
-    const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
+    
+    
     const verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
     
     // if access token is expired then check the refresh token
     // and if refresh token is valid then make a new access token and add it in the cookies
     
-    if (verifyAccessToken) {
+    if (accessToken) {
+        const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
         req.user_id = verifyAccessToken._id
         console.log('access token is okay: ', req.user_id)
         next()
     } 
     
-    else if (verifyRefreshToken) {
-        
+    else if (refreshToken) {
+        let verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
         req.user_id = verifyRefreshToken.user_id
-        const newAccessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "1d"});
+
+        delete verifyRefreshToken.iat
+        delete verifyRefreshToken.exp
+        const newAccessToken = jwt.sign(verifyRefreshToken, process.env.JWT_SECRET, {expiresIn: "1d"});
         
         // adding a new access token when refresh token is valid
         res.cookie('accessToken', newAccessToken, 
