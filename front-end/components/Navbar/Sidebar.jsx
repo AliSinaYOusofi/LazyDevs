@@ -18,7 +18,7 @@ export default function Sidebar({sidebar}) {
     }
 
     return (
-        <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 shadow-black/10 shadow-sm bg-gray-100 top-0 left-0 flex-col h-screen w-64  text-black`}>
+        <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 bg-[#FAFAFA] top-0 left-0 flex-col h-screen w-64  text-black`}>
             
             <nav className="flex-grow w-full md:mt-12 mt-20">
                 <p className="font-bold tracking-wide text-gray-900 md:text-3xl text-xl mb-3 ml-2">Links</p>

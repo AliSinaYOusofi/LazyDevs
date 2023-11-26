@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
 
 
@@ -10,6 +11,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
     useEffect( () => {
         setAlreadyFollows(isFollowing)
     }, [isFollowing])
+    
     const handleFollowButton = async () => {
 
         setSpinner(true)
@@ -22,7 +24,6 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
                 }   
             );
             const data = await response.json()
-            console.log(data)
 
             if (data.message === "following" || data.message === "new") {
                 setAlreadyFollows(true)
@@ -40,14 +41,14 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
         }
     }
     return (
-        <div className="w-fit group mt-10 flex flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#FAFAFA] h-[20rem] py-4">
+        <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#FAFAFA]">
             
             <div className=" flex items-center justify-start gap-x-4">
 
                 <img className="rounded-full w-20 h-20  md:border-[2px] object-cover border-[2px] border-gray-400" src={image} alt="Avatar" />
                 <div>
                     <div className=" ">
-                        <h4 className="md:text-xl italic text-gray-500">{name || "username"}</h4>
+                        <Link href={`/account/${user_id}`} className="md:text-xl italic text-gray-500">{name || "username"}</Link>
                     </div>
 
                     <div className=" ">

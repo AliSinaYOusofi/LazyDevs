@@ -979,7 +979,6 @@ router.get("/get_following", async (req, res) => {
         
         let ListOfFollowingUsers = []
         
-        console.log(following, ' following users')
         if (following.follows.length) {
             
             await Promise.all(
