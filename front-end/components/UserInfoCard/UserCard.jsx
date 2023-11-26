@@ -26,7 +26,6 @@ export default function UserCard({profile, email, username, date, difference, is
                 }   
             );
             const data = await response.json()
-            console.log(data)
 
             if (data.message === "following" || data.message === "new") {
                 setAlreadyFollows(true)
@@ -56,24 +55,29 @@ export default function UserCard({profile, email, username, date, difference, is
                     </div>
                 </div>
                 <div>
-                    <button 
-                        type="button" 
-                        className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900" 
-                        onClick={handleFollowButton}
-                        disabled={spinner || !username}
-                        >
-                        {
-                            alreadyFollows
-                            ? "Unfollow"
-                            : "Follow"
-                        }
-                        {
-                            spinner 
-                            ?
-                            <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-6 w-6"></div>
-                            : null
-                        }
-                    </button>
+                    {
+                        currentUser?._id === author ?
+                        null
+                        :
+                        <button 
+                            type="button" 
+                            className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900" 
+                            onClick={handleFollowButton}
+                            disabled={spinner || !username}
+                            >
+                            {
+                                alreadyFollows
+                                ? "Unfollow"
+                                : "Follow"
+                            }
+                            {
+                                spinner 
+                                ?
+                                <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-6 w-6"></div>
+                                : null
+                            }
+                        </button>
+                    }
                 </div>
             </address>
         </>

@@ -54,6 +54,7 @@ export default function CommentParent({post_id}) {
 
             let json = await response.json();
 
+            console.log(json, 'comm')
             if (json.data === "saved") {
                 toast.success("comment posted")
                 setComment(" ");

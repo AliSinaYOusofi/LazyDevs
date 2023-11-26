@@ -98,7 +98,7 @@ export default function CreatePost({content}) {
             });  
 
             const json = await res.json();
-            console.log(json)
+            
             if (json.message === "success") toast.success("post created successfully");
             else if (json.message === "serverError") toast.success("Server Error");
             else toast.error("Failed to post !")

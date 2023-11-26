@@ -79,7 +79,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
     }
     return (
         <>
-            <div key={_id} className="max-w-2xl mt-10  rounded-md p-4 shadow-[rgba(7,_65,_210,_0.1)_0px_3px_10px]">
+            <div key={_id} className="max-w-2xl mt-10  rounded-md p-4 bg-[#fafafd]">
             
                 <div className="flex flex-row mt-3">
                     <img src={profileUrl} alt="" className="w-10 h-10 rounded-full ml-2 object-cover" />
@@ -139,7 +139,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                         <div className="w-full mt-4">
                             <textarea 
                                 placeholder='reply'
-                                className="w-full bg-gray-50  focus:ring-1 ring-black border-black/40 outline-none p-2"
+                                className="w-full bg-[#fafafd]  focus:ring-1 ring-black border-black/40 outline-none p-2"
                                 rows={4}
                                 value={replyCommentValue}
                                 onChange={(e) => setReplyCommentValue(e.target.value)}

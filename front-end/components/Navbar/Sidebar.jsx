@@ -14,6 +14,7 @@ export default function Sidebar({sidebar}) {
     const handleLogout = () => {
         setCurrentUser(null);
         localStorage.removeItem("currentUser");
+        
         router.push("/");
     }
 
