@@ -1,3 +1,4 @@
+import { useAppContext } from '@/context/useContextProvider';
 import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
 
@@ -6,6 +7,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
 
     const [spinner, setSpinner] = useState()
     const [alreadyFollows, setAlreadyFollows] = useState()
+    const {currentUser} = useAppContext()
 
 
     useEffect( () => {
@@ -41,7 +43,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
         }
     }
     return (
-        <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#FAFAFA]">
+        <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#fbfbfd]">
             
             <div className=" flex items-center justify-start gap-x-4">
 
@@ -77,23 +79,33 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
             </div>
 
             <div>
-                <button 
-                    disabled={spinner} 
-                    type="button"
-                    onClick={handleFollowButton} 
-                    className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900">
-                    {
-                        alreadyFollows
-                        ? "Unfollow"
-                        : "Follow back"
-                    }
-                    {
-                        spinner 
-                        ?
-                        <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-6 w-6"></div>
-                        : null
-                    }
-                </button>
+                {
+                    user_id === currentUser._id ?
+                    <button
+                        disabled
+                        className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-white text-black ml-10" 
+                    >
+                        You
+                    </button>
+                    :
+                    <button 
+                        disabled={spinner} 
+                        type="button"
+                        onClick={handleFollowButton} 
+                        className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900">
+                        {
+                            alreadyFollows
+                            ? "Unfollow"
+                            : "Follow back"
+                        }
+                        {
+                            spinner 
+                            ?
+                            <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-6 w-6"></div>
+                            : null
+                        }
+                    </button>
+                }
             </div>
         </div>
   );

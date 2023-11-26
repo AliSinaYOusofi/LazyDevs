@@ -20,7 +20,7 @@ export default function Page() {
     when clicked on when one of them then the blogs should also.
   */
 
-  const liItemStyle = 'bg-gray-100 px-4 py-1 rounded-sm   transition-all duration-300'
+  const liItemStyle = 'bg-[#f5f6fb] px-4 py-1 rounded-sm   transition-all duration-300'
   
   const handleLiItemsClick = (e) => {
     setBlogType(e.target.textContent.trim())

@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import ProfileCard from './FollowersCard'
+import UserCard from '../UserInfoCard/UserCard'
+import Link from 'next/link'
 
-export default function Followers() {
+// users the user is following
+export default function UserFollowing ({user_id}) {
 
     const [followers, setFollowers] = useState(undefined)
     const [spinner, setSpinner] = useState(false)
@@ -14,7 +17,7 @@ export default function Followers() {
             try {
                 
                 setSpinner(true)
-                const response = await fetch(`http://localhost:3001/blogRoutes/get_follower`, 
+                const response = await fetch(`http://localhost:3001/blogRoutes/get_user_following?user_id=${user_id}`, 
                     {
                         method: "GET",
                         credentials: "include"
@@ -107,10 +110,19 @@ export default function Followers() {
             </div>
         )
     }
+
+    let noFriendsDiv = <div className="mx-auto w-full mt-20">
+        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Follow some authors to see their blogs in your feed</h1>
+        <Link href="/feed" className=""> Check posts</Link>
+    </div>
+    
     return (
         <>
-            <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Followers : {followers.length}</h1>
+            <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Following : {followers.length}</h1>
             
+            {
+                !followers.length ? noFriendsDiv : null
+            }
             <div className="w-full md:mt-0 mt-10 flex flex-row iems gap-x-2 flex-wrap md:items-start md:justify-start items-center justify-center">
                 {
                     followers.

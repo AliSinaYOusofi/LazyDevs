@@ -46,9 +46,8 @@ export default function UserHomePosts({author}) {
     }
 
     let noPostDiv = 
-        <div className="mx-auto w-full"> 
-            <h1 className="text-5xl font-extrabold mb-10 "> You have No Posts</h1>
-            <Link className="mt-10 text-gray-600 hover:text-black" href="/create_post"> Make Post</Link>
+        <div className="mt-10"> 
+            <h1 className="text-5xl font-extrabold mb-10 "> This user have no posts</h1>
         </div>
 
     const handleRetryFetchingPosts = () => {
@@ -92,16 +91,16 @@ export default function UserHomePosts({author}) {
 
     return (
 
-        <div className="w mx-auto">
+        <div className="w mx-auto h-full">
             
             {
                 posts.length
                 ?
 
-                    <div className="">
+                    <div className="md:w-full w-1/2">
                         <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 "> Posts ({posts.length})</h1>
                         
-                        <div className="flex items-center justify-start mt-4 gap-x-4">
+                        <div className="flex items-center justify-start gap-x-4">
                             <div onClick={reversePosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
@@ -117,7 +116,7 @@ export default function UserHomePosts({author}) {
                 : noPostDiv
             }
             
-            <div className="mt-10 flex flex-wrap">
+            <div className="mt-10">
                 
             </div>
                 {   
