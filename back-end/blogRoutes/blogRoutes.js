@@ -1072,4 +1072,148 @@ router.get(
     }
 )
 
+router.get(
+    "/get_user_followers",
+    query('user_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => {
+
+        const result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid user_id"})
+        
+        const {user_id} = req.query
+
+        if (!user_id) return res.status(200).json({message: "user not found"})
+
+        try {
+            
+            const followers = await FollowingUser
+                .find({
+                    "follows.user": user_id
+                })
+                .lean()
+                .exec()
+            
+            let followedByDataArr = []
+            
+            if (followers.length) {
+                
+                await Promise.all(
+                
+                    followers.map(async follower => {
+                
+                        const followersData = await SignedUpUser.findById(follower.user_id)
+                
+                        if (followersData) {
+                
+                            delete followersData.password
+                            
+                            const numberOfPosts = await Post.find({author: followersData._id}).lean().exec()
+                            const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: followersData._id}}}).lean().exec()
+                            const numberOfFollowing = await FollowingUser.findOne({user_id: followersData._id}).lean().exec()
+                            const isUserFollowingThisUser = await FollowingUser.findOne({
+                                user_id: user_id,
+                                "follows.user": followersData._id
+                            }, {_id: 1})
+
+                            followedByDataArr.push({
+                                ...followersData.toObject(),
+                                numberOfPosts: numberOfPosts.length,
+                                numberOfFollowers: numberOfFollowers.length,
+                                numberOfFollowing: numberOfFollowing.follows.length,
+                                isFollowing: isUserFollowingThisUser ? true : false
+                            })
+                        }
+                        return follower
+                    })
+                )
+                
+                return res.status(200).json({message: "success", data: followedByDataArr})
+
+            } 
+            
+            else {
+
+                return res.status(200).json({message: "success", data: "zero"})
+            }
+
+        } catch( error) {
+            console.error("error while getting followers: => ", error, req.path)
+            return res.status(404).json({message: "user not found"})
+        }
+    }
+)
+
+router.get(
+    "/get_user_following",
+    query('user_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
+    {
+
+        const result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid user_id"})
+
+        const user_id = req.query.user_id
+
+        if (!user_id) return res.status(200).json({message: "user not found"})
+
+        try {
+            
+            const following = await FollowingUser
+                .findOne({
+                    user_id: user_id
+                })
+                .lean()
+                .exec()
+            
+            let ListOfFollowingUsers = []
+            
+            if (following.follows.length) {
+                
+                await Promise.all(
+                
+                    following.follows.map(async followingUsers => {
+                
+                        const followersData = await SignedUpUser.findById(followingUsers.user)
+                
+                        if (followersData) {
+                
+                            delete followersData.password
+                            
+                            const numberOfPosts = await Post.find({author: followersData._id}).lean().exec()
+                            const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: followersData._id}}}).lean().exec()
+                            const numberOfFollowing = await FollowingUser.findOne({user_id: followersData._id}).lean().exec()
+                            const isUserFollowingThisUser = await FollowingUser.findOne({
+                                user_id: user_id,
+                                "follows.user": followersData._id
+                            }, {_id: 1})
+
+                            ListOfFollowingUsers.push({
+                                ...followersData.toObject(),
+                                numberOfPosts: numberOfPosts.length,
+                                numberOfFollowers: numberOfFollowers.length,
+                                numberOfFollowing: numberOfFollowing?.follows ? numberOfFollowing?.follows.length : 0,
+                                isFollowing: isUserFollowingThisUser ? true : false
+                            })
+                        }
+                        return followingUsers
+                    })
+                )
+                
+                return res.status(200).json({message: "success", data: ListOfFollowingUsers})
+
+            } 
+            
+            else {
+
+                return res.status(200).json({message: "success", data: "zero"})
+            }
+
+        } catch( error) {
+            console.error("error while getting followers: => ", error, req.path)
+            return res.status(404).json({message: "user not found"})
+        }
+    }
+)
 module.exports = router

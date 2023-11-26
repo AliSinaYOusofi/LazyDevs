@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
 import Following from '@/components/Followers/Following'
 import UserHomePosts from './UserHomePosts'
+import UserFollowers from '../Followers/UserFollowers'
+import UserFollowing from '../Followers/UserFollowing'
 
 export default function UserHomePage({user_id}) {
     
@@ -16,7 +18,7 @@ export default function UserHomePage({user_id}) {
 
     let liArray = [ "Posts",  "Followers", "Following"]
     let liIconMapping = [ <PostsIcon />, <FollowersIcon />, <FollowersIcon />]
-    let components = [ <UserHomePosts author={user_id}/>, <Followers />, <Following />]
+    let components = [ <UserHomePosts author={user_id}/>, <UserFollowers user_id={user_id}/>, <UserFollowing user_id={user_id}/>]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)
@@ -69,16 +71,16 @@ export default function UserHomePage({user_id}) {
     
     return (
         <>
-            <div className="w-full relative md:h-screen gap-x-4 flex flex-col items-start justify-center mx-uto mt-10">
+            <div className="w-full relative md:h-screen gap-x-4 flex flex-col items-start justify-center mx-uto mt-20">
                 
-                <div className=" w-full  px-4 md:px-0 ">
+                <div className=" w-full  px-4 md:px-0">
                     
                     <ul className="flex justify-evenly">
                         {menuItems}
                     </ul>
                 </div>
                 
-                <div className="px-10 mx-auto flex items-center justify-center md:w-[80%] w-full h-full">
+                <div className="px-10 mx-auto flex flex-col items-start justify-start mt-10 md:w-[60%] w-full h-[100%]">
                     {currentComponent}
                 </div>
             </div>
