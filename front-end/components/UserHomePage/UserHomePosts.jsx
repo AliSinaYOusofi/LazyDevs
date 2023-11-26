@@ -26,7 +26,6 @@ export default function UserHomePosts({author}) {
                     }
                 );
                 const data = await response.json()
-                console.log(data)
                 if (data.status === "success") setPosts(data.data)
                 else if (data.status === "failed") setErrorMessages("Some server error")
             }catch(e) {

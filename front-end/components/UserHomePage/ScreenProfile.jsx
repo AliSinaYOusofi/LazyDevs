@@ -30,7 +30,6 @@ export default function ScreenProfile({username, work, followers, following, num
                 }   
             );
             const data = await response.json()
-            console.log(data)
 
             if (data.message === "following") {
                 setAlreadyFollows(true)
@@ -49,8 +48,8 @@ export default function ScreenProfile({username, work, followers, following, num
     return (
         <div className="h-full rounded-md mt-10 flex md:flex-row flex-col w-[80%] mx-auto items-center  justify-evenly bg-[#fafafd] py-10">
             
-            <div className="px-5 md:w-1/2 md:h-1/2">
-                <img src={profileUrl} alt="" className="object-cover h-1/3  p-2 rounded-full border-2 border-white"/>
+            <div className="px-5 md:w-1/2 md:h-1/2 flex items-center flex-col">
+                <img src={profileUrl} alt="" className="object-cover w-[25rem] h-[25rem]  p-2 rounded-full border-2 border-white"/>
                 <p className='text-gray-700 mt-4'>
                     {bio || "Empty Bio"}
                 </p>

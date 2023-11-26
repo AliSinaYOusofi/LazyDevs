@@ -122,7 +122,7 @@ export default function LatestFeed() {
                     </button>
                 </div>
             }
-            <div className="md:max-w-2xl w-screen">
+            <div className="md:max-w-2xl w-screen px-5 md:px-0">
                 {
                     topBlogs.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }

@@ -59,8 +59,8 @@ export default function BlogCard({content, title, username, profileUrl, date, id
 
     return (
         <>
-            <hr className="mt-3 shadow-sm shadow-white"/>
-            <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg mt-4`} id={id}>
+            {/* <hr className="mt-3 shadow-sm shadow-white"/> */}
+            <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto bg-[#fafafd] transition-all duration-100  from-pink-500 via-red-500 to-yellow-500  rounded-lg mt-4`} id={id}>
                 
                 <div className="flex items-center justify-between ">
                 

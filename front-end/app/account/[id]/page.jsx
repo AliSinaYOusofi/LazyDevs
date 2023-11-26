@@ -26,7 +26,6 @@ async function getUserData (user_id)  {
             }, 
         )
         const data = await response.json()
-        console.log("data", data)
         if (data.data !== "zero") return data.data
 
         else if (data.data === "zero") return undefined
@@ -96,7 +95,7 @@ export default async function Page({params}) {
                 bio={userData?.user ? userData.user.bio : null}
             />
 
-            <div className="md:ml-12 ml-0 mx-auto overflow-x-hidden">
+            <div className="md:ml-12 ml-0 mx-auto overflow-x-hidden w-[100%] h-[100%]">
                 <UserHomePage user_id={params.id}/>
             </div>
         </>

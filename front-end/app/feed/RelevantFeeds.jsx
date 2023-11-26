@@ -34,7 +34,6 @@ export default function RelevantFeeds() {
                 const data = await response.json()
                 
                 if (data.redirectTo) {
-                    console.log('redirecting', data.redirectTo)
                     const redirectTo = data.redirectTo
                     router.replace(`http://localhost:3000${redirectTo}`)
                 }

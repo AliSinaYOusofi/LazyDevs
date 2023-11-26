@@ -40,7 +40,6 @@ export default function UserFollowing ({user_id}) {
                 else {
                     setError(true)
                 }
-                console.log(data)
             } 
             catch(e) {
                 console.error('error in while followers list', e);

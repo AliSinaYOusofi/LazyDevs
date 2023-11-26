@@ -245,13 +245,13 @@ router.get(
 router.post(
     "/comment",
     body('post_id').notEmpty().isMongoId().escape(), 
-    body('author').notEmpty().isMongoId().escape(), 
+    body('author').notEmpty().isEmail().escape(), 
     body('comment').notEmpty().escape(), 
     async (req, res) => 
     
     {
         const result = validationResult(req)
-        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id", error: result.array()})
         
         let { post_id, comment, author} = req.body;
 
@@ -307,11 +307,11 @@ router.post(
     body('post_id').notEmpty().isMongoId().escape(), 
     async (req, res) => 
     {
-        
         const result = validationResult(req)
         if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
-
+        
         const {post_id} = req.body;
+        console.log(post_id, ' post_id')
         
         if (post_id) {
 
