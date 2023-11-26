@@ -8,14 +8,16 @@ export default function MoveToTop() {
     // should only display if we move down
 
     const scrollHandler =  () => {
+        
         if (Math.round(window.scrollY) >= 200) {
             if (iconRef.current) {
                 iconRef.current.style.display = "flex"
                 iconRef.current.style.position = "fixed"
             }
         }
-        else
-            iconRef.current.style.display = "none"
+        else {
+            if (iconRef.current) iconRef.current.style.display = "none"
+        }
     }
     useEffect( () => {
         window.addEventListener("scroll", scrollHandler);

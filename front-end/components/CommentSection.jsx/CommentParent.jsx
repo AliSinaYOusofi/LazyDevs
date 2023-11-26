@@ -167,7 +167,7 @@ export default function CommentParent({post_id}) {
                         {
                             commentSuccessful
                             ?
-                            <div className="border-t-transparent border-solid animate-spin ml-1  rounded-full border-gray-400 border-2 h-5 w-5"></div>
+                            <div className="border-t-transparent border-solid animate-spin ml-1  rounded-full border-white border-2 h-5 w-5"></div>
                             :
                             null
                         }

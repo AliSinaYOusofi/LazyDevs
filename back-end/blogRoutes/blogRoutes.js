@@ -4,7 +4,7 @@ const SignedUpUser = require("../models/Register")
 const Comment = require("../models/Comments")
 const Likes = require("../models/postLikes")
 const PostView = require("../models/PostViews")
-const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays } = require("date-fns");
+const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays, subDays } = require("date-fns");
 const Comments = require("../models/Comments")
 const replyComments = require("../models/ReplyComments")
 const Saved = require("../models/PostsSavedToAccount")
@@ -59,7 +59,6 @@ router.get(
     // get thre recent posts only
     // steps: get the latest post date and from that filter the posts that are posted like a week a ago or 2 weeks ago
     // or something
-
         const result = validationResult(req)
 
         if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
@@ -102,16 +101,17 @@ router.get(
                 return latest
             }, null)
             
-            latestBlogPostedThreshold = latestBlogPostedThreshold.createdAt
+            const latestBlogCreatedAt = new Date(latestBlogPostedThreshold.createdAt);
+            const fifteenDaysBeforeLatest = subDays(latestBlogCreatedAt, 15);
 
             let latestBlogs15DaysAfterLatestBlog = completeBlogData.filter( blog => {
                 
                 const blogDate = new Date(blog.createdAt)
-                return differenceInDays(blogDate, latestBlogPostedThreshold) <= 15
+                return blogDate >= fifteenDaysBeforeLatest && blogDate < latestBlogCreatedAt;
             })
 
             latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.filter(blog => blog._id != post_id)
-            
+            latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.slice(0, 4)
             return res.status(200).json({
                 status: "success",
                 data: latestBlogs15DaysAfterLatestBlog.reverse()
@@ -119,7 +119,7 @@ router.get(
             
         } catch (e) {  
             console.error(e, "fetching recent posts, path => ", req.path);
-            res.status(200).json({
+            return res.status(400).json({
                 status: "failed"
             });  
         }     
@@ -609,8 +609,9 @@ router.post(
 
 router.get("/recent_posts", async (req, res) => {
     
-    let {user_id} = req.user_id
+    let user_id = req.user_id
 
+    if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
     try {
         // first getting the latest post from db
         // Get the latest post

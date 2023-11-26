@@ -35,18 +35,19 @@ app.use(cookieParser());
 
 
 app.use(
-    cookie('accessToken').notEmpty().isJWT().escape(),
-    cookie('refreshToken').notEmpty().isJWT().escape(),
+    // cookie('accessToken').notEmpty().isJWT().escape(),
+    // cookie('refreshToken').notEmpty().isJWT().escape(),
     (req, res, next) => 
     {
-        const result = validationResult(req)
-        if (! result.isEmpty()) return res.status(400).json({message: "invalid cookies"})
-        
         console.log(req.path)
         
         const saveRoutes = ['/user/save_user', '/user/check_user_login']
         
         if (saveRoutes.includes(req.path)) return next()
+        
+        // const result = validationResult(req)
+        // if (! result.isEmpty()) return res.status(400).json({message: "invalid cookies", error: result.array()})
+        
         
         const {accessToken = null, refreshToken = null} = req.cookies
 
