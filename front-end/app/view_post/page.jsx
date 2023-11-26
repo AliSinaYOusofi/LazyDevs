@@ -38,7 +38,6 @@ export default function Page() {
                 );
                 const data = await response.json()
                 
-                console.log(data)
                 if (data.redirectTo) {
                     const redirectTo = data.redirectTo
                     router.replace(`http://localhost:3000${redirectTo}`)
@@ -49,8 +48,6 @@ export default function Page() {
                 if (data.data === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
-
-                console.debug(data)
             }
             catch(e) {
                 console.error("while current blog", e)
@@ -72,7 +69,7 @@ export default function Page() {
                     }   
                 );
                 const data = await response.json()
-                
+
                 if (data.data) setRecentBlogs(data.data)
                 else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
@@ -223,7 +220,7 @@ export default function Page() {
                 <div className="md:w-[30%] w-full flex flex-col  overflow-ellipsis headerBlog px-2 md:pr-10">
                     
                     <h1 className="text-5xl  font-bold tracking-wide mt-10"> Recent Posts </h1>
-                    
+                    <h1 className="font-bold tracking-wide text-gray-500"> Posts from the 15 days before latest post</h1>
                     {
                         errorMessages?.recentBlogsFetchError
                     
@@ -246,6 +243,7 @@ export default function Page() {
                         : null
                     }
 
+                    
                     {
                         recentBlogs && recentBlogs.length > 0
                             ? recentBlogs?.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null

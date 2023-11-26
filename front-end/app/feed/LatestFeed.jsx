@@ -1,11 +1,9 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
-import FetchPostError from '@/components/Error/FetchPostError/FetchPostError'
-import { useAppContext } from '@/context/useContextProvider'
 import React, { useEffect, useState } from 'react'
 
 export default function LatestFeed() {
 
-    const [topBlogs, setTopBlogs] = useState([])
+    const [latestPosts, setLatestPosts] = useState([])
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
     const [sortedBy, setSortedBy] = useState(true)
@@ -23,8 +21,7 @@ export default function LatestFeed() {
                     }
                 );
                 const data = await response.json()
-
-                if (data.status === "success") setTopBlogs(data.data)
+                if (data.status === "success") setLatestPosts(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
                 
@@ -33,7 +30,7 @@ export default function LatestFeed() {
             catch(e) {
                 console.error('error in while getting feeds', e);
                 setErrorMessages("There was a problem fetching posts!")
-                setTopBlogs([])
+                setLatestPosts([])
             }
         }
         getTopBlogs()
@@ -50,12 +47,12 @@ export default function LatestFeed() {
 
         sortedBy 
         ?
-            setTopBlogs(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
+            setLatestPosts(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
         :
-            setTopBlogs(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
+            setLatestPosts(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
     }
 
-    if (! topBlogs?.length) return <div className="flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+    if (! latestPosts?.length) return <div className="flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           errorMessage ? <div className=" w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
                 
@@ -85,7 +82,7 @@ export default function LatestFeed() {
         
         setSortedByDate(prev => ! prev)
 
-        setTopBlogs( topBlogs => {
+        setLatestPosts( topBlogs => {
             
             const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
                 const firstDate = new Date(a.createdAt)
@@ -124,7 +121,7 @@ export default function LatestFeed() {
             }
             <div className="md:max-w-2xl w-screen px-5 md:px-0">
                 {
-                    topBlogs.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    latestPosts.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

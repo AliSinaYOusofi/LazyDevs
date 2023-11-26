@@ -15,6 +15,8 @@ import React, {useState, useEffect} from 'react'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
 import Following from '@/components/Followers/Following'
+import TagsIcon from '@/components/SVG/TagsIcon'
+import UserTags from '@/components/UserFollowingTags/UserTags'
 
 export default function Page() {
     
@@ -24,9 +26,9 @@ export default function Page() {
 
     const {currentUser} = useAppContext();
 
-    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Following"]
-    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <FollowersIcon />]
-    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <Following />]
+    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following"]
+    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />]
+    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)

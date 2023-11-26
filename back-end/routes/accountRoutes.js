@@ -53,17 +53,16 @@ router.get(
 
 router.post(
     "/update_account",
-    body('username').notEmpty().escape().isAlpha().isString(),
-    body('workEducation').notEmpty().escape().isAlpha().isString(),
-    body('email').notEmpty().escape().trim().isEmail(),
-    body('password').notEmpty().isLength({min: 8, max: 50}).trim().escape(),
-    body('work').notEmpty().escape(),
-    body('id').notEmpty().isMongoId().escape(), 
+    body('username').notEmpty().escape().isAlpha().isString().optional(),
+    body('workEducation').notEmpty().escape().isAlpha().isString().optional(),
+    body('email').notEmpty().escape().trim().isEmail().optional(),
+    body('password').notEmpty().isLength({min: 8, max: 50}).trim().escape().optional(),
+    body('work').notEmpty().escape().optional(),
+    body('id').notEmpty().isMongoId().escape().optional(),  
     async (req, res) => {
         
         const result = validationResult(req)
 
-        console.log(result)
         if (! result.isEmpty()) return res.status(400).json({message: "invalid data provided"})
         
         const {
@@ -174,6 +173,37 @@ router.get(
                     message: "execption happened",
                     status: "failed"
             })
+        }
+    }
+)
+
+router.post(
+    "/update_tag",
+    body('tagInputs').notEmpty().isArray(), 
+    async (req, res) => 
+    {
+        let result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message : "no author id provied"})
+        
+        try {
+
+            let {tagInputs} = req.body
+
+            tagInputs = tagInputs.map(tag => tag.trim())
+            tagInputs = tagInputs.filter(tag => tag !== '')
+            
+            const userId = req.user_id;
+            const user = await SignedUpUser.findByIdAndUpdate(userId, {
+                socials : tagInputs
+            })
+
+            await user.save()
+            return res.status(200).json({message: "tags updated", status: "success"})
+        } 
+        catch(e) {
+            console.error(e, 'while updating tags')
+            return res.status(400).json({message: "tags update failed", status: "failed"})
         }
     }
 )
