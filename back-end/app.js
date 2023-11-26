@@ -35,7 +35,7 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
 
-    console.log(req.path, req.cookies)
+    console.log(req.path)
     const saveRoutes = ['/user/save_user', '/user/check_user_login']
     
     if (saveRoutes.includes(req.path)) return next()

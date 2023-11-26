@@ -3,47 +3,53 @@ const Post = require("../models/Blogs");
 const PostView = require("../models/PostViews");
 const SignedUpUser = require("../models/Register");
 const bcrypt = require("bcrypt");
-const { body, validationResult } = require("express-validator");
+const { body, validationResult, query } = require("express-validator");
 const router = require("express").Router();
 
-router.get("/my_posts", async (req, res) => {
+router.get(
+    "/my_posts", 
+    body('id').notEmpty().isMongoId().escape(),
+    async (req, res) => 
+    
+    {
 
-    let author = req.user_id;
+        let author = req.user_id;
 
-    if (!author) return res.status(200).json({message : "no author id provied"})
+        if (!author) return res.status(200).json({message : "no author id provied"})
 
-    try {
-        const Posts = await Post.find({author}).lean().exec()
+        try {
+            const Posts = await Post.find({author}).lean().exec()
 
-        for (let post of Posts) {
-            const views = await PostView.find({post_id: post._id}).lean().exec()
-            post.viewCount = views.length
-            post.commentCount = post.comments.length
-            post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
-        }
+            for (let post of Posts) {
+                const views = await PostView.find({post_id: post._id}).lean().exec()
+                post.viewCount = views.length
+                post.commentCount = post.comments.length
+                post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
+            }
 
-        Posts.sort( (a, b) => b.viewCount - a.viewCount)
+            Posts.sort( (a, b) => b.viewCount - a.viewCount)
 
-        return res.
-            status(200).
-            json({
-                message: "data fetched",
-                status: "success",
-                data: Posts
+            return res.
+                status(200).
+                json({
+                    message: "data fetched",
+                    status: "success",
+                    data: Posts
+                })
+
+        } catch(e) {
+            
+            console.error(e, 'while fetching user based blogs, accountRoutes');
+            
+            return res.
+                status(200).
+                json({
+                    message: "execption happened",
+                    status: "failed"
             })
-
-    } catch(e) {
-        
-        console.error(e, 'while fetching user based blogs, accountRoutes');
-        
-        return res.
-            status(200).
-            json({
-                message: "execption happened",
-                status: "failed"
-        })
+        }
     }
-})
+)
 
 router.post(
     "/update_account",
@@ -114,6 +120,54 @@ router.post(
         }
         catch (e) {
             console.error(e)
+            return res.
+                status(200).
+                json({
+                    message: "execption happened",
+                    status: "failed"
+            })
+        }
+    }
+)
+
+router.get(
+    
+    "/user_posts", 
+    query('user_id').notEmpty().isMongoId().escape(),
+    async (req, res) => 
+    
+    {
+
+        let result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(200).json({message : "no author id provied"})
+        let {user_id: author} = req.query;
+        
+        console.log("here")
+        try {
+            const Posts = await Post.find({author}).lean().exec()
+
+            for (let post of Posts) {
+                const views = await PostView.find({post_id: post._id}).lean().exec()
+                post.viewCount = views.length
+                post.commentCount = post.comments.length
+                post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
+            }
+
+            Posts.sort( (a, b) => b.viewCount - a.viewCount)
+
+            return res.
+                status(200).
+                json({
+                    message: "data fetched",
+                    status: "success",
+                    data: Posts
+                })
+
+        } catch(e) {
+            
+            console.error(e, 'while fetching user based blogs, accountRoutes');
+            
             return res.
                 status(200).
                 json({
