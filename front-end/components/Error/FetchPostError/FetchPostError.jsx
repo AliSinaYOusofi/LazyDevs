@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default function FetchPostError({error}) {
+export default function FetchPostError({error, setTrigger}) {
 
-    const hideFetchErrorMessage = () => document.getElementById("fetchErrorMessage").style.display = "none"
+    const hideFetchErrorMessage = () => setTrigger(false)
 
     return (
         <div id="fetchErrorMessage" className=" py-3 flex items-center ml-4 gap-x-4 justify-between px-4 leading-normal text-red-700 bg-red-100 rounded-lg" role="alert">

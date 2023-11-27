@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default function SuccessMessage({message}) {
+export default function SuccessMessage({message, setTrigger}) {
     
-    const hideSuccessMessage = () => document.getElementById("fetchErrorMessage").style.display = "none"
+    const hideSuccessMessage = () => setTrigger(false)
 
     return (
         <div id="fetchErrorMessage" className=" py-3 flex items-center ml-4 gap-x-4 justify-between px-4 leading-normal text-white bg-green-300 rounded-lg" role="alert">

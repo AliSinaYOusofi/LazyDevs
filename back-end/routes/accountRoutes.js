@@ -190,16 +190,38 @@ router.post(
 
             let {tagInputs} = req.body
 
-            tagInputs = tagInputs.map(tag => tag.trim())
-            tagInputs = tagInputs.filter(tag => tag !== '')
-            
-            const userId = req.user_id;
-            const user = await SignedUpUser.findByIdAndUpdate(userId, {
-                socials : tagInputs
-            })
+            const currentUser = await SignedUpUser.findById(req.user_id)
 
-            await user.save()
-            return res.status(200).json({message: "tags updated", status: "success"})
+            if (currentUser) {
+
+                tagInputs = tagInputs.map(tag => tag.trim())
+                tagInputs = tagInputs.filter(tag => tag !== '')
+
+                // const updatedTags = currentUser.socials ? [...currentUser.socials] : []
+
+                // if (updatedTags.length === 0) {
+                //     for (let i = 0; i < 3; i++) {
+                //         updatedTags[i] = tagInputs[i]
+                //     }
+                // }
+
+                // else {
+                //     for (let i = 0; i < 3; i++) {
+                //         if (!updatedTags[i]) {
+                //             updatedTags[i] = tagInputs[i]
+                //         }
+                //     }
+                // }
+                
+                const userId = req.user_id;
+                
+                const user = await SignedUpUser.findByIdAndUpdate(userId, {
+                    socials : tagInputs
+                })
+                await user.save()
+                return res.status(200).json({message: "tags updated", status: "success"})
+            }
+            return res.status(200).json({message: "user not found", status: "failed"})
         } 
         catch(e) {
             console.error(e, 'while updating tags')
@@ -207,5 +229,28 @@ router.post(
         }
     }
 )
- 
+
+router.get(
+    "/get_tags", 
+    async (req, res) => 
+    {
+
+        let user_id = req.user_id
+
+        if (! user_id) return res.status(400).json({message: "no user id provided", status: "failed"})
+        
+        try {
+            let userTags = await SignedUpUser.findById(user_id).lean().exec()
+            
+            if (userTags) {
+                return res.status(400).json({status: "success", data: userTags.socials})
+            } else {
+                return res.status(400).json({message: "user not found", status: "failed"})
+            }
+        } catch(e) {
+            console.error("error getting tags", e)
+            return res.status(400).json({message: "tags update failed", status: "failed"})
+        }
+    }
+)
 module.exports = router
