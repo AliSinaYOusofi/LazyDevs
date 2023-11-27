@@ -29,7 +29,7 @@ export default function Avatar({profileUrl}) {
                 <img
                     src={profileUrl}
                     alt="user profile image"
-                    className="object-contain mt-1 md:mt-0 bg-cover md:w-10 md:h-10 w-8 h-8 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
+                    className=" object-cover mt-1 md:mt-0 bg-cover md:w-10 md:h-10 w-8 h-8 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
                 />
             </Link>
         </div>

@@ -24,6 +24,11 @@ router.get("/newsfeed", async (req, res) => {
 
     // and js and javascript py or python these extenstions should be mappped 
     // for proper undrestanding of tags
+
+    // tags added when creating posts
+    
+    // TODO: return posts based on tags the user is following
+
     try {
         const blogs = await Post.find().lean().exec();
     
