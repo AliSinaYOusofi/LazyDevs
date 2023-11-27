@@ -15,8 +15,6 @@ export default function UserTags() {
     const [tagInputs, setTagInputs] = useState(['', '', '']);
     const [spinner, setSpinner] = useState(false)
     const [clicked, setClicked] = useState(false)
-    
-    const { currentUser} = useAppContext()
 
     useEffect( () => {
 

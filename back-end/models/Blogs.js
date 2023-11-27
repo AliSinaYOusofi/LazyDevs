@@ -55,6 +55,12 @@ const PostSchema = new mongoose.Schema({
         immutable: false
     },
 
+    tags: {
+        type: Array,
+        required: true,
+        immutable: false,
+    }
+
 });
 
 // Middleware to update the updatedAt field when a post is modified

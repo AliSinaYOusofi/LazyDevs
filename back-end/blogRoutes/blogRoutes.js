@@ -13,7 +13,17 @@ const FollowingUser = require("../models/FollowingUsers")
 const { body, validationResult, query } = require("express-validator")
 
 router.get("/newsfeed", async (req, res) => {
-      
+    
+    // this route must return feeds that are based on user
+    // currently following tags
+    // if no tags are followed than random posts should be 
+    // returned
+
+    // but before this the tags part should be added to the post schema
+    // at at least one tag is required for each post with the minimum length of 3
+
+    // and js and javascript py or python these extenstions should be mappped 
+    // for proper undrestanding of tags
     try {
         const blogs = await Post.find().lean().exec();
     
@@ -524,7 +534,12 @@ router.delete(
 
             if (blogExists) {
 
+                // deleting the blog from the database
                 await Post.findByIdAndRemove(post_id)
+                await Comment.deleteMany({ post: post_id })
+                await Likes.deleteMany({ post_id })
+                await PostView.deleteMany({ post_id })
+                await replyComments.deleteMany({ post_id })
 
                 return res.status(200).json({
                     status: "success",
@@ -654,6 +669,7 @@ router.get("/recent_posts", async (req, res) => {
                 blog.commentCount = blog.comments.length
             }
 
+            postsInLast15Days.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1)
             return res.status(200).json({
                 status: "success",
                 data: postsInLast15Days 
@@ -683,11 +699,10 @@ router.post(
     "/save_post",
     body('post_id').notEmpty().isMongoId().escape(), 
     body('user_id').notEmpty().isMongoId().escape(), 
-    
     async (req, res) => {
 
         const result = validationResult(req)
-        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id", error: result.array()})
 
         const {user_id, post_id} = req.body 
         
