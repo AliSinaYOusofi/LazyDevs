@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link';
 import CommunityInfo from '../Community Info/CommunityInfo';
 import { useAppContext } from '@/context/useContextProvider';
+import delete_cookie from '@/functions/delete_cookie';
 
 export default function Sidebar({sidebar}) {
 
@@ -14,7 +15,8 @@ export default function Sidebar({sidebar}) {
     const handleLogout = () => {
         setCurrentUser(null);
         localStorage.removeItem("currentUser");
-        
+        delete_cookie("accessToken")
+        delete_cookie("refreshToken")
         router.push("/");
     }
 

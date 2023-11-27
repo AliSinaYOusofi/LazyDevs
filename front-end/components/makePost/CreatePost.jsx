@@ -13,13 +13,10 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { useAppContext } from '@/context/useContextProvider';
 
-
-
-
 export default function CreatePost({content}) { 
 
     const [spinner, setSpinner] = useState(false);
-    
+    const [tagInputs, setTagInputs] = useState(['', '', '']);
     const [postContent, setPostContent] = useState({content: ""});
     const {currentUser, templateContent} = useAppContext()
     
@@ -79,13 +76,17 @@ export default function CreatePost({content}) {
         setSpinner(true);
         // saving post to db.
         
-        if (postContent.content.length < 2) return toast.error("post must be at least 2 characters long");   
+        if (postContent.content.length < 10) {
+            setSpinner(false);
+            return toast.error("post must be at least 10 characters long");
+        }   
 
         try {
 
             const requestData = {
                 content: encodeURIComponent(JSON.stringify(postContent.content)),
-                user_id: currentUser ? currentUser._id : null
+                user_id: currentUser ? currentUser._id : null,
+                tagInputs: tagInputs,
             }
             
             const res = await fetch("http://localhost:3001/user/save_post", {
@@ -98,7 +99,7 @@ export default function CreatePost({content}) {
             });  
 
             const json = await res.json();
-            
+            console.log(json, "json");
             if (json.message === "success") toast.success("post created successfully");
             else if (json.message === "serverError") toast.success("Server Error");
             else toast.error("Failed to post !")
@@ -120,10 +121,11 @@ export default function CreatePost({content}) {
             });
         }
       }, [content]);
-
-    const renderPreview = (plainText) => {
-        const html = plainText.replace(/\n/g, '<br />');
-        return html;
+    
+    const handleInputChange = (index, value) => {
+        const newInputs = [...tagInputs];
+        newInputs[index] = value;
+        setTagInputs(newInputs);
     };
 
     return (
@@ -135,10 +137,27 @@ export default function CreatePost({content}) {
                     value={postContent.content}
                     onChange={(value) => setPostContent({...postContent, content: value})}
                 />
-                {/* bg-gray-800 px-5 py-3  hover:bg-gray-900 text-white rounded-lg h-8 md:h-10 
-                        flex items-center justify-center relative */}
-                <div className="w-fit flex flex-row">
-                    <button  
+                
+                <div>
+                    <p className="mt-4 text-gray-600">* At least one tag is required</p>
+                    {
+                        tagInputs.map((value, index) => (
+                            <input
+                                key={index}
+                                type="text"
+                                placeholder={`Tag ${index + 1}`}
+                                className="  rounded-md px-4 py-3 mr-2 outline-none border-none bg-[#fafafd]"
+                                value={value}
+                                onChange={(e) => handleInputChange(index, e.target.value)}
+                            />
+                        ))
+                    }
+                    
+                </div>
+                
+                <div className="w-fit flex flex-row mt-4">
+                    <button
+                        disabled={tagInputs.every(value => value === '') || spinner }  
                         className="px-5 py-3  gap-x-2 h-8 md:h-10  rounded-md flex flex-row items-center justify-between   bg-gray-800 text-white hover:bg-gray-900"
                         onClick={handlePost}
                         > 
@@ -151,9 +170,9 @@ export default function CreatePost({content}) {
 
                     <button
                         type="button"
-                        disabled={postContent ? postContent.content.length === 0 : false}
+                        disabled={postContent ? postContent.content.length === 0 : false }
                         title="clear"
-                        onClick={() => setPostContent("")} 
+                        onClick={() => setPostContent({})} 
                         className="bg-white ml-4 px-5 py-3  border-2 border-gray-900 text-black rounded-lg h-8 md:h-10 
                         flex items-center justify-center relative">
                         Clear

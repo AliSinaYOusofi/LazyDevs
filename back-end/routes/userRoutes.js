@@ -105,18 +105,27 @@ router.post(
     "/save_post",
     body('user_id').trim().isMongoId().escape(),
     body('content').notEmpty().escape(), 
+    body('tagInputs').isArray(),
     async (req, res) => 
     {
         const result = validationResult(req)
 
-        if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided"})
-
-        let {content, user_id} = req.body;
-        content = (JSON.parse(decodeURIComponent(content)))
+        if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided", error: result.array()})
         
-        const randomIdForPost = crypto.randomBytes(16).toString("hex");   
+        let {content, user_id, tagInputs} = req.body;
         
         if (!user_id) return res.status(200).json({message: "user_id required"});
+        
+        else if (! tagInputs || tagInputs.every(value => value === '')) {
+            return res.status(200).json({
+                status: "failed",
+                reason: "empty tags all"
+            })
+        }
+
+        content = (JSON.parse(decodeURIComponent(content)))
+        
+        const randomIdForPost = crypto.randomBytes(16).toString("hex");
         
         let newPost = new Post({
             post_id: randomIdForPost,   
@@ -124,6 +133,7 @@ router.post(
             title: content.split("\n")[0],
             body: content,
             comments: [],
+            tags: tagInputs,
         });
 
         try {   

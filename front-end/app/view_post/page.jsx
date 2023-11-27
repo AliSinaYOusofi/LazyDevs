@@ -220,7 +220,7 @@ export default function Page() {
                 <div className="md:w-[30%] w-full flex flex-col  overflow-ellipsis headerBlog px-2 md:pr-10">
                     
                     <h1 className="text-5xl  font-bold tracking-wide mt-10"> Recent Posts </h1>
-                    <h1 className="font-bold tracking-wide text-gray-500"> Posts from the 15 days before latest post</h1>
+                    <p className="font-bold tracking-wide text-gray-500"> Posts from the 15 days before latest post</p>
                     {
                         errorMessages?.recentBlogsFetchError
                     
