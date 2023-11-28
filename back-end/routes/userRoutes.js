@@ -4,7 +4,12 @@ const crypto = require("crypto");
 // const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
 const Post = require("../models/Blogs");
-const {validationResult, body} = require("express-validator")
+const {validationResult, body} = require("express-validator");
+const PostView = require("../models/PostViews");
+const Likes = require("../models/postLikes");
+const Comments = require("../models/Comments");
+const CommentsReply = require("../models/ReplyComments");
+const FollowingUser = require("../models/FollowingUsers");
 require("dotenv").config();
 
 router.post(
@@ -154,4 +159,45 @@ router.get(
         return res.status(200).send("dummmy")
     }
 )
+
+router.delete("/delete_account", async (req, res) => {
+    
+    const user_id = req.user_id
+
+    if (! user_id) return res.status(200).send("noUser")
+    
+    try {
+        let user_exists = await SignedUpUser.findById(user_id)
+
+        if (! user_exists) return res.status(200).send("noUser")
+        
+        await SignedUpUser.deleteOne({_id: user_id});
+        // delete all posts of the user
+        await Post.deleteMany({author: user_id})
+        // clear cookies
+        res.clearCookie("accessToken")
+        res.clearCookie("refreshToken")
+        // delete comments
+        await Comments.deleteMany({"comment.author": user_id})
+        // delete likes
+        await Likes.deleteMany({liker: user_id})
+        // delete post views
+        await PostView.deleteMany({viewer: user_id})
+        // delete reply comments
+        await CommentsReply.deleteMany({author: user_id})
+        // remove from those who are following this user
+        await FollowingUser.updateMany(
+            { "follows.user": user_id },
+            { $pull: { "follows.$.user": user_id } }
+        )
+        // remove those who are followed by this user
+
+        await FollowingUser.findOneAndDelete({user_id: user_id})
+
+        return res.status(200).json({status: "success"});
+    } catch (error) {
+        console.error("Error deleting account", error);
+        return res.status(200).json({status: "failed"});
+    }
+})
 module.exports = router; // to special object

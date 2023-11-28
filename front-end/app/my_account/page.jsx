@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation'
 import Following from '@/components/Followers/Following'
 import TagsIcon from '@/components/SVG/TagsIcon'
 import UserTags from '@/components/UserFollowingTags/UserTags'
+import DeleteAccount from '@/components/DeleteAccount/DeleteAccount'
+import DangerZone from '@/components/SVG/DangerZone'
 
 export default function Page() {
     
@@ -26,9 +28,9 @@ export default function Page() {
 
     const {currentUser} = useAppContext();
 
-    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following"]
-    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />]
-    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />]
+    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following", "Danger Zone"]
+    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />, <DangerZone />]
+    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />, <DeleteAccount />]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)
