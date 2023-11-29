@@ -1,4 +1,5 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
+import SortData from '@/components/Sort/SortData'
 import React, { useEffect, useState } from 'react'
 
 export default function LatestFeed() {
@@ -6,8 +7,8 @@ export default function LatestFeed() {
     const [latestPosts, setLatestPosts] = useState([])
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
-    const [sortedBy, setSortedBy] = useState(true)
-    const [sorteByDate, setSortedByDate] = useState(false)
+    // const [sortedBy, setSortedBy] = useState(true)
+    // const [sorteByDate, setSortedByDate] = useState(false)
     
     useEffect( () => {
         
@@ -41,18 +42,18 @@ export default function LatestFeed() {
         setErrorMessages("")
     }
 
-    const handleSortedBy = () => {
+    // const handleSortedBy = () => {
         
-        setSortedBy(prev => ! prev)
+    //     setSortedBy(prev => ! prev)
 
-        sortedBy 
-        ?
-            setLatestPosts(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
-        :
-            setLatestPosts(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
-    }
+    //     sortedBy 
+    //     ?
+    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
+    //     :
+    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
+    // }
 
-    if (! latestPosts?.length) return <div className="flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+    if (! latestPosts?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           errorMessage ? <div className=" w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
                 
@@ -78,21 +79,21 @@ export default function LatestFeed() {
         }
     </div>
 
-    const handleSortPostsByDate = () => {
+    // const handleSortPostsByDate = () => {
         
-        setSortedByDate(prev => ! prev)
+    //     setSortedByDate(prev => ! prev)
 
-        setLatestPosts( topBlogs => {
+    //     setLatestPosts( topBlogs => {
             
-            const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
-                const firstDate = new Date(a.createdAt)
-                const secondDate = new Date(b.createdAt)
-                return sorteByDate ? firstDate > secondDate : secondDate > firstDate
-            })
+    //         const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
+    //             const firstDate = new Date(a.createdAt)
+    //             const secondDate = new Date(b.createdAt)
+    //             return sorteByDate ? firstDate > secondDate : secondDate > firstDate
+    //         })
 
-            return sortedByDatePosts
-        })
-    }
+    //         return sortedByDatePosts
+    //     })
+    // }
     return (
         <>
             {
@@ -102,8 +103,9 @@ export default function LatestFeed() {
                 null :
                 
                 <div className={`flex items-center justify-start mt-4 gap-x-4 md:ml-0 ml-2`}>
-                
-                    <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
+                    
+                    <SortData sortedBy={latestPosts} setSortedBy={setLatestPosts} />
+                    {/* <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
                 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
@@ -116,10 +118,10 @@ export default function LatestFeed() {
                         className={`${sorteByDate ? "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-800 text-white transition-all text-lg": "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-500 text-white transition-all text-lg"}`}
                         onClick={handleSortPostsByDate}
                     > SortByDate
-                    </button>
+                    </button> */}
                 </div>
             }
-            <div className="md:max-w-2xl w-screen px-5 md:px-0">
+            <div className="md:max-w-2xl w-screen px-4 md:px-0">
                 {
                     latestPosts.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }

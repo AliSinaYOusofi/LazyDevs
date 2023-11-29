@@ -127,7 +127,8 @@ router.post(
                 reason: "empty tags all"
             })
         }
-
+        //TODO: taginputs must have a hash before their name: done
+        tagInputs = tagInputs.map(tag => `#${tag}`.toLowerCase())
         content = (JSON.parse(decodeURIComponent(content)))
         
         const randomIdForPost = crypto.randomBytes(16).toString("hex");
@@ -188,7 +189,7 @@ router.delete("/delete_account", async (req, res) => {
         // remove from those who are following this user
         await FollowingUser.updateMany(
             { "follows.user": user_id },
-            { $pull: { "follows.$.user": user_id } }
+            { $pull: { "follows": user_id } }
         )
         // remove those who are followed by this user
 

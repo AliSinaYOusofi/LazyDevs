@@ -29,7 +29,6 @@ export default function DeleteAccount() {
 
             const json = await response.json()
 
-            console.log(json, 'delete')
             if (json.status === "success") {
                 setCurrentUser(null);
                 localStorage.removeItem("currentUser");
