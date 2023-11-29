@@ -29,8 +29,6 @@ export default function UserTags() {
                 
                 const data = await response.json()
                 
-                console.log(data, 'data')
-                
                 if (data.status === "success") setTags(data.data)
                 
                 else if (data.status === "failed") {

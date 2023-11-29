@@ -8,14 +8,16 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import SortData from '@/components/Sort/SortData'
 
 export default function RelevantFeeds() {
     
     const [relevantBlogs, setRelevantBlogs] = useState([])
+    const [isBasedOnTags, setIsBasedOnTags] = useState(undefined)
     const [errorMessage, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
-    const [sortedBy, setSortedBy] = useState(true)
-    const [sorteByDate, setSortedByDate] = useState(false)
+    // const [sortedBy, setSortedBy] = useState(true)
+    // const [sorteByDate, setSortedByDate] = useState(false)
     const {currentUser} = useAppContext()
     const router = useRouter()
 
@@ -34,12 +36,16 @@ export default function RelevantFeeds() {
 
                 const data = await response.json()
                 
+                console.log(data, )
                 if (data.redirectTo) {
                     const redirectTo = data.redirectTo
                     router.replace(`http://localhost:3000${redirectTo}`)
                 }
 
-                if (data.status === "success") setRelevantBlogs(data.data)
+                if (data.status === "success") {
+                    setRelevantBlogs(data.data)
+                    setIsBasedOnTags(data.isPostsBasedOnTags)
+                }
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
                 else setErrorMessages("server error while fethcing posts")
             } 
@@ -57,19 +63,19 @@ export default function RelevantFeeds() {
         setErrorMessages("")
     }
 
-    const handleSortedBy = () => {
+    // const handleSortedBy = () => {
         
-        setSortedBy(prev => ! prev)
+    //     setSortedBy(prev => ! prev)
         
-        sortedBy 
-        ?
-            setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => a.viewCount > b.viewCount))
-        :
-            setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => b.viewCount > a.viewCount))
+    //     sortedBy 
+    //     ?
+    //         setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => a.viewCount > b.viewCount))
+    //     :
+    //         setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => b.viewCount > a.viewCount))
 
-    }
+    // }
     
-    if (! relevantBlogs?.length) return <div className="flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
+    if (! relevantBlogs?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           errorMessage ? <div className="h-screen w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
                 
@@ -94,21 +100,21 @@ export default function RelevantFeeds() {
         }
     </div>
 
-    const handleSortPostsByDate = () => {
+    // const handleSortPostsByDate = () => {
         
-        setSortedByDate(prev => ! prev)
+    //     setSortedByDate(prev => ! prev)
 
-        setRelevantBlogs( date => {
-            const blogsSortedByDate = date.slice().sort( (a, b) => {
-                const firstDate = new Date(a.createdAt)
-                const secondDate = new Date(b.createdAt)
-                return sorteByDate ? firstDate - secondDate : secondDate - firstDate
-            })
+    //     setRelevantBlogs( date => {
+    //         const blogsSortedByDate = date.slice().sort( (a, b) => {
+    //             const firstDate = new Date(a.createdAt)
+    //             const secondDate = new Date(b.createdAt)
+    //             return sorteByDate ? firstDate - secondDate : secondDate - firstDate
+    //         })
 
-            return blogsSortedByDate
-        })
+    //         return blogsSortedByDate
+    //     })
         
-    }
+    // }
     return (
         <>
             {
@@ -119,30 +125,27 @@ export default function RelevantFeeds() {
                 
                 <div className={`flex items-center justify-start mt-4 gap-x-4 md:ml-0 ml-2`}>
                 
-                    <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                    </svg>
-                    </div>
-                
-                    <span className={` mt-4`}> Sorted By: {sortedBy ? "By most viewed" : "By less viewd"}</span>
-
-                    <button
-                        type="button" 
-                        className={`${sorteByDate ? "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-800 text-white transition-all text-lg": "py-1 px-4 mt-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-gray-500 text-white transition-all text-lg"}`}
-                        onClick={handleSortPostsByDate}
-                    > SortByDate
-                    </button>
+                    <SortData setSortedBy={setRelevantBlogs} sortedBy={relevantBlogs} />
                 </div>
             }
             <div className="md:w-fit w-screen">
-                <h1 className="text-2xl  font-bold tracking-wide mt-10"> Posts are based on the tags your following </h1>
-                <p className="font-bold tracking-wide text-gray-500"> You can change tags <Link href="/my_account" className="hover:text-black underline hover:cursor-pointer"> here.</Link></p>
+                <h1 className="text-2xl ml-4 md:ml-0  font-bold tracking-wide mt-10"> Posts are based on the tags your following </h1>
+                <p className="font-bold ml-4 md:ml-0  tracking-wide text-gray-500"> You can change tags <Link href="/my_account" className="hover:text-black underline hover:cursor-pointer"> here.</Link></p>
 
+                <p className="mt-10 text-red-500 ml-4 md:ml-0">
+                    {
+                        !isBasedOnTags 
+                            ? "*Could not find any post matching your tags. Displaying random posts "
+                        : ""
+                    }
+                </p>
+            </div>
+
+            <div className="px-4">
                 {
                     relevantBlogs.map(blog => <BlogCard dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
+
             </div>
         </>
     )

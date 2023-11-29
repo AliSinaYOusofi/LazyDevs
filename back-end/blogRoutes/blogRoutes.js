@@ -30,8 +30,38 @@ router.get("/newsfeed", async (req, res) => {
     // TODO: return posts based on tags the user is following
 
     try {
-        const blogs = await Post.find().lean().exec();
-    
+        let user_id = req.user_id
+
+        if (! user_id) return res.status(401).json({message: "Unathorized"})
+        
+        let currentUserFollowingTags = await SignedUpUser.findById(user_id).lean().exec()
+
+        // changing to lowercase before using it
+        let userTags = currentUserFollowingTags?.socials ? currentUserFollowingTags?.socials.map( tag => `#${tag}`.toLowerCase()) : []
+
+        let blogs
+        let isPostsBasedOnTags = true // store if the posts selected is based on user following tags
+
+        if (userTags.length) { // if user is following some tags then send the tags that intersects
+
+            blogs = await Post.aggregate([
+                { $match: { tags: { $in: userTags } } },
+                {$limit: 20}
+            ]).exec()
+
+            // if the user following tags does not match any of the blogs then
+            // select all of the blogs
+            if (! blogs.length) {
+                isPostsBasedOnTags = false
+                blogs = await Post.aggregate([{ $sample: { size: 20}}]).exec()
+            }
+        }
+        else {
+            isPostsBasedOnTags = false
+            blogs = await Post.aggregate([{ $sample: { size: 20}}]).exec()
+        }
+        // getting the that have at least one in common with user 
+        
         const authorIds = blogs.map(blog => blog.author);
         const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
         const authorData = await Promise.all(authorDataPromises);
@@ -53,7 +83,8 @@ router.get("/newsfeed", async (req, res) => {
     
         return res.status(200).json({
             status: "success",
-            data: completeBlogData
+            data: completeBlogData,
+            isPostsBasedOnTags
         });
   
     } catch (e) {  

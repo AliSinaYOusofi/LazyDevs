@@ -11,7 +11,7 @@ export default function Page() {
   
   const [blogType, setBlogType] = useState("Relevant")
   
-  const menutItems = ["Relevant", "Top", "Latest"]
+  const menutItems = ["Relevant", "Most Viewed", "Latest"]
   const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />]
   const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
 
@@ -40,7 +40,7 @@ export default function Page() {
       <div className="w-full bg-white/30 mx-auto z-[999]">
         
         <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
-          <div className="flex flex-row gap-x-10 justify-start items-start w-full mt-10">
+          <div className="flex flex-row gap-x-10 justify-center items-center w-full mt-10">
             {menutItemsHTML}
           </div>
           
