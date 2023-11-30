@@ -8,7 +8,7 @@ import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 import SavedPostIconBlog from '../SVG/SavedPostBlogIcon'
 import UnsavedPostBlogIcon from '../SVG/UnsavedPostIcon'
 
-export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, tags}) {
+export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, tags, author}) {
     
     const [savedToAccount, setSavedToAccount] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
@@ -23,7 +23,6 @@ export default function BlogCard({content, title, username, profileUrl, date, id
         setSavedToAccount(saved)
     }, [])
 
-    console.log(tags)
     const saveBlogToAccount = async () => {
         
         if (!currentUser) return setNotLoggedInCard(prev => ! prev)
@@ -100,7 +99,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                     
                     </div> 
                 
-                    <div className="flex items-center">
+                    <Link href={{pathname: `/account/${author}`}} className="flex items-center">
                 
                         {
                             date
@@ -109,7 +108,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                             : null
                         }
                         <span className="font-bold text-black/80">{username}</span>
-                    </div>
+                    </Link>
                 </div>
                 
                 <div className="w-full text-gray-400 flex flex-row gap-x-2">

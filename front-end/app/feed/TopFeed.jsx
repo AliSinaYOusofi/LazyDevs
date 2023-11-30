@@ -18,7 +18,7 @@ export default function TopFeed() {
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/top`, {method: "GET", credentials: "include"});
                 const data = await response.json()
-                
+                console.log(data)
                 if (data.status === "success") setTopBlogs(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
@@ -106,7 +106,7 @@ export default function TopFeed() {
             }
             <div className="md:w-fit w-screen px-4">
                 {
-                    topBlogs.map(blog => <BlogCard tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    topBlogs.map(blog => <BlogCard author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

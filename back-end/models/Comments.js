@@ -11,7 +11,8 @@ const CommentSchema = new mongoose.Schema({
     comment: [
         {
             author: {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
+                ref:"SignedUpUser",
                 required: true,
                 immutable: true
             },

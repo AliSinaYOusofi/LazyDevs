@@ -20,6 +20,7 @@ export default function CommentParent({post_id}) {
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
     const [commentReplies, setCommentReplies] = useState("")
     const [commentReplyPosted, setCommentReplyPosted] = useState(false)
+    const [hideComments, setHideComments] = useState(false)
     
     const {currentUser} = useAppContext(); 
 
@@ -83,7 +84,6 @@ export default function CommentParent({post_id}) {
                 );
                 
                 const data = await response.json()
-                
                 if (data?.data?.length === 0) {
                     setPostComments([])
                     setCommentReplies([])
@@ -94,6 +94,7 @@ export default function CommentParent({post_id}) {
                     const extractedReplies = data.data.map(reps => reps.replies).flat()
                     setCommentReplies(extractedReplies)
                     setPostComments(extractedComments)
+                    console.log(extractedReplies)
                 } 
                 
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments")
@@ -175,7 +176,37 @@ export default function CommentParent({post_id}) {
                 </div>
 
                 <div>
-                    <h1 className="text-3xl font-bold tracking-wide mt-10"> Comments </h1>
+                    
+                    <div className="flex  items-center justify-start mt-10">
+                        
+                        <h1 className="text-3xl font-bold tracking-wide flex items-center"> 
+                            Comments
+                            <span className="text-gray-500 text-xl ml-2">({postComments ? postComments.length : null})</span> 
+                        </h1>
+                        
+                        {
+                            postComments?.length > 0
+                            ?
+                            <div className="ml-4 flex items-center transition-all duration-200 border-black border-[1px] rounded-full p-1 " onClick={() => setHideComments(prev => ! prev)}>
+                                
+                                {
+                                    hideComments
+                                    ?
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                    :
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
+                                    </svg>
+                                }
+                                <span className="text-gray-500">hide/unhide comments</span>
+                            </div>
+                            : null
+                        }
+                    </div>
+
+                    
                     {
                         postComments?.length === 0
                         ?
@@ -185,9 +216,11 @@ export default function CommentParent({post_id}) {
 
                     {postCommentsErrorHandler}
                     
-                    {
-                        postComments?.map(comment => <DisplayComments updateComments={setCommentReplyPosted} commentReplies={commentReplies} post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} />)
-                    }
+                    <div className={`${hideComments ? "hidden" : "block"} transition-all duration-200`}>
+                        {
+                            postComments?.map(comment => <DisplayComments  updateComments={setCommentReplyPosted} commentReplies={commentReplies} post_id={post_id} distance={comment.distance} _id={comment?._id} key={comment?._id} author={comment.username} comment={comment.body} date={comment.commentedOn} profileUrl={comment.profileUrl} author_id={comment?.author} />)
+                        }
+                    </div>
 
                 </div>
             </div>
