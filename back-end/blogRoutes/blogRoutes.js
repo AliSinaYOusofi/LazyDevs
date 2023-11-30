@@ -292,7 +292,6 @@ router.get(
 router.post(
     "/comment",
     body('post_id').notEmpty().isMongoId().escape(), 
-    body('author').notEmpty().isEmail().escape(), 
     body('comment').notEmpty().escape(), 
     async (req, res) => 
     
@@ -300,9 +299,12 @@ router.post(
         const result = validationResult(req)
         if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id", error: result.array()})
         
-        let { post_id, comment, author} = req.body;
-
-
+        let { post_id, comment} = req.body;
+        
+        let author = req.user_id
+        
+        if (!author) return res.status(400).json({message: "invalid data provided"})
+        
         if (post_id) {
             
             try {
@@ -327,8 +329,6 @@ router.post(
                 );
 
                 await newComment.save();
-
-
 
                 singleBlog.comments.push(newComment._id);
 
@@ -358,7 +358,6 @@ router.post(
         if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
         
         const {post_id} = req.body;
-        console.log(post_id, ' post_id')
         
         if (post_id) {
 
@@ -370,7 +369,7 @@ router.post(
                     
                     comms.comment = await Promise.all(comms.comment.map(async comment => {
                     
-                        const whoCommented = await SignedUpUser.findOne({ email: comment.author }).lean().exec();
+                        const whoCommented = await SignedUpUser.findById(comment.author).lean().exec();
 
                         comment.distance = formatDistanceToNow(comment.commentedOn, {addSuffix: true}).replace("about", "")
                         
@@ -1330,6 +1329,7 @@ router.get(
 
         let userTags = tag.split(",")
         let user_id = req.user_id
+        
         try {
             
             const posts = await Post.aggregate([
@@ -1337,7 +1337,6 @@ router.get(
                 {$limit: 20}
             ])
             
-            console.log(posts)
             if (posts.length) {
                 
                 const authorIds = posts.map(blog => blog.author);
@@ -1366,12 +1365,13 @@ router.get(
                     blog.viewCount = views.length
                 }
 
-                return res.status(200).json({message: "success", data: completeBlogData, zero: completeBlogData.length ? true : false})
+                return res.status(200).json({message: "success", data: completeBlogData})
             }
             return res.status(200).json({message: "success", zero: true})
         }
         catch(e) {
             console.error("error in while getting same tags posts", e)
+            return res.status(200).json({message: "success", zero: true})
         }
     }
 )
