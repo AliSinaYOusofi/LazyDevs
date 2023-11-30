@@ -7,7 +7,7 @@ import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 import SavedPostIconBlog from '../SVG/SavedPostBlogIcon'
 import UnsavedPostBlogIcon from '../SVG/UnsavedPostIcon'
 
-export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved}) {
+export default function BlogCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, tags}) {
     
     const [savedToAccount, setSavedToAccount] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
@@ -22,7 +22,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
         setSavedToAccount(saved)
     }, [])
 
-
+    console.log(tags)
     const saveBlogToAccount = async () => {
         
         if (!currentUser) return setNotLoggedInCard(prev => ! prev)
@@ -104,11 +104,20 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                         {
                             date
                             ?
-                            <img src={profileUrl && date ? profileUrl : "https://stackdiary.com/140x100.png"} alt="Author Photo" className=" object-cover w-10 h-10 mx-4 rounded-full sm:block" /> 
+                            <img src={profileUrl && date ? profileUrl : "https://stackdiary.com/140x100.png"} alt="Author Photo" className=" object-cover w-8 h-8 mx-4 rounded-full sm:block" /> 
                             : null
                         }
                         <span className="font-bold text-black/80">{username}</span>
                     </div>
+                </div>
+                
+                <div className="w-full text-gray-400 flex flex-row gap-x-2">
+                    
+                    {
+                        tags && tags.length > 0
+                        ? tags.map( tag => tag !== "#" ? <Link className="hover:underline hover:text-black" href={`/tag/${tag}`}> {tag}</Link> : null)
+                        : null
+                    }
                 </div>
             </div>
             

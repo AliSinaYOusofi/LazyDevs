@@ -1221,7 +1221,7 @@ router.get(
             
             let ListOfFollowingUsers = []
             
-            if (following.follows.length) {
+            if (following?.follows?.length) {
                 
                 await Promise.all(
                 
@@ -1268,4 +1268,49 @@ router.get(
         }
     }
 )
+
+router.get("/my_following_posts", async (req, res) => {
+    
+    const user_id = req.user_id
+    
+    if (!user_id) return res.status(200).json({message: "user not found"})
+    
+    try {
+        
+        const following = await FollowingUser.findOne({user_id: user_id}).lean().exec()
+        
+        if (following) {
+            const followingPosts = await Post.find({author: {$in: following.follows.map(follow => follow.user)}}).lean().exec()
+            
+            const authorIds = followingPosts.map(blog => blog.author);
+            const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+            const authorData = await Promise.all(authorDataPromises);
+        
+            const completeBlogData = followingPosts.map((blog, index) => {
+                blog.profileUrl = authorData[index].profileUrl;
+                blog.username = authorData[index].username;
+                blog.viewCount = 0
+                blog.commentCount = 0
+                blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                return blog;
+            });
+
+            for (const blog of completeBlogData) {
+                const views = await PostView.find({post_id: blog._id}).lean().exec()
+                if (user_id) {
+                    const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                    blog.saved = alreadySaved.length > 0
+                }
+                blog.viewCount = views.length
+                blog.commentCount = blog.comments.length
+            }
+
+            return res.status(200).json({message: "success", data: completeBlogData, zero: completeBlogData.length ? true : false})
+        }
+        return res.status(200).json({message: "success", data: "zero"})
+    } catch(e) {
+        console.error("error in while getting following posts", e)
+        return res.status(404).json({message: "user not found"})
+    }
+})
 module.exports = router

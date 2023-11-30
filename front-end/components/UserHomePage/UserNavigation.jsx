@@ -80,7 +80,7 @@ export default function UserHomePage({user_id}) {
                     </ul>
                 </div>
                 
-                <div className="px-10 mx-auto flex flex-col items-start justify-start mt-10 md:w-[60%] w-full h-[100%]">
+                <div className="px-10 mx-auto flex flex-col items-start justify-start mt-10 md:w-[60%] w-[100%] h-[100%]">
                     {currentComponent}
                 </div>
             </div>

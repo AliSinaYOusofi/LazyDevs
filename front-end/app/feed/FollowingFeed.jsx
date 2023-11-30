@@ -1,59 +1,59 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import SortData from '@/components/Sort/SortData'
-import React, { useEffect, useState } from 'react'
+import React, {useState, useEffect} from 'react'
 
-export default function LatestFeed() {
-
-    const [latestPosts, setLatestPosts] = useState([])
-    const [errorMessage, setErrorMessages] = useState('')
-    const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
-    // const [sortedBy, setSortedBy] = useState(true)
-    // const [sorteByDate, setSortedByDate] = useState(false)
+export default function FollowingFeed() {
     
+    const [followingPosts, setFollowingPosts] = useState([])
+    const [errorMessage, setErrorMessages] = useState('')
+    const [retryFollowingPosts, setRetryFollowingPosts] = useState(false)
+    const [zeroFollowing, setZeroFollowing] = useState(false)
+
     useEffect( () => {
         
-        async function getTopBlogs() {
+        async function getFollowingPosts() {
             try {
                 
-                const response = await fetch(`http://localhost:3001/blogRoutes/recent_posts`, 
+                const response = await fetch(`http://localhost:3001/blogRoutes/my_following_posts`, 
                     {
                         method: "GET",
                         credentials: "include"
                     }
                 );
-                const data = await response.json()
-                if (data.status === "success") setLatestPosts(data.data)
                 
-                else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")
+                const data = await response.json()
+                console.log(data)
+                if (data.message === "success") {
+                    if (!data.zero) setZeroFollowing(true)
+                    else setFollowingPosts(data.data)
+                }
+                else if (data.message === "failed") setErrorMessages("There was a problem fetching posts!")
                 
                 else setErrorMessages("server error while fethcing posts")
             } 
             catch(e) {
                 console.error('error in while getting feeds', e);
                 setErrorMessages("There was a problem fetching posts!")
-                setLatestPosts([])
+                setFollowingPosts([])
             }
         }
-        getTopBlogs()
-    }, [retryFetchTopBlogs])
+        getFollowingPosts()
+    }, [retryFollowingPosts])
+    
 
-    const handleRetryFetchTopBlogs = () => {
-        setRetryFetchTopBlogs(prev => ! prev)
+    const noFollowingDiv = <div className="flex items-center justify-center flex-col h-screen">
+        <h1 className="md:text-4xl text-2xl font-bold tracking-wide"> Follow some users to see their posts</h1>
+        <p className="text-lg mt-4"> All caught up</p>
+    </div>
+
+    if (zeroFollowing) return noFollowingDiv
+
+    const handleRetryFollowingBlogs = () => {
+        setRetryFollowingPosts(prev => ! prev)
         setErrorMessages("")
     }
 
-    // const handleSortedBy = () => {
-        
-    //     setSortedBy(prev => ! prev)
-
-    //     sortedBy 
-    //     ?
-    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
-    //     :
-    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
-    // }
-
-    if (! latestPosts?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
+    if (! followingPosts?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           errorMessage ? <div className=" w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
                 
@@ -62,7 +62,7 @@ export default function LatestFeed() {
                     <button 
                         type="button" 
                         className="py-1 h-8 md:h-10 px-4 mt-2 inline-flex justify-center items-center text-lg font-light gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
-                        onClick={handleRetryFetchTopBlogs}
+                        onClick={handleRetryFollowingBlogs}
                     >
                         <svg
                             viewBox="0 0 512 512"
@@ -79,32 +79,17 @@ export default function LatestFeed() {
         }
     </div>
 
-    // const handleSortPostsByDate = () => {
-        
-    //     setSortedByDate(prev => ! prev)
-
-    //     setLatestPosts( topBlogs => {
-            
-    //         const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
-    //             const firstDate = new Date(a.createdAt)
-    //             const secondDate = new Date(b.createdAt)
-    //             return sorteByDate ? firstDate > secondDate : secondDate > firstDate
-    //         })
-
-    //         return sortedByDatePosts
-    //     })
-    // }
     return (
         <>
             {
             
-            errorMessage ?
+                errorMessage ?
                 
                 null :
                 
                 <div className={`flex items-center justify-start mt-4 gap-x-4 md:ml-0 ml-2`}>
                     
-                    <SortData sortedBy={latestPosts} setSortedBy={setLatestPosts} />
+                    <SortData sortedBy={followingPosts} setSortedBy={setFollowingPosts} />
                     {/* <div onClick={handleSortedBy} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full">
                 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -121,9 +106,12 @@ export default function LatestFeed() {
                     </button> */}
                 </div>
             }
+
             <div className="md:max-w-2xl w-screen px-4 md:px-0">
                 {
-                    latestPosts.map(blog => <BlogCard tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    followingPosts.length >= 1 ?
+                    followingPosts.map(blog => <BlogCard tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    : null
                 }
             </div>
         </>
