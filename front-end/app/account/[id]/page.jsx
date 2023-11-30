@@ -61,7 +61,7 @@ const userBasedFollowing = async (user_id) => {
             }, 
         )
         const data = await response.json()
-        console.log("data", data)
+        
         if (data.data !== "zero") return data.data
 
         else if (data.data === "zero") return undefined

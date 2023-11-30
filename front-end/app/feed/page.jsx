@@ -6,13 +6,14 @@ import TopFeed from './TopFeed';
 import LatestFeed from './LatestFeed';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import FollowingFeed from './FollowingFeed';
 
 export default function Page() {
   
   const [blogType, setBlogType] = useState("Relevant")
   
-  const menutItems = ["Relevant", "Most Viewed", "Latest"]
-  const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />]
+  const menutItems = ["Relevant", "Most Viewed", "Latest", "Following"]
+  const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />, <FollowingFeed />]
   const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
 
   /* 
@@ -29,9 +30,9 @@ export default function Page() {
 
   const menutItemsHTML = menutItems.map( li => {
     return (
-      <ul >
-        <li onClick={handleLiItemsClick} key={li} className={`${blogType === li ? liItemStyle : "cursor-pointer px-4 py-1 rounded-sm"}`}> {li} </li>
-      </ul>
+      
+      <li onClick={handleLiItemsClick} key={li} className={`${blogType === li ? liItemStyle : "cursor-pointer w-fit px-4 py-1 rounded-sm"}`}> {li} </li>
+      
     )
   })
 
@@ -39,9 +40,11 @@ export default function Page() {
     <>
       <div className="w-full bg-white/30 mx-auto z-[999]">
         
-        <div className="w-[60%] mx-auto flex flex-col items-center justify-start">
-          <div className="flex flex-row gap-x-10 justify-center items-center w-full mt-10">
+        <div className="w-[60%] mx-auto flex flex-col items-center justify-evenly">
+          <div className=" w-full mt-10">
+          <ul className="flex flex-row md:gap-x-10 justify-center items-center">
             {menutItemsHTML}
+          </ul>
           </div>
           
           <div className="md:max-w-2xl max-w-[50rem]">  

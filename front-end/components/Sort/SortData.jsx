@@ -6,7 +6,7 @@ export default function SortData({sortedBy, setSortedBy}) {
 
     useEffect(() => {
 
-        if (! searchFlag) setSearchFlag("viewcount")
+        if (! searchFlag) setSearchFlag("date")
 
         const handleSortChange = () => {
 
@@ -47,7 +47,7 @@ export default function SortData({sortedBy, setSortedBy}) {
     return (
         <div className="mt-10">
             <span className="">Select Sort options : </span>
-            <select defaultValue={"Title"} className="py-3 px-4 rounded-lg border-none outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
+            <select defaultValue={"Title"} className="py-3 px-5 rounded-lg border-none bg-[#fafafd] w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
                 <option value="date" defaultValue={"date"}>Date</option>
                 <option value="viewcount">View</option>
                 <option value="comment">comment</option>

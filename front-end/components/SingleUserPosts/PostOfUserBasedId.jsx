@@ -6,6 +6,7 @@ import Link from 'next/link';
 import FetchPostError from '../Error/FetchPostError/FetchPostError';
 import SearchBlogsBasedProps from '../SearchInput/SearchBlogsBasedProps';
 import SingleUserPostBlogTemplate from './SingleUserPostBlogTemplate';
+import SortData from '../Sort/SortData';
 
 export default function PostOfUserBasedId({author}) {
 
@@ -101,14 +102,7 @@ export default function PostOfUserBasedId({author}) {
                     <div className="">
                         <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0"> Your Posts ({posts.length})</h1>
                         
-                        <div className="flex items-center justify-start mt-4 gap-x-4">
-                            <div onClick={reversePosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                                </svg>
-                            </div>
-                            <span className="mt-4"> Sorted By: {sortedBy ? "By most viewed" : "By less viewed"}</span>
-                        </div>
+                        <SortData sortedBy={posts} setSortedBy={setPosts} />
                         
                         <div className="mt-10 w-full">
                             <SearchBlogsBasedProps blogs={posts}/>

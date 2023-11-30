@@ -5,6 +5,7 @@ import Link from 'next/link';
 import SearchBlogsBasedProps from '../SearchInput/SearchBlogsBasedProps';
 import SingleUserPostBlogTemplate from '../SingleUserPosts/SingleUserPostBlogTemplate';
 import OtherUserPosts from '../SingleUserPosts/OtherUserPosts';
+import SortData from '../Sort/SortData';
 
 export default function UserHomePosts({author}) {
 
@@ -90,23 +91,16 @@ export default function UserHomePosts({author}) {
 
     return (
 
-        <div className="w mx-auto h-full">
+        <div className="w mx-auto w-[100%] h-full">
             
             {
                 posts.length
                 ?
 
-                    <div className="md:w-full w-1/2">
+                    <div className="md:w-full  md:ml-0 ml-10 ">
                         <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 "> Posts ({posts.length})</h1>
                         
-                        <div className="flex items-center justify-start gap-x-4">
-                            <div onClick={reversePosts} className="p-2 shadow-black/50 mt-4 z-[99] hover:cursor-pointer shadow-sm bg-white rounded-full w-fit">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                                </svg>
-                            </div>
-                            <span className="mt-4"> Sorted By: {sortedBy ? "By most viewed" : "By less viewed"}</span>
-                        </div>
+                        <SortData sortedBy={posts} setSortedBy={setPosts} />
                         
                         <div className="mt-10 w-full">
                             <SearchBlogsBasedProps blogs={posts}/>
@@ -117,7 +111,6 @@ export default function UserHomePosts({author}) {
             
             <div className="mt-10">
                 
-            </div>
                 {   
                     posts.map
                     (blog => 
@@ -125,6 +118,7 @@ export default function UserHomePosts({author}) {
                     )
                         
                 }
+            </div >
         </div>
     )
 }
