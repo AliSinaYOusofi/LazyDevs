@@ -70,7 +70,7 @@ export default function Page() {
                     }   
                 );
                 const data = await response.json()
-
+                
                 if (data.data) setRecentBlogs(data.data)
                 else if (data.data === undefined) setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "recentBlogsFetchError": "Problem fetching recent posts"}))
             }
@@ -242,7 +242,7 @@ export default function Page() {
                     
                     {
                         recentBlogs && recentBlogs.length > 0
-                            ? recentBlogs?.map(blog => <BlogCard saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
+                            ? recentBlogs?.map(blog => <BlogCard tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} clamp="3" width={"f"} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>) : null
                     }
                 </div>
 

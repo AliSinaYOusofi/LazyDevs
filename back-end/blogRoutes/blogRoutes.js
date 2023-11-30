@@ -158,6 +158,7 @@ router.get(
 
             latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.filter(blog => blog._id != post_id)
             latestBlogs15DaysAfterLatestBlog = latestBlogs15DaysAfterLatestBlog.slice(0, 4)
+            
             return res.status(200).json({
                 status: "success",
                 data: latestBlogs15DaysAfterLatestBlog.reverse()
@@ -1313,4 +1314,65 @@ router.get("/my_following_posts", async (req, res) => {
         return res.status(404).json({message: "user not found"})
     }
 })
+
+router.get(
+    "/same_tags_posts",
+    query('tag').notEmpty().escape(), 
+    async (req, res) => {
+        
+        const result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid tag"})
+
+        let {tag} = req.query
+
+        tag = decodeURIComponent(tag)
+
+        let userTags = tag.split(",")
+        let user_id = req.user_id
+        try {
+            
+            const posts = await Post.aggregate([
+                { $match: { tags: { $in: userTags } } },
+                {$limit: 20}
+            ])
+            
+            console.log(posts)
+            if (posts.length) {
+                
+                const authorIds = posts.map(blog => blog.author);
+                const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+                const authorData = await Promise.all(authorDataPromises);
+            
+                const completeBlogData = posts.map((blog, index) => {
+                    blog.profileUrl = authorData[index].profileUrl;
+                    blog.username = authorData[index].username;
+                    blog.viewCount = 0
+                    blog.commentCount = 0
+                    blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                    return blog;
+                });
+            
+                for (const blog of completeBlogData) {
+                    
+                    const views = await PostView.find({post_id: blog._id}).lean().exec()
+                    
+                    if (user_id) {
+
+                        const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                        blog.saved = alreadySaved.length > 0
+                    }
+                    
+                    blog.viewCount = views.length
+                }
+
+                return res.status(200).json({message: "success", data: completeBlogData, zero: completeBlogData.length ? true : false})
+            }
+            return res.status(200).json({message: "success", zero: true})
+        }
+        catch(e) {
+            console.error("error in while getting same tags posts", e)
+        }
+    }
+)
 module.exports = router

@@ -1,3 +1,4 @@
+"use client"
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ReadingTime from '../ReadingTime/ReadingTime'
@@ -115,7 +116,7 @@ export default function BlogCard({content, title, username, profileUrl, date, id
                     
                     {
                         tags && tags.length > 0
-                        ? tags.map( tag => tag !== "#" ? <Link className="hover:underline hover:text-black" href={`/tag/${tag}`}> {tag}</Link> : null)
+                        ? tags.map( tag => tag !== "#" ? <Link className="hover:underline hover:text-black" href={{pathname: `/hashtag/${tag}`}}> {tag}</Link> : null)
                         : null
                     }
                 </div>
