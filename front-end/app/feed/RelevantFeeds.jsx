@@ -6,9 +6,10 @@ import { useAppContext } from '@/context/useContextProvider'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import SortData from '@/components/Sort/SortData'
+import delete_cookie from '@/functions/delete_cookie'
 
 export default function RelevantFeeds() {
     
@@ -18,7 +19,7 @@ export default function RelevantFeeds() {
     const [retryPosts, setRetryPosts] = useState(false)
     // const [sortedBy, setSortedBy] = useState(true)
     // const [sorteByDate, setSortedByDate] = useState(false)
-    const {currentUser} = useAppContext()
+    const {currentUser, setCurrentUser} = useAppContext()
     const router = useRouter()
 
     useEffect( () => {
@@ -36,9 +37,14 @@ export default function RelevantFeeds() {
 
                 const data = await response.json()
                 
-                console.log(data, )
                 if (data.redirectTo) {
+                    
                     const redirectTo = data.redirectTo
+                    localStorage.removeItem("currentUser")
+                    
+                    delete_cookie("refreshToken")
+                    delete_cookie('accessToken')
+                    setCurrentUser(null)
                     router.replace(`http://localhost:3000${redirectTo}`)
                 }
 

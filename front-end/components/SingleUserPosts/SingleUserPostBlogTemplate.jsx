@@ -13,8 +13,8 @@ export default function SingleUserPostBlogTemplate({title, date, viewCount, comm
     return (
         
         <>
-            <hr/>
-            <div id={id} className="w-full flex flex-col md:flex-row md:items-center justify-between mt-3 mb-3">
+            <div id={id} className="w-full flex flex-col md:flex-row md:items-center justify-between mt-3 mb-3 bg-[#fafafd] p-4 rounded-md">
+                
                 <div className="md:w-1/2 w-full">
                     <Link href={{ pathname:"/view_post", query: {post: id} }} className="md:text-2xl text-xl line-clamp-2 hover:underline  font-bold tracking-wide">{title}</Link>
                     <p className="mt-4 md:text-base text-sm">{date ? date.split("T")[0] : ""} <i className="md:text-sm text-xs text-gray-600"> ({dateDifference}) </i></p>
@@ -46,7 +46,6 @@ export default function SingleUserPostBlogTemplate({title, date, viewCount, comm
                     <button onClick={handleOpenModal} className="md:h-10 outline-none border-none h-8 px-5 mt-2 ml-2 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"> Delete </button>
                 </div>
             </div>
-            <hr />
 
             {/* if postDelete pressed show the options */}
             {

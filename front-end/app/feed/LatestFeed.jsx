@@ -1,5 +1,8 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import SortData from '@/components/Sort/SortData'
+import { useAppContext } from '@/context/useContextProvider'
+import delete_cookie from '@/functions/delete_cookie'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 export default function LatestFeed() {
@@ -7,8 +10,8 @@ export default function LatestFeed() {
     const [latestPosts, setLatestPosts] = useState([])
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
-    // const [sortedBy, setSortedBy] = useState(true)
-    // const [sorteByDate, setSortedByDate] = useState(false)
+    const router = useRouter()
+    const {setCurrentUser} = useAppContext()
     
     useEffect( () => {
         
@@ -22,6 +25,18 @@ export default function LatestFeed() {
                     }
                 );
                 const data = await response.json()
+
+                if (data.redirectTo) {
+                    
+                    const redirectTo = data.redirectTo
+                    localStorage.removeItem("currentUser")
+                    
+                    delete_cookie("refreshToken")
+                    delete_cookie('accessToken')
+                    setCurrentUser(null)
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
+
                 if (data.status === "success") setLatestPosts(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")

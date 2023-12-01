@@ -1,5 +1,8 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import SortData from '@/components/Sort/SortData'
+import { useAppContext } from '@/context/useContextProvider'
+import delete_cookie from '@/functions/delete_cookie'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -9,16 +12,28 @@ export default function TopFeed() {
     const [topBlogs, setTopBlogs] = useState([])
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
-    // const [sortedBy, setSortedBy] = useState(true)
-    // const [sorteByDate, setSortedByDate] = useState(false)
+    const router = useRouter()
+    const {setCurrentUser} = useAppContext()
 
     useEffect( () => {
         
         async function getTopBlogs() {
+            
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/top`, {method: "GET", credentials: "include"});
                 const data = await response.json()
-                console.log(data)
+                
+                if (data.redirectTo) {
+                    
+                    const redirectTo = data.redirectTo
+                    localStorage.removeItem("currentUser")
+                    
+                    delete_cookie("refreshToken")
+                    delete_cookie('accessToken')
+                    setCurrentUser(null)
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
+
                 if (data.status === "success") setTopBlogs(data.data)
                 
                 else if (data.status === "failed") setErrorMessages("There was a problem fetching posts!")

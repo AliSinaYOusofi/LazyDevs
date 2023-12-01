@@ -12,8 +12,6 @@ export default function SortData({sortedBy, setSortedBy}) {
         const handleSortChange = () => {
 
             if (searchFlag === "date") {
-                
-                console.log(searchFlag, 'here')
                 setSortedBy( date => {
                     const blogsSortedByDate = date.slice().sort( (a, b) => {
                         const firstDate = new Date(a.createdAt)
@@ -26,7 +24,6 @@ export default function SortData({sortedBy, setSortedBy}) {
             } 
             
             else if (searchFlag === "viewcount") {
-                console.log(searchFlag, 'here')
                 setSortedBy( viewCount => {
                     const sortedByViewCount = viewCount.slice().sort( (a, b) => b.viewCount > a.viewCount)
                     return sortedByViewCount
@@ -34,7 +31,6 @@ export default function SortData({sortedBy, setSortedBy}) {
             }
 
             else if (searchFlag === "comment") {
-                console.log(searchFlag, 'here')
                 setSortedBy( comment => {
                     const sortedByComment = comment.slice().sort( (a, b) => b.comments.length > a.comments.length)
                     return sortedByComment
