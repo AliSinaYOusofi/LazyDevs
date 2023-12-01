@@ -61,48 +61,63 @@ app.use(
         // if access token is expired then check the refresh token
         // and if refresh token is valid then make a new access token and add it in the cookies
         
-        if (accessToken) {
-            const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
-            req.user_id = verifyAccessToken._id
-            console.log('access token is okay: ', req.user_id)
-            next()
-        } 
-        
-        else if (refreshToken) {
-            let verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
-            req.user_id = verifyRefreshToken.user_id
+        try {
 
-            delete verifyRefreshToken.iat
-            delete verifyRefreshToken.exp
-            const newAccessToken = jwt.sign(verifyRefreshToken, process.env.JWT_SECRET, {expiresIn: "1d"});
+            if (accessToken) {
+                const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
+                req.user_id = verifyAccessToken._id
+                console.log('access token is okay: ', req.user_id)
+                next()
+            } 
             
-            // adding a new access token when refresh token is valid
-            res.cookie('accessToken', newAccessToken, 
-                {
-                    maxAge: 86400000, 
-                    sameSite: "Lax"
-                }
-            );
-
-            console.log('sent a new access token')
-            console.log('refresh token is okay: ', req.user_id, req.path)
-            next() 
+            else if (refreshToken) {
+    
+                console.log(refreshToken, 'on refresh token')
+                let verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
+                console.log('not here')
+                req.user_id = verifyRefreshToken.user_id
+    
+                delete verifyRefreshToken.iat
+                delete verifyRefreshToken.exp
+                const newAccessToken = jwt.sign(verifyRefreshToken, process.env.JWT_SECRET, {expiresIn: "1d"});
+                
+                // adding a new access token when refresh token is valid
+                res.cookie('accessToken', newAccessToken, 
+                    {
+                        maxAge: 86400000, 
+                        sameSite: "Lax"
+                    }
+                );
+    
+                console.log('sent a new access token')
+                console.log('refresh token is okay: ', req.user_id, req.path)
+                next() 
+            }
+                // if no refresh token or access token then both are expired and must
+            // login again
+            else {
+                return res.status(302).json({redirectTo: "/login"})
+            }
         } 
         
-        // if no refresh token or access token then both are expired and must
-        // login again
-        else {
+        catch(e) {
+            console.error(e, 'while verifying tokens')
             return res.status(302).json({redirectTo: "/login"})
         }
-    });
+    }
+);
 
-    app.use(async (req, res, next) => {
+app.use(async (req, res, next) => 
+    
+    {
+    
         try {
-        await getDBInstance();
-        next();
-        } catch (error) {
-        console.error('Error initializing database:', error);
-        res.status(500).send('Internal Server Error');
+            await getDBInstance();
+            next();
+        } 
+        catch (error) {
+            console.error('Error initializing database:', error);
+            res.status(500).send('Internal Server Error');
         }
     }
 );

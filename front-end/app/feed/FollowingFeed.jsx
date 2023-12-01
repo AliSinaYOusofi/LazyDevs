@@ -1,5 +1,8 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import SortData from '@/components/Sort/SortData'
+import { useAppContext } from '@/context/useContextProvider'
+import delete_cookie from '@/functions/delete_cookie'
+import { useRouter } from 'next/navigation'
 import React, {useState, useEffect} from 'react'
 
 export default function FollowingFeed() {
@@ -8,6 +11,8 @@ export default function FollowingFeed() {
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFollowingPosts, setRetryFollowingPosts] = useState(false)
     const [zeroFollowing, setZeroFollowing] = useState(false)
+    const router = useRouter()
+    const {setCurrentUser} = useAppContext()
 
     useEffect( () => {
         
@@ -22,7 +27,18 @@ export default function FollowingFeed() {
                 );
                 
                 const data = await response.json()
-                console.log(data)
+                
+                if (data.redirectTo) {
+                    
+                    const redirectTo = data.redirectTo
+                    localStorage.removeItem("currentUser")
+                    
+                    delete_cookie("refreshToken")
+                    delete_cookie('accessToken')
+                    setCurrentUser(null)
+                    router.replace(`http://localhost:3000${redirectTo}`)
+                }
+
                 if (data.message === "success") {
                     if (!data.zero) setZeroFollowing(true)
                     else setFollowingPosts(data.data)

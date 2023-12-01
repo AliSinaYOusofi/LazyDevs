@@ -12,6 +12,9 @@ import SearchBlogsBasedProps from '@/components/SearchInput/SearchBlogsBasedProp
 import useCurrentUser from '@/hooks/useCurrentUser';
 import MarkdownToHtml from '@/components/MarkDown/MarDownToHtml';
 import SortData from '@/components/Sort/SortData';
+import Link from 'next/link';
+import delete_cookie from '@/functions/delete_cookie';
+import { useAppContext } from '@/context/useContextProvider';
 
 export default function Page() {
 
@@ -21,9 +24,9 @@ export default function Page() {
     const [errorMessages, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
-    const [sortedBy, setSortedBy] = useState(false)
     const currentUser = useCurrentUser()
     const router = useRouter()
+    const {setCurrentUser} = useAppContext()
     
     useEffect( () => {
         
@@ -37,16 +40,25 @@ export default function Page() {
                         credentials: "include"
                     }
                 );
+                
                 const data = await response.json()
+                
+                console.log(data)
                 
                 if (data.redirectTo) {
                     const redirectTo = data.redirectTo
+                    delete_cookie("refreshToken")
+                    delete_cookie("accessToken")
+
+                    setCurrentUser(null)
                     router.replace(`http://localhost:3000${redirectTo}`)
                 }
                 
-                setCurrentBlog(data.data)
+                if (data.status === "success") setCurrentBlog(data.data)
                 
-                if (data.data === undefined) {
+                else if (data.message === "failed") setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
+                
+                if (data.status === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
             }
@@ -189,10 +201,10 @@ export default function Page() {
         </div>
     }
     
-    const handleSortRecentPosts = () => {
-       setRecentBlogs([...recentBlogs].reverse())
-       setSortedBy(prev => !prev)
-    }
+    // const handleSortRecentPosts = () => {
+    //    setRecentBlogs([...recentBlogs].reverse())
+    //    setSortedBy(prev => !prev)
+    // }
 
     return (
         <>
@@ -206,7 +218,20 @@ export default function Page() {
                     
                     <UserCard isFollowing={currentBlog?.alreadyFollows} author={currentBlog?.author} difference={currentBlog?.distance} email={currentBlog?.email} date={currentBlog?.createdAt} username={currentBlog?.username} profile={currentBlog?.profileUrl} />
                     <ReadingTime paragraphs={currentBlog?.body}/>
+                    
+                    <h1 className="text-3xl  font-bold tracking-wide mt-10"> Tags used:</h1>
 
+                    <div className="mt-5">
+
+                        {
+                            currentBlog ? currentBlog.tags.map(
+                                tag => tag !== "#" 
+                                ? <Link className="hover:underline text-gray-400 mt-4 hover:text-black" href={{pathname: `/hashtag/${tag}`}}> {tag}</Link> 
+                                : null
+                            )
+                            : null
+                        }
+                    </div>
                     {/* <TextToSpeech text={currentBlog?.body}/> */}
                     
                     <hr className="mt-10"/>
