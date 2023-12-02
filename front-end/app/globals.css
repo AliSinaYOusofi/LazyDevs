@@ -4,6 +4,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+
+body {
+    overflow-x: hidden;
+}
 @layer base {
     .editor h1 {
         display: block;
