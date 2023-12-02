@@ -74,11 +74,12 @@ app.use(
     
                 console.log(refreshToken, 'on refresh token')
                 let verifyRefreshToken  = jwt.verify(refreshToken, process.env.JWT_SECRET)
-                console.log('not here')
+
                 req.user_id = verifyRefreshToken.user_id
     
                 delete verifyRefreshToken.iat
                 delete verifyRefreshToken.exp
+                
                 const newAccessToken = jwt.sign(verifyRefreshToken, process.env.JWT_SECRET, {expiresIn: "1d"});
                 
                 // adding a new access token when refresh token is valid

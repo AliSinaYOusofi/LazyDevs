@@ -1,6 +1,7 @@
 import BlogCard from '@/components/BlogCard/BlogCard'
 import ErrorPage from '@/components/Error/FullErrorPage/ErrorPage'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import React from 'react'
 
@@ -84,6 +85,7 @@ export default async function Page({params}) {
                             date={blog.createdAt} 
                             key={blog._id} 
                             id={blog._id}
+                            author={blog?.author}
                         />) 
                         : null
                 }
