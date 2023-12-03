@@ -14,7 +14,7 @@ const Following = mongoose.Schema( {
         required: true,
     },
 
-    followedAt: {
+    At: {
         type: Date,
         default: Date.now,
     },
