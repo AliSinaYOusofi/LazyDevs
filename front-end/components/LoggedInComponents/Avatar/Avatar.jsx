@@ -1,7 +1,39 @@
 import Link from 'next/link'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+
 
 export default function Avatar({profileUrl}) {
+
+    const [userHasNotifications, setUserHasNotifications] = useState(false)
+    
+    useEffect( () => {
+        
+        const checkUserHasNotifications = async () => {
+
+            try {
+
+                const response = await fetch(`http://localhost:3001/blogRoutes/has_notifications`, 
+                    {
+                        
+                        method: "GET",
+                        credentials: "include",
+                        
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }, 
+                )
+
+                const data = await response.json()
+                console.log(data, 'avatar')
+            } 
+            catch (error) {
+                console.log(error)
+            }
+        }
+
+        checkUserHasNotifications()
+    }, [])
 
     return (
         <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">
@@ -31,6 +63,21 @@ export default function Avatar({profileUrl}) {
                     alt="user profile image"
                     className=" object-cover mt-1 md:mt-0 bg-cover md:w-10 md:h-10 w-8 h-8 shadow-sm lg:shadow-mdr shadow-black/20 md:p-1 rounded-full "
                 />
+            </Link>
+            
+            <Link href="/notifications">
+                {
+                    userHasNotifications
+                    ?
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                    :
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+                    </svg>
+
+                }
             </Link>
         </div>
     )
