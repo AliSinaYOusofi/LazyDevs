@@ -2,7 +2,7 @@ import BlogCard from '@/components/BlogCard/BlogCard'
 import SortData from '@/components/Sort/SortData'
 import { useAppContext } from '@/context/useContextProvider'
 import delete_cookie from '@/functions/delete_cookie'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 export default function LatestFeed() {

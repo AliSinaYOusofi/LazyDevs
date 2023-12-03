@@ -11,6 +11,10 @@ const Saved = require("../models/PostsSavedToAccount")
 const json = require("jsonwebtoken");
 const FollowingUser = require("../models/FollowingUsers")
 const { body, validationResult, query } = require("express-validator")
+const Notifications = require("../models/Notifications")
+const { followMessage } = require("../utils/notification_data")
+const FollowingNotification = require("../models/FollowingNotifications")
+const PostNotifications = require("../models/PostNotification")
 
 router.get("/newsfeed", async (req, res) => {
     
@@ -908,6 +912,9 @@ router.get(
                             new: true,
                         }
                     )
+
+                    // now we must also push the notification to it
+                    
                     return res.status(200).json({message: "unfollowing", data: alreadyFollowingThenUPdate})
                 }
 
@@ -927,6 +934,18 @@ router.get(
                             upsert: true
                         }
                     )
+                    
+                    let toReceiveNotificationsUser = await SignedUpUser.findById(user_id).lean().exec()
+                    
+                    let toRecieveNotificationName = toReceiveNotificationsUser?.username || toReceiveNotificationsUser?.fullName
+                    
+                    let sendNotfication = await new FollowingNotification({
+                        receiver: to_followed_user,
+                        sender: user_id,
+                        message: followMessage(toRecieveNotificationName),
+                    })
+                    
+                    await sendNotfication.save()
                     return res.status(200).json({message: "following", data: followNewUser})
                 }
 
@@ -1375,4 +1394,108 @@ router.get(
         }
     }
 )
+
+router.get("/has_notifications", async (req, res) => {
+
+    const user_id = req.user_id
+    
+    if (! user_id) return res.status(400).json({message: "invalid user"})
+    
+    try {
+        
+        const userHasNotfications = await Notifications
+        .find(
+            {
+                receivers: {
+                    $in: [user_id]
+                }
+            }
+        ).lean().exec()
+        
+        return res.status(200).json({data: userHasNotfications})
+
+    } catch(e) {
+        console.error("while fetching user notifications", e)
+    }
+})
+
+router.get("/user_notifications", async (req, res) => {
+
+    // getting all the notifications
+
+    const user_id = req.user_id
+    
+    if (! user_id) return res.status(200).json({message: "invalid user"})
+    
+    try {
+        
+        // sorting user notfications first
+        const userNotifications = await FollowingNotification.
+            find
+            (
+                {
+                    receiver: {
+                        $eq: user_id
+                    }
+                }
+            )
+        
+        const postNotifications = await PostNotifications.find(
+            {
+                receivers: {
+                    $eq: user_id
+                }
+            }
+        )
+
+        console.log(postNotifications, 'post', user_id)
+        const dataToSendBack = []
+        
+        let completeDataOfSenders = Promise.all(
+            
+            userNotifications.map( async user => {
+        
+                const currentSenderData = await SignedUpUser.findById(user.sender)
+
+                const date_difference = formatDistanceToNowStrict((user.followedAt), {addSuffix: true}).replace("about", "")
+                
+                if (currentSenderData) {
+                    dataToSendBack.push({
+                        ...user.toObject(),
+                        profileUrl: currentSenderData.profileUrl,
+                        notifier_id : currentSenderData._id,
+                        date_difference,
+                    })
+                }
+            }),
+        )
+        
+        completeDataOfSenders = await completeDataOfSenders
+        await Promise.all(
+            postNotifications.map( async post => {
+                
+                const currentSenderData = await SignedUpUser.findById(post.sender)
+
+                const date_difference = formatDistanceToNowStrict((post.postedAt), {addSuffix: true}).replace("about", "")
+                
+                if (currentSenderData) {
+                    dataToSendBack.push({
+                        ...post.toObject(),
+                        profileUrl: currentSenderData.profileUrl,
+                        notifier_id : currentSenderData._id,
+                        date_difference
+                    })
+                }
+            })
+        )
+        console.log(dataToSendBack, 'dataToSendBack')
+        return res.status(200).json({followersNotification: dataToSendBack.reverse()})
+
+    } 
+    
+    catch( e ) {
+        console.error(e, 'while getting user notifications')
+        return res.status(200).json({message: "failed"})
+    }
+})
 module.exports = router

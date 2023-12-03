@@ -10,6 +10,9 @@ const Likes = require("../models/postLikes");
 const Comments = require("../models/Comments");
 const CommentsReply = require("../models/ReplyComments");
 const FollowingUser = require("../models/FollowingUsers");
+const Notifications = require("../models/Notifications");
+const PostNotifications = require("../models/PostNotification");
+const { postMessage } = require("../utils/notification_data");
 require("dotenv").config();
 
 router.post(
@@ -144,6 +147,43 @@ router.post(
 
         try {   
             await newPost.save();
+            // before sending response a notification must be sent
+            // to the users who are following this user
+
+            const followersList = await FollowingUser.
+                find({
+                    user_id:{ $ne: user_id},
+                    "follows.user": user_id
+                }).
+                lean().
+                exec()
+            
+            // the receivers might be a bunch of users
+            
+            console.log(followersList, 'are following this user', user_id)
+
+            
+            await Promise.all(
+                
+                followersList.map(
+                
+                    async (follower, index) => {
+                
+                        const followersData = await SignedUpUser.findById(user_id).lean().exec()
+
+                            if ( followersData) {
+                                const sendNotificationsToUser = new PostNotifications( {
+                                    receivers: follower.user_id,
+                                    sender: user_id,
+                                    message: postMessage(followersData.username),
+                                    post_id: newPost._id
+                                } )
+
+                                await sendNotificationsToUser.save()
+                            }
+                    }
+                )
+            )
             return res.status(200).json({message: "success"}); 
         }         
         catch(error) {

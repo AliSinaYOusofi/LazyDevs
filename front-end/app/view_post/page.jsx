@@ -224,7 +224,7 @@ export default function Page() {
                     <div className="mt-5">
 
                         {
-                            currentBlog ? currentBlog.tags.map(
+                            currentBlog && currentBlog?.tags ? currentBlog.tags.map(
                                 tag => tag !== "#" 
                                 ? <Link className="hover:underline text-gray-400 mt-4 hover:text-black" href={{pathname: `/hashtag/${tag}`}}> {tag}</Link> 
                                 : null
