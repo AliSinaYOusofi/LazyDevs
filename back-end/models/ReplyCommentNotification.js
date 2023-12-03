@@ -23,8 +23,16 @@ const ReplyComment = mongoose.Schema({
         required: true
     },
 
-    notifiedAt: {
+    At: {
         type: Date,
         default: Date.now,
+    },
+
+    post_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
     }
 })
+
+const ReplyCommentNotification = mongoose.model("ReplyCommentNotification", ReplyComment)
+module.exports = ReplyCommentNotification

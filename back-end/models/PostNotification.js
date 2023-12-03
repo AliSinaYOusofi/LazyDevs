@@ -28,7 +28,7 @@ const PostNoti = mongoose.Schema( {
         default: false
     },
 
-    postedAt: {
+    At: {
         type: Date,
         default: Date.now
     }

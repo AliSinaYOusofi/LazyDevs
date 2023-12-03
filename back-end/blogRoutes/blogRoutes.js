@@ -12,9 +12,11 @@ const json = require("jsonwebtoken");
 const FollowingUser = require("../models/FollowingUsers")
 const { body, validationResult, query } = require("express-validator")
 const Notifications = require("../models/Notifications")
-const { followMessage } = require("../utils/notification_data")
+const { followMessage, commentMessage, replyMessage } = require("../utils/notification_data")
 const FollowingNotification = require("../models/FollowingNotifications")
 const PostNotifications = require("../models/PostNotification")
+const CommentNotification = require("../models/CommentsNotifications")
+const ReplyCommentNotification = require("../models/ReplyCommentNotification")
 
 router.get("/newsfeed", async (req, res) => {
     
@@ -335,9 +337,25 @@ router.post(
                 await newComment.save();
 
                 singleBlog.comments.push(newComment._id);
-
                 await singleBlog.save();
+                
+                let authorData = await SignedUpUser.findById(author).lean().exec()
 
+                // same user should not get notifications for commenting on his/her post
+
+                if (author !== singleBlog.author) {
+
+                    let sendNotfication = new CommentNotification( {
+                        receiver: singleBlog.author,
+                        sender: author,
+                        message: commentMessage(authorData.username),
+                        post_id: post_id,
+                        comment_id: newComment._id
+    
+                    } )
+                    // notifying the user of the comment on his post
+                    await sendNotfication.save()
+                }
                 return res.status(200).json({
                     status: "success",
                     data: "saved"
@@ -641,7 +659,34 @@ router.post(
                 ).
                 lean().
                 exec()
+                    
             
+            // send notifications to the user
+            let blogAuthorData = await Post.findById(post_id).lean().exec()
+
+            console.log(blogAuthorData, ' blog author', post_id)
+            
+            // and send the notifications if it's other than the user who made the comment
+            // so a user should not get notifications if he replies to his or her own
+            // comment
+            
+            if (user_id !== blogAuthorData.author) {
+                
+                let authorData = await SignedUpUser.findById(user_id).lean().exec()
+                console.log("sending notifications")
+
+                // the receiver should be the author of the comment not the author of the post
+
+                let sendNotfication = new ReplyCommentNotification( {
+                    receiver: ParentCommentSchema.comment[0].author,
+                    sender: user_id,
+                    message: replyMessage(authorData.username),
+                    post_id: post_id,
+                    comment_id: comment_id,
+                } )
+                // notifying the user of the comment on his post
+                await sendNotfication.save()
+            }
             return res.status(200).json({
                 status: "success",
                 data: ParentCommentSchema
@@ -1448,8 +1493,7 @@ router.get("/user_notifications", async (req, res) => {
             }
         )
 
-        console.log(postNotifications, 'post', user_id)
-        const dataToSendBack = []
+        let dataToSendBack = []
         
         let completeDataOfSenders = Promise.all(
             
@@ -1457,7 +1501,7 @@ router.get("/user_notifications", async (req, res) => {
         
                 const currentSenderData = await SignedUpUser.findById(user.sender)
 
-                const date_difference = formatDistanceToNowStrict((user.followedAt), {addSuffix: true}).replace("about", "")
+                const date_difference = formatDistanceToNowStrict((user.At), {addSuffix: true}).replace("about", "")
                 
                 if (currentSenderData) {
                     dataToSendBack.push({
@@ -1471,12 +1515,14 @@ router.get("/user_notifications", async (req, res) => {
         )
         
         completeDataOfSenders = await completeDataOfSenders
+        
         await Promise.all(
+            
             postNotifications.map( async post => {
                 
                 const currentSenderData = await SignedUpUser.findById(post.sender)
 
-                const date_difference = formatDistanceToNowStrict((post.postedAt), {addSuffix: true}).replace("about", "")
+                const date_difference = formatDistanceToNowStrict((post.At), {addSuffix: true}).replace("about", "")
                 
                 if (currentSenderData) {
                     dataToSendBack.push({
@@ -1488,7 +1534,58 @@ router.get("/user_notifications", async (req, res) => {
                 }
             })
         )
-        console.log(dataToSendBack, 'dataToSendBack')
+
+        let commentNotifications = await CommentNotification.find({receiver: user_id})
+
+        await Promise.all(
+            
+            commentNotifications.map( async comment => {
+                
+                const currentSenderData = await SignedUpUser.findById(comment.sender)
+
+                const date_difference = formatDistanceToNowStrict((comment.At), {addSuffix: true}).replace("about", "")
+                
+                if (currentSenderData) {
+                    dataToSendBack.push({
+                        ...comment.toObject(),
+                        profileUrl: currentSenderData.profileUrl,
+                        notifier_id : currentSenderData._id,
+                        date_difference
+                    })
+                }
+            }
+            )
+        )
+
+        let replyCommentsNotification = await ReplyCommentNotification.find({receiver: user_id})
+
+        await Promise.all(
+            
+            replyCommentsNotification.map( async reply => {
+                
+                const currentSenderData = await SignedUpUser.findById(reply.sender)
+
+                const date_difference = formatDistanceToNowStrict((reply.At), {addSuffix: true}).replace("about", "")
+                
+                if (currentSenderData) {
+                    dataToSendBack.push({
+                        ...reply.toObject(),
+                        profileUrl: currentSenderData.profileUrl,
+                        notifier_id : currentSenderData._id,
+                        date_difference
+                    })
+                }
+            
+            })
+        )
+
+        dataToSendBack = dataToSendBack.sort( (a, b) => {
+            const firstDate = new Date(a.At)
+            const secondDate = new Date(b.At)
+
+            return secondDate >= firstDate
+        })
+        console.log(dataToSendBack, 'dataToSendBack ')
         return res.status(200).json({followersNotification: dataToSendBack.reverse()})
 
     } 

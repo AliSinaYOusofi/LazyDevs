@@ -15,6 +15,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
     }
 
     return (
+        
         <div 
             className={`${!isRead ? "border-l-4 border-black" : ""} max-w-2xl px-8 py-4 mx-auto bg-[#fafafd] transition-all duration-100  from-pink-500 via-red-500 to-yellow-500  rounded-lg mt-4 flex items-center justify-between`}>
             
@@ -70,7 +71,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
                 >
                     Check Post
                 </Link>
-            : null
+                : null
             }
         </div>
     )
