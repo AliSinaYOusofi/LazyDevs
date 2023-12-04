@@ -1,16 +1,35 @@
 "use client"
+import { notification_to_invoke } from '@/functions/notification_to_invoke'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter} from 'next/navigation'
+import React, { useState} from 'react'
 
 export default function FollowingNotificationCard({imageSource, message, id, isRead, notifier_id, date, date_difference, post_id, post_date}) {
+
+    const [spinner, setSpinner] = useState(false)
+    const router = useRouter()
 
     const markNotificationRead = async () => {
         
         try {
-            const response = await fetch("")
+            setSpinner(true)
+            let whichNotificationToInvode = notification_to_invoke(message)
+
+            const response = await fetch(`http://localhost:3001/blogRoutes/mark_notification?notification_id=${encodeURIComponent(id)}&post_id=${post_id}&notification_type=${encodeURIComponent(whichNotificationToInvode)}`, {
+                method: "GET",
+                credentials: "include",
+            })
+
+            const json = await response.json()
+            
+            if (json.message === "marked") {
+                router.refresh()
+            }
         }
         catch( e ) {
             console.error(e, " error while making notification read")
+        } finally {
+            setSpinner(false)
         }
     }
 
@@ -53,13 +72,25 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
                 
             </Link>
 
-            <button
-                type="button"
-                onClick={markNotificationRead}
-                className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
-            >
-                Mark as read
-            </button>
+            {
+                isRead
+                ? null
+                : 
+                <button
+                    type="button"
+                    onClick={markNotificationRead}
+                    disabled={spinner}
+                    className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
+                    >
+                    Mark as read
+                    {
+                        spinner
+                        ?
+                        <div className="border-t-transparent border-solid animate-spin  rounded-full border-gray-400 border-2 h-7 w-7"></div>
+                        : null
+                    }
+                </button>
+            }
 
             {
                 post_id
@@ -69,7 +100,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
                     type="button"
                     className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-100 text-black transition-all hover:bg-gray-300"
                 >
-                    Check Post
+                    Check
                 </Link>
                 : null
             }

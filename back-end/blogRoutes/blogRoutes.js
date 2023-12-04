@@ -1585,8 +1585,7 @@ router.get("/user_notifications", async (req, res) => {
 
             return secondDate >= firstDate
         })
-        console.log(dataToSendBack, 'dataToSendBack ')
-        return res.status(200).json({followersNotification: dataToSendBack.reverse()})
+        return res.status(200).json({followersNotification: dataToSendBack})
 
     } 
     
@@ -1595,4 +1594,50 @@ router.get("/user_notifications", async (req, res) => {
         return res.status(200).json({message: "failed"})
     }
 })
+
+router.get(
+    "/mark_notification",
+    query('notification_id').notEmpty().escape(),
+    query("post_id").notEmpty().escape().isMongoId().optional(),
+    async (req, res) => 
+    {
+    
+        let error = validationResult(req)
+
+        if (! error.isEmpty()) return res.status(200).json({message: "invalid notification id"})
+
+        try {
+
+            let user_id = req.user_id
+
+            let {notification_id, post_id, notification_type} = req.query
+            
+            notification_id = decodeURIComponent(notification_id)
+            notification_type = String(decodeURIComponent(notification_type))
+            
+            if (notification_type === "post") {
+                await PostNotifications.findByIdAndUpdate(notification_id, {isRead: true})
+            }
+
+            else if (notification_type === "comment") {
+                await CommentNotification.findByIdAndUpdate(notification_id, {isRead: true})
+            } 
+            
+            else if (notification_type === "replied") {
+                await ReplyCommentNotification.findByIdAndUpdate(notification_id, {isRead: true})
+            }
+
+            else if (notification_type === "follow") {
+                await FollowingNotification.findByIdAndUpdate(notification_id, {isRead: true})
+            }
+           
+            return res.status(200).json({status: "success", message: "marked"})
+        } 
+        
+        catch(e) {
+            console.error("error while marking notification", e)
+            return res.status(200).json({message: "failed"})
+        }
+    }
+)
 module.exports = router
