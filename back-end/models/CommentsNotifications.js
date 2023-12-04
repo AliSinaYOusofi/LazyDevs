@@ -32,7 +32,10 @@ const CommentNotificationSchema = mongoose.Schema({
         ref: "Comments",
         required: true
     },
-    // Other fields specific to comment notifications
+    isRead: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 const CommentNotification = mongoose.model("CommentNotification", CommentNotificationSchema);

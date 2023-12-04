@@ -45,7 +45,7 @@ const getNotifications = async () => {
 export default async function Page() {
     
     const result = await getNotifications()
-    console.log(result, 'result')
+
     if (result === undefined) {
         return (
             <div>
@@ -62,11 +62,13 @@ export default async function Page() {
                     imageSource={user.profileUrl} 
                     message={user.message} 
                     id={user._id}
+                    key={user?._id}
                     notifier_id={user?.notifier_id}
                     date={user?.followedAt}
                     date_difference={user?.date_difference}
                     post_id={user?.post_id}
                     post_date={user?.postedAt}
+                    isRead={user?.isRead}
                     />
                 )
             }

@@ -31,6 +31,11 @@ const ReplyComment = mongoose.Schema({
     post_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',
+    },
+    
+    isRead: {
+        type: Boolean,
+        default: false,
     }
 })
 
