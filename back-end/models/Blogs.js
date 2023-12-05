@@ -63,6 +63,7 @@ const PostSchema = new mongoose.Schema({
 
 });
 
+PostSchema.index({body: "text"})
 // Middleware to update the updatedAt field when a post is modified
 PostSchema.pre('findOneAndUpdate', function (next) {
     this.update({}, { $set: { updatedAt: new Date() } });
