@@ -1448,16 +1448,34 @@ router.get("/has_notifications", async (req, res) => {
     
     try {
         
-        const userHasNotfications = await Notifications
-        .find(
+        let totalUnreadNotifications = 0
+        const followingNotification = await FollowingNotification.find(
             {
-                receivers: {
-                    $in: [user_id]
-                }
+                receiver: user_id,
+                isRead: false
             }
         ).lean().exec()
         
-        return res.status(200).json({data: userHasNotfications})
+        const postNotification = await PostNotifications.find(
+            {
+                receiver: user_id,
+                isRead: false
+            }
+        ).lean().exec()
+
+        const commentNotification = await CommentNotification.find({
+            receiver: user_id,
+            isRead: false
+        }).lean().exec()
+
+        const replyCommentNotification = await ReplyCommentNotification.find({
+            receiver: user_id,
+            isRead: false
+        })
+
+        totalUnreadNotifications = followingNotification?.length || 0 + postNotification?.length || 0 + commentNotification?.length || 0 + replyCommentNotification?.length || 0
+        
+        return res.status(200).json({data: totalUnreadNotifications})
 
     } catch(e) {
         console.error("while fetching user notifications", e)
@@ -1583,7 +1601,7 @@ router.get("/user_notifications", async (req, res) => {
             const firstDate = new Date(a.At)
             const secondDate = new Date(b.At)
 
-            return secondDate >= firstDate
+            return secondDate - firstDate
         })
         return res.status(200).json({followersNotification: dataToSendBack})
 
@@ -1637,6 +1655,144 @@ router.get(
         catch(e) {
             console.error("error while marking notification", e)
             return res.status(200).json({message: "failed"})
+        }
+    }
+)
+
+router.get(
+    "/search_posts",
+    query('post').notEmpty().escape(), 
+    async (req, res) => 
+    {
+        const result = validationResult(req)
+
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post"})
+
+        let {post} = req.query
+
+        post = decodeURIComponent(post)
+
+        let user_id = req.user_id
+
+        try {
+            const posts = await Post.find(
+                {
+                    $text: {
+                        $search: post
+                    }
+                }
+            ).lean().exec()
+            
+            if (posts.length) {
+                
+                const authorIds = posts.map(blog => blog.author);
+                const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+                const authorData = await Promise.all(authorDataPromises);
+            
+                const completeBlogData = posts.map((blog, index) => {
+                    blog.profileUrl = authorData[index].profileUrl;
+                    blog.username = authorData[index].username;
+                    blog.viewCount = 0
+                    blog.commentCount = 0
+                    blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                    return blog;
+                });
+            
+                for (const blog of completeBlogData) {
+                    
+                    const views = await PostView.find({post_id: blog._id}).lean().exec()
+                    
+                    if (user_id) {
+
+                        const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                        blog.saved = alreadySaved.length > 0
+                    }
+                    
+                    blog.viewCount = views.length
+                }
+                
+                return res.status(200).json({message: "success", data: completeBlogData})
+
+            }
+            return res.status(200).json({message: "success", zero: true})
+        
+        } catch ( e ) {
+            console.error("error while searching for posts", e)
+            return res.status(200).json({message: "failed"})
+        }
+    }
+)
+
+router.get(
+    "/search_users", 
+    query('user').notEmpty().escape(),
+    async (req, res) => 
+    {
+        const result = validationResult(req)
+
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid post"})
+
+        let {user} = req.query
+
+        user = decodeURIComponent(user)
+
+        let user_id = req.user_id
+
+        try {
+        
+            const followers = await SignedUpUser
+                .find({
+                    $or: [
+                        {username: {$regex: user, $options: 'i'}},
+                        {fullName: {$regex: user, $options: 'i'}}
+                    ]
+                })
+                .lean()
+                .exec()
+            
+            let followedByDataArr = []
+            
+            if (followers.length) {
+                
+                await Promise.all(
+                
+                    followers.map(async follower => {
+                        
+                        delete follower.password
+                        delete follower.email
+
+                        follower.distance = formatDistanceToNowStrict((follower.joined), {addSuffix: true}).replace("about", "")
+                        const numberOfPosts = await Post.find({author: follower._id}).lean().exec()
+                        const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: follower._id}}}).lean().exec()
+                        const numberOfFollowing = await FollowingUser.findOne({user_id: follower._id}).lean().exec()
+                        
+                        const isUserFollowingThisUser = await FollowingUser.findOne({
+                            user_id: user_id,
+                            "follows.user": follower._id
+                        }, {_id: 1})
+
+                        followedByDataArr.push({
+                            ...follower,
+                            numberOfPosts: numberOfPosts?.length || 0,
+                            numberOfFollowers: numberOfFollowers?.length || 0,
+                            numberOfFollowing: numberOfFollowing?.follows?.length || 0,
+                            isFollowing: isUserFollowingThisUser ? true : false
+                        })
+                        
+                        return follower
+                    })
+                )
+                
+                return res.status(200).json({message: "success", data: followedByDataArr})
+    
+            } 
+            
+            return res.status(200).json({message: "success", zero: true})
+            
+    
+        } catch( error) {
+            console.error("error while getting followers: => ", error, req.path)
+            return res.status(404).json({message: "user not found"})
         }
     }
 )

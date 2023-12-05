@@ -48,15 +48,22 @@ export default async function Page() {
 
     if (result === undefined) {
         return (
-            <div>
-
+            <div className="mt-10 text-center">
+                <h1 className="text-4xl tracking-wide"> Failed to load your notifications</h1>
             </div>
         )
     }
     
+    else if (result.followersNotification.length === 0) {
+        return (
+            <div className="mt-10 text-center">
+                <h1> You have no notifications </h1>
+            </div>
+        )
+    }
     return (
         <>
-            <h1 className="text-3xl mt-10 text-center"> Notifications </h1>
+            <h1 className="text-3xl mt-10 text-center"> Notifications : {result?.followersNotification?.length} </h1>
             {
                 result.followersNotification.map(user => <FollowingNotificationCard 
                     imageSource={user.profileUrl} 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
 
 
-function ProfileCard({ followers, posts, following, image, name, work, user_id, isFollowing}) {
+function ProfileCard({ followers, posts, following, image, name, work, user_id, isFollowing, date, diff}) {
 
     const [spinner, setSpinner] = useState()
     const [alreadyFollows, setAlreadyFollows] = useState()
@@ -48,6 +48,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
             <div className=" flex items-center justify-start gap-x-4">
 
                 <img className="rounded-full w-20 h-20  md:border-[2px] object-cover border-[2px] border-gray-400" src={image} alt="Avatar" />
+                
                 <div>
                     <div className=" ">
                         <Link href={`/account/${user_id}`} className="md:text-xl italic text-gray-500">{name || "username"}</Link>
@@ -75,6 +76,11 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
                 <div className="flex flex-col items-center justify-center">
                     <p className="text-sm font-normal text-gray-600">Following</p>
                     <p className="text-2xl font-bold text-gray-500">{following ||0}</p>
+                </div>
+
+                <div className="flex flex-col items-center justify-center">
+                    <p className="text-sm font-normal text-gray-600">Joined</p>
+                    <p className="text-sm font-bold text-gray-500"> { date ? date.split("T")[0] : null} <span className="text-xs"> ({diff})</span></p>
                 </div>
             </div>
 
