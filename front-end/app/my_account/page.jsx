@@ -20,6 +20,7 @@ import UserTags from '@/components/UserFollowingTags/UserTags'
 import DeleteAccount from '@/components/DeleteAccount/DeleteAccount'
 import DangerZone from '@/components/SVG/DangerZone'
 import Analytics from './Analytics'
+import Link from 'next/link'
 
 export default function Page() {
     
@@ -40,6 +41,13 @@ export default function Page() {
 
     const similarClass = "flex items-center justify-start transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 px-2 rounded-r-md mt-2 gap-x-2"
     const menuItems = liArray.map( (li, index) => 
+        li === "Analytics" ?
+        
+            <Link href="/analytics" className={similarClass}>
+                {liIconMapping[index]}
+                {li}
+            </Link>
+        :
         <li 
             className={`${activeListItem === index  ? `${similarClass} bg-[#fbfbfd] border-l-2 border-black`: `${similarClass}`}`} 
             
@@ -49,6 +57,7 @@ export default function Page() {
             {liIconMapping[index]}
             {li}
         </li> 
+
     );
     
     useEffect( () => {
