@@ -1868,14 +1868,49 @@ router.get("/analytics_data", async (req, res) => {
         // getting the user post and showing the analytics of the posts just
 
         let posts = await Post.find({author: user_id}).lean().exec()
-        
+        let commentsSummary = []
+
         if (posts.length) {
             
             posts = posts.map( post => {
                 post.nameOfTheMonth = format(post.createdAt, "MMMM")
                 return post
             })
-            return res.status(200).json({message: "success", data: posts})
+
+            let totalPostViews = await Promise.all(
+                
+                posts.map( async post => {
+                    
+                    const views = await PostView.find({post_id: post._id}).lean().exec()
+
+                    let comments = await Comment.find({post: post._id}).lean().exec()
+
+                    if (comments.length) {
+                        
+                        comments = comments.map( comment => {
+
+                            comment.comment.map( comm => {
+                                
+                                comm.nameOfTheMonth = format(comm.commentedOn, "MMMM")
+                                
+                                commentsSummary.push(
+                                    comm
+                                )
+
+                                return comm
+                            })
+                            
+                            return comment
+                        })
+                    }
+
+                    post.viewCount = views.length
+                    return post 
+                
+                })
+            )
+            
+            return res.status(200).json({message: "success", data: posts, readerCount: totalPostViews, commentCount: commentsSummary})
         }
         return res.status(200).json({message: "success", zero: true})
     } 

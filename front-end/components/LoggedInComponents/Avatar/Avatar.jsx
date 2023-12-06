@@ -1,44 +1,43 @@
 import Link from 'next/link'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 
 
 export default function Avatar({profileUrl}) {
 
     const [userHasNotifications, setUserHasNotifications] = useState(false)
     
-    useEffect( () => {
-        
-        const checkUserHasNotifications = async () => {
+    const checkUserHasNotifications = useCallback(async  () => {
+        try {
 
-            try {
+            const response = await fetch(`http://localhost:3001/blogRoutes/has_notifications`, 
+                {
+                    
+                    method: "GET",
+                    credentials: "include",
+                    
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }, 
+            )
 
-                const response = await fetch(`http://localhost:3001/blogRoutes/has_notifications`, 
-                    {
-                        
-                        method: "GET",
-                        credentials: "include",
-                        
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }, 
-                )
-
-                const data = await response.json()
-                
-                if (data.data) {
-                    setUserHasNotifications(parseInt(data.data))
-                }
-
-                console.log(userHasNotifications)
-            } 
-            catch (error) {
-                console.log(error)
+            const data = await response.json()
+            
+            if (data.data) {
+                setUserHasNotifications(parseInt(data.data))
             }
-        }
 
+            console.log(userHasNotifications)
+        } 
+        catch (error) {
+            console.log(error)
+        }
+    }, [profileUrl])
+
+
+    useEffect( () => {
         checkUserHasNotifications()
-    }, [])
+    }, [checkUserHasNotifications, profileUrl])
 
     return (
         <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">

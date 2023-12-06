@@ -15,6 +15,7 @@ import SortData from '@/components/Sort/SortData';
 import Link from 'next/link';
 import delete_cookie from '@/functions/delete_cookie';
 import { useAppContext } from '@/context/useContextProvider';
+import { debounce } from 'lodash';
 
 export default function Page() {
 
@@ -95,36 +96,43 @@ export default function Page() {
         getRecentBlogs()
     }, [post_id, retryRecentPosts])
 
+    const saveNewViewer = async () => {
+
+        if (! currentUser) return
+
+        try {
+            const dataToSend = {
+                post_id,
+                user_id: currentUser._id
+            }
+            await fetch(`http://localhost:3001/blogRoutes/save_new_visitor`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dataToSend),
+                credentials: "include"
+            });
+        }
+        catch(e) {
+            console.error("error while fetching data", e)
+        }
+    }
+
+    let debouncedSaveNewVisitor = debounce(saveNewViewer, 1000)
+
     useEffect( () => {
         
-        const saveNewViewer = async () => {
-
-            if (! currentUser) return
-
-            try {
-                const dataToSend = {
-                    post_id,
-                    user_id: currentUser._id
-                }
-                await fetch(`http://localhost:3001/blogRoutes/save_new_visitor`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(dataToSend),
-                    credentials: "include"
-                });
-            }
-            catch(e) {
-                console.error("error while fetching data", e)
-            }
-        }
-        saveNewViewer()
+        debouncedSaveNewVisitor()
+        
         moveToId("nav")
+        
     }, [post_id])
 
     const handleRetryFetchingPosts = () => {
+        
         setRetryPosts(prev => ! prev)
+        
         setErrorMessages(previousErrorMessages => {
             const {currentBlogFetchError, ...rest} = previousErrorMessages
             return rest
