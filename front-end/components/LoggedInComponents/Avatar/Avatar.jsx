@@ -7,6 +7,7 @@ export default function Avatar({profileUrl}) {
     const [userHasNotifications, setUserHasNotifications] = useState(false)
     
     const checkUserHasNotifications = useCallback(async  () => {
+        
         try {
 
             const response = await fetch(`http://localhost:3001/blogRoutes/has_notifications`, 

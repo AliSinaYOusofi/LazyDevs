@@ -1237,7 +1237,8 @@ router.get(
                                 numberOfPosts: numberOfPosts.length,
                                 numberOfFollowers: numberOfFollowers.length,
                                 numberOfFollowing: numberOfFollowing.follows.length,
-                                isFollowing: isUserFollowingThisUser ? true : false
+                                isFollowing: isUserFollowingThisUser ? true : false,
+                                distance: formatDistanceToNowStrict((followersData.joined), {addSuffix: true}).replace("about", "")
                             })
                         }
                         return follower
@@ -1296,10 +1297,11 @@ router.get(
                         if (followersData) {
                 
                             delete followersData.password
-                            
+
                             const numberOfPosts = await Post.find({author: followersData._id}).lean().exec()
                             const numberOfFollowers = await FollowingUser.find({follows: {$elemMatch: {user: followersData._id}}}).lean().exec()
                             const numberOfFollowing = await FollowingUser.findOne({user_id: followersData._id}).lean().exec()
+                            
                             const isUserFollowingThisUser = await FollowingUser.findOne({
                                 user_id: user_id,
                                 "follows.user": followersData._id
@@ -1310,7 +1312,8 @@ router.get(
                                 numberOfPosts: numberOfPosts.length,
                                 numberOfFollowers: numberOfFollowers.length,
                                 numberOfFollowing: numberOfFollowing?.follows ? numberOfFollowing?.follows.length : 0,
-                                isFollowing: isUserFollowingThisUser ? true : false
+                                isFollowing: isUserFollowingThisUser ? true : false,
+                                distance: formatDistanceToNowStrict((followersData.joined), {addSuffix: true}).replace("about", "")
                             })
                         }
                         return followingUsers

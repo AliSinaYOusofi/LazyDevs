@@ -26,6 +26,7 @@ export default function UserHomePage({user_id}) {
     }
 
     const similarClass = "flex items-center justify-start transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 px-2 rounded-r-md mt-2 gap-x-2"
+    
     const menuItems = liArray.map( (li, index) => 
         <li 
             className={`${activeListItem === index  ? `${similarClass} shadow-inner border-l-2 border-black`: `${similarClass}`}`} 
