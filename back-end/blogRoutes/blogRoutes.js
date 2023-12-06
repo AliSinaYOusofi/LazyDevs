@@ -4,7 +4,7 @@ const SignedUpUser = require("../models/Register")
 const Comment = require("../models/Comments")
 const Likes = require("../models/postLikes")
 const PostView = require("../models/PostViews")
-const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays, subDays } = require("date-fns");
+const { formatDistanceToNow, formatDistanceToNowStrict, differenceInDays, subDays, format } = require("date-fns");
 const Comments = require("../models/Comments")
 const replyComments = require("../models/ReplyComments")
 const Saved = require("../models/PostsSavedToAccount")
@@ -1796,4 +1796,93 @@ router.get(
         }
     }
 )
-module.exports = router
+
+router.get(
+    "/search_tags",
+    query('tag').notEmpty().escape(), 
+    async (req, res) => {
+        
+        const result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid tag"})
+
+        let {tag} = req.query
+
+        tag = '#' + decodeURIComponent(tag)
+
+        let userTags = tag.split(",")
+        let user_id = req.user_id
+        
+        try {
+            
+            const posts = await Post.find({tags: {$in: userTags}}).lean().exec()
+
+            if (posts.length) {
+                
+                const authorIds = posts.map(blog => blog.author);
+                const authorDataPromises = authorIds.map(authorId => SignedUpUser.findById(authorId).lean().exec());
+                const authorData = await Promise.all(authorDataPromises);
+            
+                const completeBlogData = posts.map((blog, index) => {
+                    blog.profileUrl = authorData[index].profileUrl;
+                    blog.username = authorData[index].username;
+                    blog.viewCount = 0
+                    blog.commentCount = 0
+                    blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                    return blog;
+                });
+            
+                for (const blog of completeBlogData) {
+                    
+                    const views = await PostView.find({post_id: blog._id}).lean().exec()
+                    
+                    if (user_id) {
+
+                        const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                        blog.saved = alreadySaved.length > 0
+                    }
+                    
+                    blog.viewCount = views.length
+                }
+
+                return res.status(200).json({message: "success", data: completeBlogData})
+            }
+            return res.status(200).json({message: "success", zero: true})
+        }
+        catch(e) {
+            console.error("error in while getting same tags posts", e)
+            return res.status(200).json({message: "success", zero: true})
+        }
+    }
+)
+
+router.get("/analytics_data", async (req, res) => {
+
+    let user_id = req.user_id
+    
+    if (! user_id) return res.status(400).json({message: "invalid data provided"})
+
+
+    try {
+
+        // getting the user post and showing the analytics of the posts just
+
+        let posts = await Post.find({author: user_id}).lean().exec()
+        
+        if (posts.length) {
+            
+            posts = posts.map( post => {
+                post.nameOfTheMonth = format(post.createdAt, "MMMM")
+                return post
+            })
+            return res.status(200).json({message: "success", data: posts})
+        }
+        return res.status(200).json({message: "success", zero: true})
+    } 
+    
+    catch ( e ) {
+        console.error("error while getting analytics data", e)
+        return res.status(200).json({message: "failed"})
+    }
+})
+module.exports = router 
