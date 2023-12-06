@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import ProfileCard from './FollowersCard'
 import UserCard from '../UserInfoCard/UserCard'
 import Link from 'next/link'
+import SortUsers from '@/app/search/SortUsers'
 
 // users the user is following
 export default function UserFollowing ({user_id}) {
@@ -24,7 +25,7 @@ export default function UserFollowing ({user_id}) {
                     }
                 );
                 const data = await response.json()
-                
+                console.log(data)
                 if (data.message === "success" && data.data === "zero") {
                     setFollowers([])
                 } 
@@ -110,9 +111,9 @@ export default function UserFollowing ({user_id}) {
         )
     }
 
-    let noFriendsDiv = <div className="mx-auto w-full mt-20">
-        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Follow some authors to see their blogs in your feed</h1>
-        <Link href="/feed" className=""> Check posts</Link>
+    let noFriendsDiv = <div className="mx-auto w-full mt-20 border-2 border-green-600 rounded-md p-10">
+        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> This user is not following anyone at the moment!</h1>
+        {/* <Link href="/feed" className=""> Check posts</Link> */}
     </div>
     
     return (
@@ -120,8 +121,9 @@ export default function UserFollowing ({user_id}) {
             <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Following : {followers.length}</h1>
             
             {
-                !followers.length ? noFriendsDiv : null
+                followers.length === 0 ? noFriendsDiv : <SortUsers setSortedBy={setFollowers} />
             }
+
             <div className="w-full md:mt-0 mt-10 flex flex-row iems gap-x-2 flex-wrap md:items-start md:justify-start items-center justify-center">
                 {
                     followers.
@@ -135,6 +137,8 @@ export default function UserFollowing ({user_id}) {
                                 following={user.numberOfFollowing}
                                 user_id={user._id}
                                 isFollowing={user.isFollowing}
+                                diff={user?.distance}
+                                date={user?.joined}
                             />
                         )
                 }
