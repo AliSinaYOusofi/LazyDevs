@@ -19,6 +19,7 @@ import TagsIcon from '@/components/SVG/TagsIcon'
 import UserTags from '@/components/UserFollowingTags/UserTags'
 import DeleteAccount from '@/components/DeleteAccount/DeleteAccount'
 import DangerZone from '@/components/SVG/DangerZone'
+import Analytics from './Analytics'
 
 export default function Page() {
     
@@ -28,9 +29,9 @@ export default function Page() {
 
     const {currentUser} = useAppContext();
 
-    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following", "Danger Zone"]
-    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />, <DangerZone />]
-    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />, <DeleteAccount />]
+    let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following", "Danger Zone", "Analytics"]
+    let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />, <DangerZone />, <AnalyticsIcon />]
+    let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />, <DeleteAccount />, <Analytics />]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)

@@ -15,7 +15,7 @@ export default function page({searchParams}) {
 
     let liArray = ["Posts", "Users", "Tags"]
     let liIconMapping = [<PostsIcon />, <ProfileIcon />, <TagsIcon />]
-    let components = [<PostSearchResult query={searchParams.q}/>, <UsersSearchResult query={searchParams.q}/>, <TagSearchResults />]
+    let components = [<PostSearchResult query={searchParams.q}/>, <UsersSearchResult query={searchParams.q}/>, <TagSearchResults query={searchParams.q}/>]
 
     const handleListItemClick = (index) => {
         setActiveListItem(index)
