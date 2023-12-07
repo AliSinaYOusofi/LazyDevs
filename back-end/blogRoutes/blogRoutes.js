@@ -19,7 +19,7 @@ const CommentNotification = require("../models/CommentsNotifications")
 const ReplyCommentNotification = require("../models/ReplyCommentNotification")
 const PostLikes = require("../models/postLikes")
 
-router.get("/newsfeed", async (req, res) => {
+router.get("/relevant_feed", async (req, res) => {
     
     // this route must return feeds that are based on user
     // currently following tags
@@ -37,6 +37,7 @@ router.get("/newsfeed", async (req, res) => {
     // TODO: return posts based on tags the user is following
 
     try {
+        
         let user_id = req.user_id
 
         if (! user_id) return res.status(401).json({message: "Unathorized"})
@@ -82,9 +83,15 @@ router.get("/newsfeed", async (req, res) => {
         });
 
         for (const blog of completeBlogData) {
+            
             const views = await PostView.find({post_id: blog._id}).lean().exec()
             const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
             
+            if (user_id) {
+                const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                blog.saved = alreadySaved.length > 0
+            }
+
             blog.likes = likes?.length
             blog.viewCount = views.length
         }
@@ -198,7 +205,7 @@ router.get("/top", async (req, res) => {
 
     // need the id for checking if user has saved the post
     // and chaning the UI accordingly
-    let {user_id} = req.user_id
+    let user_id = req.user_id
     
     try {
         const blogs = await Post.find().lean().exec();
@@ -221,6 +228,7 @@ router.get("/top", async (req, res) => {
             
             if (user_id) {
                 const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
+                console.log(alreadySaved)
                 blog.saved = alreadySaved.length > 0
             }    
             
@@ -1091,7 +1099,8 @@ router.get("/get_follower", async (req, res) => {
                             numberOfPosts: numberOfPosts.length,
                             numberOfFollowers: numberOfFollowers.length,
                             numberOfFollowing: numberOfFollowing.follows.length,
-                            isFollowing: isUserFollowingThisUser ? true : false
+                            isFollowing: isUserFollowingThisUser ? true : false,
+                            distance: formatDistanceToNowStrict((followersData.joined), {addSuffix: true}).replace("about", "")
                         })
                     }
                     return follower
@@ -1156,7 +1165,8 @@ router.get("/get_following", async (req, res) => {
                             numberOfPosts: numberOfPosts.length,
                             numberOfFollowers: numberOfFollowers.length,
                             numberOfFollowing: numberOfFollowing?.follows ? numberOfFollowing?.follows.length : 0,
-                            isFollowing: isUserFollowingThisUser ? true : false
+                            isFollowing: isUserFollowingThisUser ? true : false,
+                            distance: formatDistanceToNowStrict((followersData.joined), {addSuffix: true}).replace("about", "")
                         })
                     }
                     return followingUsers

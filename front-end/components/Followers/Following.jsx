@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import ProfileCard from './FollowersCard'
 import UserCard from '../UserInfoCard/UserCard'
 import Link from 'next/link'
+import SortUsers from '@/app/search/SortUsers'
 
 // users the user is following
 export default function Following () {
@@ -120,7 +121,7 @@ export default function Following () {
             <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Following : {followers.length}</h1>
             
             {
-                !followers.length ? noFriendsDiv : null
+                !followers.length ? noFriendsDiv : <SortUsers setSortedBy={setFollowers} />
             }
             <div className="w-full md:mt-0 mt-10 flex flex-row iems gap-x-2 flex-wrap md:items-start md:justify-start items-center justify-center">
                 {
@@ -135,6 +136,8 @@ export default function Following () {
                                 following={user.numberOfFollowing}
                                 user_id={user._id}
                                 isFollowing={user.isFollowing}
+                                date={user?.joined}
+                                diff={user?.distance}
                             />
                         )
                 }

@@ -23,9 +23,12 @@ export default function RelevantFeeds() {
     const router = useRouter()
 
     useEffect( () => {
+        
         async function getRelevantBlogs() {
+        
             try {
-                const response = await fetch(`http://localhost:3001/blogRoutes/newsfeed?user_id=${currentUser ? currentUser?._id : null}`, 
+        
+                const response = await fetch(`http://localhost:3001/blogRoutes/relevant_feed?user_id=${currentUser ? currentUser?._id : null}`, 
                     {
                         method: "GET",
                         headers: {
@@ -37,7 +40,6 @@ export default function RelevantFeeds() {
 
                 const data = await response.json()
                 
-                console.log(data, ' relevant ffeed')
                 if (data.redirectTo) {
                     
                     const redirectTo = data.redirectTo
@@ -69,18 +71,6 @@ export default function RelevantFeeds() {
         setRetryPosts(prev => ! prev)
         setErrorMessages("")
     }
-
-    // const handleSortedBy = () => {
-        
-    //     setSortedBy(prev => ! prev)
-        
-    //     sortedBy 
-    //     ?
-    //         setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => a.viewCount > b.viewCount))
-    //     :
-    //         setRelevantBlogs(relevantBlogs => relevantBlogs.sort( (a, b) => b.viewCount > a.viewCount))
-
-    // }
     
     if (! relevantBlogs?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
@@ -107,21 +97,6 @@ export default function RelevantFeeds() {
         }
     </div>
 
-    // const handleSortPostsByDate = () => {
-        
-    //     setSortedByDate(prev => ! prev)
-
-    //     setRelevantBlogs( date => {
-    //         const blogsSortedByDate = date.slice().sort( (a, b) => {
-    //             const firstDate = new Date(a.createdAt)
-    //             const secondDate = new Date(b.createdAt)
-    //             return sorteByDate ? firstDate - secondDate : secondDate - firstDate
-    //         })
-
-    //         return blogsSortedByDate
-    //     })
-        
-    // }
     return (
         <>
             {
@@ -150,7 +125,7 @@ export default function RelevantFeeds() {
 
             <div className="px-4">
                 {
-                    relevantBlogs.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} tags={blog?.tags} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    relevantBlogs.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} saved={blog?.saved} tags={blog?.tags} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
 
             </div>
