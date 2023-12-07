@@ -23,10 +23,7 @@ const getPostsWithSameHashTags = async (hashtag) => {
                     "Content-Type": "application/json",
                     "Cookie": `refreshToken=${refreshToken};accessToken=${accessToken}`
                 },
-                cache: "no-store",
-                next: {
-                    revalidate: false
-                }
+
             }, 
         )
         const data = await response.json()
@@ -55,7 +52,7 @@ export default async function Page({params}) {
     
     const data = await getPostsWithSameHashTags(params.hash)
     
-    
+    console.log(data)
     if (data === undefined) return <ErrorPage  />
 
     return (
@@ -86,6 +83,7 @@ export default async function Page({params}) {
                             key={blog._id} 
                             id={blog._id}
                             author={blog?.author}
+                            likes={blog?.likes}
                         />) 
                         : null
                 }

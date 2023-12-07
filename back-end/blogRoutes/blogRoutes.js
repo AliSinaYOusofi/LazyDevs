@@ -17,6 +17,7 @@ const FollowingNotification = require("../models/FollowingNotifications")
 const PostNotifications = require("../models/PostNotification")
 const CommentNotification = require("../models/CommentsNotifications")
 const ReplyCommentNotification = require("../models/ReplyCommentNotification")
+const PostLikes = require("../models/postLikes")
 
 router.get("/newsfeed", async (req, res) => {
     
@@ -81,7 +82,10 @@ router.get("/newsfeed", async (req, res) => {
         });
 
         for (const blog of completeBlogData) {
-            const views = await PostView.find({post_id: blog._id}).lean().exec()    
+            const views = await PostView.find({post_id: blog._id}).lean().exec()
+            const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+            
+            blog.likes = likes?.length
             blog.viewCount = views.length
         }
 
@@ -117,6 +121,7 @@ router.get(
 
         let {post_id} = req.query
         post_id = post_id !== 'null' ? post_id : null
+        
         let user_id = req.user_id
 
         if (! user_id ) return res.status(404).send().json({"message: ": "user not found"})
@@ -139,13 +144,18 @@ router.get(
             });
 
             for (const blog of completeBlogData) {
+                
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
+                const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+
                 if (user_id) {
                     const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                     blog.saved = alreadySaved.length > 0
                 }
+                
                 blog.viewCount = views.length
                 blog.commentCount = blog.comments.length
+                blog.likes = likes.length
             }
 
             let latestBlogPostedThreshold = completeBlogData.reduce( (latest, blog) => {
@@ -214,6 +224,9 @@ router.get("/top", async (req, res) => {
                 blog.saved = alreadySaved.length > 0
             }    
             
+            const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+            
+            blog.likes = likes?.length
             blog.viewCount = views.length
         }
 
@@ -461,50 +474,63 @@ router.post(
 );
 
 
-router.post("/like_post", async (req, res) => {
+router.post(
+    "/like_post",
+    body('post_id').notEmpty().isMongoId().escape(),
+    body('status').notEmpty().escape().isString(), 
+    async (req, res) => 
+    {
 
-    const {status, post_id, userEmail} = req.body;
+        const result = validationResult(req)
 
-    const post_id_exists = await Post.findById(post_id).lean().exec();
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid data provided", error: result.array()})
 
-    if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
-
-    if (status === "liked") {
+        let user_id = req.user_id
         
-        let user_email = await Likes.findOne({'liker': userEmail}).lean().exec();
-        
-        if (user_email) { 
+        const {status, post_id} = req.body;
+
+        console.log(status, post_id, user_id)
+        const post_id_exists = await Post.findById(post_id).lean().exec();
+    
+        if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
+
+        if (status) {
             
-            if (user_email.likes === 0) {
-                /// adding one to the like
-                await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: 1}})
+            let userExists = await PostLikes.findOne({liker: user_id}).lean().exec();
+            
+            if (userExists) { 
+                
+                if (userExists.likes === 0) {
+                    /// adding one to the like
+                    await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: 1}})
 
-                return res.status(200).json({status: "success", data: "added one like"})
+                    return res.status(200).json({status: "success", data: "liked"})
+                }
+                // subtracting one
+                await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: -1}})
+
+                return res.status(200).json({status: "success", data: "disliked"})
+            } 
+            
+            else {
+                // new user liked should be added
+                const newLiker = new Likes({
+                    post_id,
+                    likes: 1,
+                    liker: user_id
+                }) 
+
+                await newLiker.save();
+                return res.status(200).json({status: "success", data: "liked"})
             }
-            // subtracting one
-            await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
-
-            return res.status(200).json({status: "success", data: "subtracted one like"})
         } 
-        
         else {
-            // new user liked should be added
-            const newLiker = new Likes({
-                post_id,
-                likes: 1,
-                liker: userEmail
-            }) 
-
-            await newLiker.save();
-            return res.status(200).json({status: "success", data: "new user liked"})
+            
+            await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
+            return res.status(200).json({status: "success", data: "disliked and subtracted one"})
         }
-    } 
-    else if (status === "disliked") {
-        
-        await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
-        return res.status(200).json({status: "success", data: "disliked and subtracted one"})
     }
-});
+);
 
 
 router.get(
@@ -514,17 +540,21 @@ router.get(
     
     {
         const result = validationResult(req)
+        
         if (! result.isEmpty()) return res.status(400).json({message: "invalid post_id"})
 
         let {post_id} = req.query;     
 
         if (post_id) {
 
-            let post_likes = await PostView.find({'post_id': post_id}).lean().exec();
+            let view_count = await PostView.find({'post_id': post_id}).lean().exec();
             let commentCount = await Comment.find({'post': post_id}).lean().exec();
+            let likes_count = await PostLikes.find({'post_id': post_id, likes: {$eq: 1}}).lean().exec()
             
-            if (post_likes) {
-                return res.status(200).json({status: "success", likeCount: post_likes, commentCount})
+            let already_user_liked = await PostLikes.findOne({'post_id': post_id, 'liker': req.user_id, likes: { $eq: 1}}).lean().exec()
+
+            if (view_count) {
+                return res.status(200).json({status: "success", view_count, commentCount, likes_count, already_user_liked: already_user_liked ? already_user_liked.likes : 0})
             }
         }
         return res.status(200).json({status: "failed", data: "post not found"})
@@ -712,6 +742,7 @@ router.get("/recent_posts", async (req, res) => {
     let user_id = req.user_id
 
     if (! user_id) return res.status(200).json({status: "failed", reason: "user not found"})
+    
     try {
         // first getting the latest post from db
         // Get the latest post
@@ -744,14 +775,19 @@ router.get("/recent_posts", async (req, res) => {
             })
 
             for (const blog of postsInLast15Days) {
+                
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
 
                 if (user_id) {
                     const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                     blog.saved = alreadySaved.length > 0
                 }
-                blog.viewCount = views.length
-                blog.commentCount = blog.comments.length
+
+                const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+                
+                blog.likes = likes?.length
+                blog.viewCount = views?.length
+                blog.commentCount = blog.comments?.length
             }
 
             postsInLast15Days.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1)
@@ -1363,12 +1399,17 @@ router.get("/my_following_posts", async (req, res) => {
             });
 
             for (const blog of completeBlogData) {
+                
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
+                const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+                
                 if (user_id) {
                     const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                     blog.saved = alreadySaved.length > 0
                 }
-                blog.viewCount = views.length
+            
+                blog.likes = likes?.length
+                blog.viewCount = views.length || 0
                 blog.commentCount = blog.comments.length
             }
 
@@ -1428,10 +1469,13 @@ router.get(
                         const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                         blog.saved = alreadySaved.length > 0
                     }
-                    
+                    const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+            
+                    blog.likes = likes?.length
                     blog.viewCount = views.length
                 }
 
+                console.log(completeBlogData)
                 return res.status(200).json({message: "success", data: completeBlogData})
             }
             return res.status(200).json({message: "success", zero: true})
@@ -1711,6 +1755,9 @@ router.get(
                         blog.saved = alreadySaved.length > 0
                     }
                     
+                    const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+                    
+                    blog.likes = likes?.length
                     blog.viewCount = views.length
                 }
                 
@@ -1845,6 +1892,9 @@ router.get(
                         blog.saved = alreadySaved.length > 0
                     }
                     
+                    const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+            
+                    blog.likes = likes?.length
                     blog.viewCount = views.length
                 }
 

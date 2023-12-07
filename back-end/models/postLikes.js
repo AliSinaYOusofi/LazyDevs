@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const postLikes = new mongoose.Schema({
+    
     post_id: {
         type: "String",
         required: true,
@@ -9,16 +10,18 @@ const postLikes = new mongoose.Schema({
 
     likes: {
         type: Number,
-        required: false,
-        immutable: false
+        required: true,
+        default: 0,
+        immutable: false,
     },
 
     liker: {
-        type: "String",
+        type: mongoose.Types.ObjectId,
+        ref: "SignedUpUser",
         required: true,
         immutable: false
     }
 });
 
-const Likes = mongoose.model('Likes', postLikes);
-module.exports = Likes;
+const PostLikes = mongoose.model('Likes', postLikes);
+module.exports = PostLikes;

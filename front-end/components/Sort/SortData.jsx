@@ -11,7 +11,11 @@ export default function SortData({sortedBy, setSortedBy}) {
 
         const handleSortChange = () => {
 
-            if (searchFlag === "date") {
+            if (searchFlag === "likes") {
+                setSortedBy( likes => likes.slice().sort((a, b) => b.likes - a.likes) )
+            }
+            
+            else if (searchFlag === "date") {
                 setSortedBy( date => {
                     const blogsSortedByDate = date.slice().sort( (a, b) => {
                         const firstDate = new Date(a.createdAt)
@@ -43,9 +47,12 @@ export default function SortData({sortedBy, setSortedBy}) {
     
     return (
         <div className="mt-10">
+            
             <span className="">Select Sort options : </span>
+            
             <select defaultValue={"Title"} className="py-3 px-5 rounded-lg border-none bg-[#fafafd] w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
-                <option value="date" defaultValue={"date"}>Date</option>
+                <option value="likes" defaultValue={"likes"}>Likes</option>
+                <option value="date">Date</option>
                 <option value="viewcount">View</option>
                 <option value="comment">comment</option>
             </select>
