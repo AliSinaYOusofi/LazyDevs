@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import ProfileCard from './FollowersCard'
+import SortUsers from '@/app/search/SortUsers'
 
 export default function Followers() {
 
@@ -109,7 +110,7 @@ export default function Followers() {
     return (
         <>
             <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Followers : {followers.length}</h1>
-            
+            <SortUsers setSortedBy={setFollowers} />
             <div className="w-full md:mt-0 mt-10 flex flex-row iems gap-x-2 flex-wrap md:items-start md:justify-start items-center justify-center">
                 {
                     followers.
@@ -123,6 +124,8 @@ export default function Followers() {
                                 following={user.numberOfFollowing}
                                 user_id={user._id}
                                 isFollowing={user.isFollowing}
+                                date={user?.joined}
+                                diff={user?.distance}
                             />
                         )
                 }

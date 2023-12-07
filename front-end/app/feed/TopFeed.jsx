@@ -21,8 +21,10 @@ export default function TopFeed() {
             
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/top`, {method: "GET", credentials: "include"});
+                
                 const data = await response.json()
                 
+                console.log(data, ' top feed')
                 if (data.redirectTo) {
                     
                     const redirectTo = data.redirectTo

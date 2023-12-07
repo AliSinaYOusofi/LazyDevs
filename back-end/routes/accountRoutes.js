@@ -4,6 +4,7 @@ const PostView = require("../models/PostViews");
 const SignedUpUser = require("../models/Register");
 const bcrypt = require("bcrypt");
 const { body, validationResult, query } = require("express-validator");
+const PostLikes = require("../models/postLikes");
 const router = require("express").Router();
 
 router.get(
@@ -21,7 +22,11 @@ router.get(
             const Posts = await Post.find({author}).lean().exec()
 
             for (let post of Posts) {
+                
                 const views = await PostView.find({post_id: post._id}).lean().exec()
+                const likes = await PostLikes.find({post_id: post._id}).lean().exec()
+            
+                post.likes = likes?.length
                 post.viewCount = views.length
                 post.commentCount = post.comments.length
                 post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")

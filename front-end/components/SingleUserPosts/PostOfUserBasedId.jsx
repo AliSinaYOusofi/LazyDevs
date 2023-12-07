@@ -26,11 +26,17 @@ export default function PostOfUserBasedId({author}) {
                         credentials: "include"
                     }
                 );
+                
                 const data = await response.json()
 
+                console.log(data, 'based')
                 if (data.status === "success") setPosts(data.data)
+            
                 else if (data.status === "failed") setErrorMessages("Some server error")
-            }catch(e) {
+            
+            }
+            
+            catch(e) {
                 console.error('error in while getting your posts');
                 setErrorMessages("failed to fetch your posts")
                 setPosts(undefined)
@@ -115,7 +121,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <SingleUserPostBlogTemplate commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }
