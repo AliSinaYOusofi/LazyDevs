@@ -57,17 +57,6 @@ export default function LatestFeed() {
         setErrorMessages("")
     }
 
-    // const handleSortedBy = () => {
-        
-    //     setSortedBy(prev => ! prev)
-
-    //     sortedBy 
-    //     ?
-    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => a.viewCount > b.viewCount))
-    //     :
-    //         setLatestPosts(topBlogs => topBlogs.sort( (a, b) => b.viewCount > a.viewCount))
-    // }
-
     if (! latestPosts?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           errorMessage ? <div className=" w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
@@ -94,21 +83,6 @@ export default function LatestFeed() {
         }
     </div>
 
-    // const handleSortPostsByDate = () => {
-        
-    //     setSortedByDate(prev => ! prev)
-
-    //     setLatestPosts( topBlogs => {
-            
-    //         const sortedByDatePosts = topBlogs.slice().sort( (a, b) => {
-    //             const firstDate = new Date(a.createdAt)
-    //             const secondDate = new Date(b.createdAt)
-    //             return sorteByDate ? firstDate > secondDate : secondDate > firstDate
-    //         })
-
-    //         return sortedByDatePosts
-    //     })
-    // }
     return (
         <>
             {
@@ -138,7 +112,7 @@ export default function LatestFeed() {
             }
             <div className="md:max-w-2xl w-screen px-4 md:px-0">
                 {
-                    latestPosts.map(blog => <BlogCard author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    latestPosts.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

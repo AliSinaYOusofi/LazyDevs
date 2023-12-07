@@ -5,52 +5,64 @@ import { moveToId } from '@/functions/movtToId';
 import FetchPostError from '../Error/FetchPostError/FetchPostError';
 import EyeView from '../SVG/ViewEye';
 import CommentIcon from '../SVG/CommentIcon';
+import { set } from 'lodash';
 
 
 export default function SocialIcons({post_id}) {
 
-    // const [liked, setLiked] = useState(false);
-    
+    const [liked, setLiked] = useState(false);
+    const [alreadyLikes, setAlreadyLiked] = useState(false)
+    const [likesCount, setLikesCount] = useState(undefined)
     const [viewCount, setViewCount] = useState(undefined);
     const [commentCount, setCommentCount] = useState(undefined);
     const [currentUrl, setCurrentUrl] = useState("")
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchPostViewCount, setRetryFetchPostViewCount] = useState(false)
+    const [spinner, setSpinner] = useState(false)
 
-    // const handleLikes = async () => {
+    const handleLikes = async () => {
     
-    //     setLiked(prev => !prev);
+        setLiked(prev => !prev);
+        setSpinner(true)
         
-    //     try {
+        try {
 
-    //         let likeStatus = 'disliked';
-    //         if (!liked) likeStatus = 'liked';
+            const dataToSend = {
+                status: !liked,
+                post_id
+            }
 
-    //         const dataToSend = {
-    //             status: likeStatus,
-    //             userEmail: currentUser.email,
-    //             post_id
-    //         }
-
-    //         const response = await fetch(`http://localhost:3001/blogRoutes/like_post`, 
-    //             {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json"
-    //                 },
-    //                 body: JSON.stringify(dataToSend)
-    //             },
+            const response = await fetch(`http://localhost:3001/blogRoutes/like_post`, 
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(dataToSend),
+                    credentials: "include"
+                },
                 
-    //         );
-    //         const data = await response.json()
-    //     }
+            );
+            const data = await response.json()
+
+            if (data.data === "liked") {
+                setLiked( true )
+            } else if (data.data === "disliked") {
+                setLiked(false)
+            }
+        }
         
-    //     catch(e) {
-    //         console.log("error liking the post", e)
-    //     }
-    // }
+        catch(e) {
+            console.log("error liking the post", e)
+        }
+        finally {
+            setSpinner(false)
+            setRetryFetchPostViewCount(perev => ! perev)
+        }
+    }
 
     useEffect( () => {
+        
         const likesCommentsCount = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/blogRoutes/get_likes_comments_count?post_id=${post_id}`, 
@@ -62,11 +74,14 @@ export default function SocialIcons({post_id}) {
                 const data = await response.json()
 
                 if (data.status === "success") {
-                    setViewCount(data.likeCount?.length)
+                    setViewCount(data?.view_count ? data.view_count?.length : 0)
                     setCommentCount(data?.commentCount ?  data.commentCount.length : 0)
+                    setLikesCount(data?.likes_count ? data.likes_count.length : 0)
+                    setAlreadyLiked(data?.already_user_liked ? true : false)
                 }
 
                 else if (data.status === "failed") setErrorMessages("Failed to get post comments and view")
+    
             }
             catch(e) {
                 console.error("error while fetching likes and comments count", e)
@@ -83,6 +98,7 @@ export default function SocialIcons({post_id}) {
         setRetryFetchPostViewCount(prev => !prev)
         setErrorMessages("")
     }
+    
     let fetchErrorDiv
     
     if (commentCount === undefined) {
@@ -102,6 +118,25 @@ export default function SocialIcons({post_id}) {
     }
     return (
         <div className="flex md:ml-4 ml-0 md:flex-col flex-row items-center justify-center socials md:mt-0 mt-4 gap-4 mr-4 md:mr-0">
+            
+            <div onClick={handleLikes} className=" md:p-2 rounded-full flex flex-col items-center justify-center mt-10 cursor-pointer">
+                
+                <button disabled={spinner}>
+                    {
+                        liked || alreadyLikes
+                        ?
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                        </svg>
+                        :
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                    }
+                </button>
+                <span className="text-xl">{likesCount ? likesCount : "0"}</span>
+            </div>
+            
             <div className=" md:p-2 rounded-full flex flex-col items-center justify-center">
                 
                 <div className="mt-3 md:mt-4 z-[99] w-fit">
