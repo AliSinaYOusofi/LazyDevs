@@ -20,6 +20,12 @@ const postLikes = new mongoose.Schema({
         ref: "SignedUpUser",
         required: true,
         immutable: false
+    },
+
+    likedAt: {
+        type: Date,
+        default: Date.now,
+        required: false,
     }
 });
 

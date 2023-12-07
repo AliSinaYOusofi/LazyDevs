@@ -9,8 +9,7 @@ export default function SavedPosts() {
     const [savedPosts, setSavedPosts] = useState(undefined)
     const [errorMessages, setErrorMessages] = useState('')
     const [retrySavedPosts, setRetrySavedPosts] = useState(false)
-    const [sortedBy, setSortedBy] = useState("")
-
+    
     useEffect( () => {
         
         async function getSavedPostsOfUser() {
@@ -23,13 +22,10 @@ export default function SavedPosts() {
                         credentials: "include",
                     }
                 );
+
                 const data = await response.json()
                 if (data.message === "success") {
                     setSavedPosts(data.data)
-
-                    if (data?.isSortedByViewCount) setSortedBy("most viewd")
-                    else setSortedBy("least viewed")
-                
                 }
                 else if (data.message === "zeroSaved") setSavedPosts([])
                 else if (data.status) setErrorMessages("Server error happened")
@@ -43,13 +39,6 @@ export default function SavedPosts() {
         }
         getSavedPostsOfUser()
     }, [retrySavedPosts])
-
-    const reverseSavedPosts = () => {
-        
-        setSavedPosts([...savedPosts].reverse())
-        
-        setSortedBy(prev => prev === "least viewed" ? "most viewed" : "least viewed")
-    }
 
     const handleRetrySavedPosts = () => {
         setRetrySavedPosts(prev => !prev)

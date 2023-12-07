@@ -57,8 +57,8 @@ export default function FollowingFeed() {
     }, [retryFollowingPosts])
     
 
-    const noFollowingDiv = <div className="flex items-center justify-center flex-col h-screen">
-        <h1 className="md:text-4xl text-2xl font-bold tracking-wide"> Follow some users to see their posts</h1>
+    const noFollowingDiv = <div className="flex items-center justify-center flex-col mt-20  h-screen rounded-md">
+        <h1 className="md:text-4xl text-2xl font-bold tracking-wide"> You have no feeds here</h1>
         <p className="text-lg mt-4"> All caught up</p>
     </div>
 

@@ -2,7 +2,6 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ReadingTime from '../ReadingTime/ReadingTime'
 import { useAppContext } from '@/context/useContextProvider'
-import { toast } from 'react-toastify'
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 
 export default function SavedToAccountPostCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, savedAt, savedDifference, refechSavedListRefreshFunction}) {
@@ -41,16 +40,13 @@ export default function SavedToAccountPostCard({content, title, username, profil
             const json = await response.json()
             
             if (json.message === "saved") {
-                toast.info("Post saved to account")
                 setSavedToAccount(true)
             } else if (json.message === "deleted") {
-                toast.info("deleted from saved posts")
                 setSavedToAccount(false)
             }
         } 
         catch (e) {
             console.error("while savin to account => " + e)
-            toast.error("failed to save! try again")
         }
         refechSavedListRefreshFunction( prev => ! prev)
     }
