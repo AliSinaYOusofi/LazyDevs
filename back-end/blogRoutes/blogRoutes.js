@@ -1931,7 +1931,16 @@ router.get("/analytics_data", async (req, res) => {
         // getting the user post and showing the analytics of the posts just
 
         let posts = await Post.find({author: user_id}).lean().exec()
+
+        // analytics should show the date when it was commented with corresponding length
+
+        // in here i should sort the data
+        // TODO: get post comments and their dates in specific day and show the total with the same
+        // day 
+
         let commentsSummary = []
+        let totalLikesSummary = []
+        let totalReadSummary = []
 
         if (posts.length) {
             
@@ -1945,6 +1954,12 @@ router.get("/analytics_data", async (req, res) => {
                 posts.map( async post => {
                     
                     const views = await PostView.find({post_id: post._id}).lean().exec()
+                    
+                    const likes = await PostLikes.find({post_id: post._id, likes: { $eq: 1}}).lean().exec()
+                    
+                    if (likes.length) {
+                        totalLikesSummary.push(...likes)
+                    }
 
                     let comments = await Comment.find({post: post._id}).lean().exec()
 
@@ -1966,14 +1981,12 @@ router.get("/analytics_data", async (req, res) => {
                             return comment
                         })
                     }
-
-                    post.viewCount = views.length
+                    totalReadSummary.push(...views)
                     return post 
-                
                 })
             )
             
-            return res.status(200).json({message: "success", data: posts, readerCount: totalPostViews, commentCount: commentsSummary})
+            return res.status(200).json({message: "success", data: totalReadSummary, readerCount: totalReadSummary, commentCount: commentsSummary, likeCount: totalLikesSummary})
         }
         return res.status(200).json({message: "success", zero: true})
     } 

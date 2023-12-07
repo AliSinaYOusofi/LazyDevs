@@ -20,6 +20,12 @@ const PostViewsSchema = new mongoose.Schema( {
         type: mongoose.Schema.Types.ObjectId,
         ref: "SignedUpUser",
         required: true,
+    },
+
+    viewdAt: {
+        type: Date,
+        default: Date.now,
+        required: false
     }
 
 } );

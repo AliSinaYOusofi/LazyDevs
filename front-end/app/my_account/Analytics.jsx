@@ -14,6 +14,7 @@ import {
     } from 'chart.js';
 import { useAppContext } from '@/context/useContextProvider';
 import Link from 'next/link';
+import {generateIncrementalDates } from '@/functions/convert_month_to';
 
 
 ChartJS.register(
@@ -41,6 +42,15 @@ export const options = {
             text: '',
         },
     },
+    scales: {
+        y: {
+            suggestedMin: 0,
+            suggestedMax: 10, // Adjust this value based on your data
+            ticks: {
+                stepSize: 1, // Display integers only
+            },
+        }
+    }
 };
 export default function Analytics() {
 
@@ -48,6 +58,7 @@ export default function Analytics() {
     const [error, setError] = useState('')
     const {currentUser} = useAppContext()
     const [readerCount, setReadersCount ] = useState([])
+    const [likeCount, setLikeCount ] = useState([])
     const [commentsCount, setCommentsCount] = useState([])
     const [totalReadCount, setTotalReadCount] = useState(0)
     const [retryFetch, setRetryFetch] = useState(false)
@@ -65,12 +76,13 @@ export default function Analytics() {
 
             const json = await response.json()
             
+            console.log(json, )
             if (json.message === "success" && ! json.zero) {
                 
                 setPostDataSet(json.data)
                 setCommentsCount(json.commentCount)
                 setReadersCount(json.readerCount)
-
+                setLikeCount(json.likeCount)
                 setTotalReadCount(json.readerCount.reduce((a, b) => a + b.viewCount, 0))
             }
 
@@ -92,7 +104,7 @@ export default function Analytics() {
         fetchAnalyticsData()
     }, [fetchAnalyticsData, retryFetch])
 
-    let labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    // let labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     
     if (! postDataSet?.length) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
@@ -120,6 +132,26 @@ export default function Analytics() {
         }
     </div>
 
+    const commentCountByDate = commentsCount.reduce((acc, comment) => {
+
+        const date = comment.commentedOn.split('T')[0];
+        acc[date] = (acc[date] || 0) + 1; // Increment comment count for each date
+        return acc;
+
+    }, {});
+
+    const readerCountByDate = postDataSet.reduce((acc, reader) => {
+        const date = reader.viewdAt.split('T')[0];
+        acc[date] = (acc[date] || 0) + 1; // Increment reader count for each date
+        return acc;
+    }, {});
+    
+    const likesCountByDate = likeCount.reduce((acc, reader) => {
+        const date = reader.likedAt.split('T')[0];
+        acc[date] = (acc[date] || 0) + 1; // Increment reader count for each date
+        return acc;
+    }, {});
+
     return (
         <div className=" h-1/2 flex flex-col">
             
@@ -137,7 +169,7 @@ export default function Analytics() {
 
                 <div className="p-10 w-1/2 bg-gray-100 rounded-md text-center flex items-center justify-center flex-col">
                     <p>   Reactions </p>
-                    <p className="mt-3 font-bold bg-white px-2 rounded-full w-fit text-2xl"> {commentsCount.length }</p>
+                    <p className="mt-3 font-bold bg-white px-2 rounded-full w-fit text-2xl"> {likeCount.length }</p>
                 </div>
 
                 <div className="p-10 w-1/2 bg-gray-100 rounded-md text-center flex items-center justify-center flex-col">
@@ -153,15 +185,10 @@ export default function Analytics() {
                 <hr />
                 
                 <Line
-                    
+                    datasetIdKey='readers'
                     data={{
                     
-                        labels : postDataSet.length >= 1 
-                        ? postDataSet.map(post => {
-                            const index = labels.findIndex(label => label === post.nameOfTheMonth);
-                            return labels.slice(index);
-                        })
-                        : labels,
+                        labels : Object.keys(readerCountByDate),
                     
                         datasets: [
                             {
@@ -169,7 +196,7 @@ export default function Analytics() {
                                 fill: false,
                                 backgroundColor: 'rgb(255, 99, 132)',
                                 borderColor: 'rgb(255, 99, 132)',
-                                data: readerCount ? readerCount.map(count => count.viewCount)  : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+                                data: Object.values(readerCountByDate)
                             },
                         ],
                     }}
@@ -188,15 +215,10 @@ export default function Analytics() {
                     <hr />
                     
                     <Line
-                        
+                        datasetIdKey='comments'
                         data={{
                         
-                            labels : postDataSet.length >= 1 
-                            ? commentsCount.map(post => {
-                                const index = labels.findIndex(label => label === post.nameOfTheMonth);
-                                return labels.slice(index);
-                            })
-                            : labels,
+                            labels : Object.keys(commentCountByDate),
                         
                             datasets: [
                                 {
@@ -204,7 +226,7 @@ export default function Analytics() {
                                     fill: false,
                                     backgroundColor: '#008B8B',
                                     borderColor: 'rgb(255, 99, 132)',
-                                    data: commentsCount ? [commentsCount.length]  : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+                                    data: Object.values(commentCountByDate)
                                 },
                             ],
                         }}
@@ -221,15 +243,10 @@ export default function Analytics() {
                     <hr />
                     
                     <Line
-                        
+                        datasetIdKey='reactions'
                         data={{
                         
-                            labels : postDataSet.length >= 1 
-                            ? commentsCount.map(post => {
-                                const index = labels.findIndex(label => label === post.nameOfTheMonth);
-                                return labels.slice(index);
-                            })
-                            : labels,
+                            labels : Object.keys(likesCountByDate),
                         
                             datasets: [
                                 {
@@ -237,7 +254,7 @@ export default function Analytics() {
                                     fill: false,
                                     backgroundColor: '#8A2BE2',
                                     borderColor: 'rgb(255, 99, 132)',
-                                    data: commentsCount ? [commentsCount.length]  : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+                                    data: Object.values(likesCountByDate)
                                 },
                             ],
                         }}

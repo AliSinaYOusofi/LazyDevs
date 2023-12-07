@@ -27,8 +27,6 @@ export default function Avatar({profileUrl}) {
             if (data.data) {
                 setUserHasNotifications(parseInt(data.data))
             }
-
-            console.log(userHasNotifications)
         } 
         catch (error) {
             console.log(error)
