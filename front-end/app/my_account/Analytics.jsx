@@ -67,7 +67,6 @@ export default function Analytics() {
 
             else if (json.status === "failed") setError(true)
 
-            console.log(json)
         } 
         
         catch ( e ) {
@@ -205,7 +204,9 @@ export default function Analytics() {
                     <hr />
                     
                     <Line
+                        
                         datasetIdKey='comments'
+                        
                         data={{
                         
                             labels : Object.keys(commentCountByDate).sort( (a, b) => new Date(a) - new Date(b)),
@@ -216,7 +217,7 @@ export default function Analytics() {
                                     fill: false,
                                     backgroundColor: '#008B8B',
                                     borderColor: 'rgb(255, 99, 132)',
-                                    data: Object.values(commentCountByDate).reverse()
+                                    data: Object.values(commentCountByDate)
                                 },
                             ],
                         }}
@@ -236,7 +237,7 @@ export default function Analytics() {
                         datasetIdKey='reactions'
                         data={{
                         
-                            labels : Object.keys(likesCountByDate),
+                            labels : Object.keys(likesCountByDate).sort( (a, b) => new Date(a) - new Date(b)),
                         
                             datasets: [
                                 {

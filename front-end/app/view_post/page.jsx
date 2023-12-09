@@ -16,6 +16,7 @@ import Link from 'next/link';
 import delete_cookie from '@/functions/delete_cookie';
 import { useAppContext } from '@/context/useContextProvider';
 import { debounce } from 'lodash';
+import PostNotFoundDiv from './PostNotFound';
 
 export default function Page() {
 
@@ -57,8 +58,12 @@ export default function Page() {
                 
                 if (data.status === "success") setCurrentBlog(data.data)
                 
-                else if (data.message === "failed") setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
+                else if (data.message === "failed" && data.reason !== "notfound") setErrorMessages(previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 
+                if (data.status === "failed" && data.data === "notfound") {
+                    setCurrentBlog("notfound")
+                }
+
                 if (data.status === undefined) {
                     setErrorMessages( previousErrorMessages => ({...previousErrorMessages, "currentBlogFetchError": "There was a problem fetching this post!"}))
                 }
@@ -140,6 +145,7 @@ export default function Page() {
     }
 
     let currentBlogErrorDiv;
+    
     if (currentBlog === undefined) {
 
         currentBlogErrorDiv = <div key="curretnBlogDivError" className=" flex items-center justify-center mx-auto right-[50%] mt-[4rem]">
@@ -214,6 +220,8 @@ export default function Page() {
     //    setSortedBy(prev => !prev)
     // }
 
+    else if (currentBlog === "notfound") return <PostNotFoundDiv />
+    
     return (
         <>
             <div className={`w-screen relative flex flex-col md:flex-row justify-start items-start makeBlurry `}>

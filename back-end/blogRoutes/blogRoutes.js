@@ -287,6 +287,16 @@ router.get(
 
                 //Todo: handle if posts are deleted
                 let singleBlog = await Post.findById(post_id).lean().exec();
+
+                console.log(singleBlog)
+
+                if (! singleBlog) {
+                    return res.status(200).json({
+                        status: "failed",
+                        data: "notfound"
+                    })
+                }
+
                 let singleBlogAuthor = await SignedUpUser.findById(singleBlog.author).lean().exec();
                 singleBlog.profileUrl = singleBlogAuthor.profileUrl;
                 singleBlog.username = singleBlogAuthor.username;
@@ -294,6 +304,7 @@ router.get(
                 singleBlog.email = singleBlogAuthor.email;
                 singleBlog.distance = formatDistanceToNow(singleBlog.createdAt, {addSuffix: true}).replace("about", "")
                 singleBlog.alreadyFollows = false
+                
                 const isUserFollowingThisUser = await FollowingUser.findOne({
                     user_id: user_id,
                     "follows.user": singleBlogAuthor._id
@@ -665,7 +676,9 @@ router.delete(
         
         if (! post_id) return res.status(200).json({status: "failed", reason: "post_id not provided"})
 
+        let user_id = req.user_id
         try {
+            
             const blogExists = await Post.findById(post_id).lean().exec()
 
             if (blogExists) {
@@ -676,6 +689,12 @@ router.delete(
                 await Likes.deleteMany({ post_id })
                 await PostView.deleteMany({ post_id })
                 await replyComments.deleteMany({ post_id })
+                
+                // removing notifications assocaited with that post
+                await PostLikesNotification.deleteMany({post_id: post_id, sender: user_id})
+                await CommentNotification.deleteMany({post_id: post_id, sender: user_id})
+                await ReplyCommentNotification.deleteMany({post_id: post_id, sender: user_id})
+                await PostNotifications.deleteMany({post_id: post_id, sender: user_id})
 
                 return res.status(200).json({
                     status: "success",
@@ -684,7 +703,7 @@ router.delete(
             } else {
                 return res.status(200).json({
                     status: "failed",
-                    reason: "post not found"
+                    reason: "notfound"
                 })
             }
         } catch (e) {
@@ -1570,7 +1589,12 @@ router.get("/has_notifications", async (req, res) => {
             isRead: false
         })
 
-        totalUnreadNotifications = followingNotification?.length || 0 + postNotification?.length || 0 + commentNotification?.length || 0 + replyCommentNotification?.length || 0
+        const postLikeNotiFication = await PostLikesNotification.find({
+            receiver: user_id,
+            isRead: false
+        })
+
+        totalUnreadNotifications = followingNotification?.length || 0 + postNotification?.length || 0 + commentNotification?.length || 0 + replyCommentNotification?.length || 0 + postLikeNotiFication.length || 0
         
         return res.status(200).json({data: totalUnreadNotifications})
 
