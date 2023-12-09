@@ -13,6 +13,9 @@ const FollowingUser = require("../models/FollowingUsers");
 const Notifications = require("../models/Notifications");
 const PostNotifications = require("../models/PostNotification");
 const { postMessage } = require("../utils/notification_data");
+const PostLikesNotification = require("../models/LikePostNotification");
+const CommentNotification = require("../models/CommentsNotifications");
+const ReplyCommentNotification = require("../models/ReplyCommentNotification");
 require("dotenv").config();
 
 router.post(
@@ -159,8 +162,6 @@ router.post(
                 exec()
             
             // the receivers might be a bunch of users
-            
-            console.log(followersList, 'are following this user', user_id)
 
             
             await Promise.all(
@@ -234,7 +235,11 @@ router.delete("/delete_account", async (req, res) => {
         // remove those who are followed by this user
 
         await FollowingUser.findOneAndDelete({user_id: user_id})
-
+        await PostLikesNotification.deleteMany({post_id: post_id, sender: user_id})
+        await CommentNotification.deleteMany({post_id: post_id, sender: user_id})
+        await ReplyCommentNotification.deleteMany({post_id: post_id, sender: user_id})
+        await PostNotifications.deleteMany({post_id: post_id, sender: user_id})
+        
         return res.status(200).json({status: "success"});
     } catch (error) {
         console.error("Error deleting account", error);

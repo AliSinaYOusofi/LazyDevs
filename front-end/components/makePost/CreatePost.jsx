@@ -18,7 +18,7 @@ export default function CreatePost({content}) {
     const [spinner, setSpinner] = useState(false);
     const [tagInputs, setTagInputs] = useState(['', '', '']);
     const [postContent, setPostContent] = useState({content: ""});
-    const {currentUser, templateContent} = useAppContext()
+    const {currentUser, templateContent, editTags, postid, setPostid, setEditTags} = useAppContext()
     
     const handleImagePreview = () => {}
     
@@ -83,33 +83,78 @@ export default function CreatePost({content}) {
 
         try {
 
-            const requestData = {
-                content: encodeURIComponent(JSON.stringify(postContent.content)),
-                user_id: currentUser ? currentUser._id : null,
-                tagInputs: tagInputs,
-            }
+            // now there should be two endpoints for this
             
-            const res = await fetch("http://localhost:3001/user/save_post", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestData),
-                credentials: "include"
-            });  
+            
+            // saving post to db.
+            
+            if (editTags && postid) { // if this is the case then it's an update mode
+                
+                const requestData = {
+                    content: encodeURIComponent(JSON.stringify(postContent.content)),
+                    user_id: currentUser ? currentUser._id : null,
+                    tagInputs: tagInputs,
+                    post_id: postid
+                }
 
-            const json = await res.json();
+                const res = await fetch("http://localhost:3001/blogRoutes/update_post", 
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestData),
+                        credentials: "include"
+                    }
+                );  
 
-            if (json.message === "success") toast.success("post created successfully");
-            else if (json.message === "serverError") toast.success("Server Error");
-            else toast.error("Failed to post !")
- 
-            setPostContent({content: ""})
+                const json = await res.json();
+
+                if (json.message === "success") toast.success("post updated successfully");
+                else if (json.message === "serverError") toast.success("Server Error");
+                else toast.error("Failed to update post !")
+                setEditTags(null)
+                setPostid(null)
+                setPostContent({content: ""})
+            }
+
+            // else this is a create mode
+
+            else {
+                
+                const requestData = {
+                    content: encodeURIComponent(JSON.stringify(postContent.content)),
+                    user_id: currentUser ? currentUser._id : null,
+                    tagInputs: tagInputs,
+                }
+
+                const res = await fetch("http://localhost:3001/user/save_post", 
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestData),
+                        credentials: "include"
+                    }
+                );  
+    
+                const json = await res.json();
+    
+                if (json.message === "success") toast.success("post created successfully");
+                else if (json.message === "serverError") toast.success("Server Error");
+                else toast.error("Failed to post !")
+     
+                setPostContent({content: ""})
+            }
         } catch(err) {
-            toast.error("failed to create post");
+            toast.error("failed to process");
             console.error(err);
         }
-        setSpinner(false);
+
+        finally {
+            setSpinner(false)
+        }
     }
 
     useEffect(() => {
@@ -119,6 +164,15 @@ export default function CreatePost({content}) {
             setPostContent({
                 content: templateContent,
             });
+        }
+
+        if (editTags) {
+            setTagInputs(editTags);
+        }
+
+        return () => {
+            setEditTags(null)
+            setPostid(null)
         }
       }, [content]);
     
@@ -170,7 +224,7 @@ export default function CreatePost({content}) {
 
                     <button
                         type="button"
-                        disabled={postContent ? postContent.content.length === 0 : false }
+                        disabled={postContent?.content ? postContent.content.length === 0 : false }
                         title="clear"
                         onClick={() => setPostContent({})} 
                         className="bg-white ml-4 px-5 py-3  border-2 border-gray-900 text-black rounded-lg h-8 md:h-10 

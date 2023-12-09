@@ -288,8 +288,6 @@ router.get(
                 //Todo: handle if posts are deleted
                 let singleBlog = await Post.findById(post_id).lean().exec();
 
-                console.log(singleBlog)
-
                 if (! singleBlog) {
                     return res.status(200).json({
                         status: "failed",
@@ -2086,4 +2084,52 @@ router.get("/analytics_data", async (req, res) => {
         return res.status(200).json({message: "failed"})
     }
 })
+
+router.post(
+    "/update_post",
+    
+    body('user_id').trim().isMongoId().escape(),
+    body('content').notEmpty().escape(), 
+    body('tagInputs').isArray(),
+    body('post_id').isMongoId().escape(), 
+    
+    async (req, res) => 
+    
+    {
+        const result = validationResult(req)
+
+        if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided", error: result.array()})
+        
+        let {content, user_id, tagInputs, post_id} = req.body;
+        
+        if (!user_id) return res.status(200).json({message: "user_id required"});
+        
+        else if (! tagInputs || tagInputs.every(value => value === '')) {
+            return res.status(200).json({
+                status: "failed",
+                reason: "empty tags all"
+            })
+        }
+    
+        tagInputs = tagInputs.map(tag => tag.includes("#") ? tag :  `#${tag}`.toLowerCase())
+        content = (JSON.parse(decodeURIComponent(content)))
+        
+        try {
+
+            // now for updating the post
+            await Post.updateOne({_id: post_id}, {
+                title: content.split("\n")[0],
+                body: content,
+                tags: tagInputs,
+            })
+            return res.status(200).json({message: "success"})
+
+        } 
+        
+        catch( e ) {
+            console.error("while updating post", e)
+            return res.status(200).json({message: "serverError"})
+        }
+    }
+)
 module.exports = router 

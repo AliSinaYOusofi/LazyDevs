@@ -12,13 +12,15 @@ export default function PostOfUserBasedId({author}) {
 
     const [posts, setPosts] = useState(undefined);
     const [errorMessages, setErrorMessages] = useState('')
-    const [sortedBy, setSortedBy] = useState(true)
     const [retryPosts, setRetryPosts] = useState(false)
     const [deletePost, setDeletePost] = useState(false)
 
     useEffect( () => {
+        
         async function getUserBlogsBasedOnAuthorOfTheUser() {
+            
             if (!author) return alert("no author id provided") 
+            
             try {
                 const response = await fetch(`http://localhost:3001/accountRoutes/my_posts`, 
                     {
@@ -28,7 +30,7 @@ export default function PostOfUserBasedId({author}) {
                 );
                 
                 const data = await response.json()
-
+                
                 if (data.status === "success") setPosts(data.data)
             
                 else if (data.status === "failed") setErrorMessages("Some server error")
@@ -45,11 +47,6 @@ export default function PostOfUserBasedId({author}) {
         getUserBlogsBasedOnAuthorOfTheUser()
 
     }, [author, retryPosts, deletePost])
-
-    const reversePosts = () => {
-        setPosts([...posts].reverse())
-        setSortedBy(prev => ! prev)
-    }
 
     let noPostDiv = 
         <div className="mx-auto w-full"> 
@@ -120,7 +117,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <SingleUserPostBlogTemplate likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate tags={blog?.tags} body={blog?.body} likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }
