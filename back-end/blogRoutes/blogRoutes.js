@@ -12,12 +12,13 @@ const json = require("jsonwebtoken");
 const FollowingUser = require("../models/FollowingUsers")
 const { body, validationResult, query } = require("express-validator")
 const Notifications = require("../models/Notifications")
-const { followMessage, commentMessage, replyMessage } = require("../utils/notification_data")
+const { followMessage, commentMessage, replyMessage, likeMessage } = require("../utils/notification_data")
 const FollowingNotification = require("../models/FollowingNotifications")
 const PostNotifications = require("../models/PostNotification")
 const CommentNotification = require("../models/CommentsNotifications")
 const ReplyCommentNotification = require("../models/ReplyCommentNotification")
 const PostLikes = require("../models/postLikes")
+const PostLikesNotification = require("../models/LikePostNotification")
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -372,7 +373,6 @@ router.post(
                         message: commentMessage(authorData.username),
                         post_id: post_id,
                         comment_id: newComment._id
-    
                     } )
                     // notifying the user of the comment on his post
                     await sendNotfication.save()
@@ -497,24 +497,44 @@ router.post(
         
         const {status, post_id} = req.body;
 
-        console.log(status, post_id, user_id)
         const post_id_exists = await Post.findById(post_id).lean().exec();
     
         if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
 
+        const username = await SignedUpUser.findById(post_id_exists.author).lean().exec()
+
         if (status) {
             
-            let userExists = await PostLikes.findOne({liker: user_id}).lean().exec();
+            let userExists = await PostLikes.findOne({liker: user_id, post_id: post_id}).lean().exec();
             
             if (userExists) { 
                 
                 if (userExists.likes === 0) {
                     /// adding one to the like
+
+                    // sending like notification if is liked
+                    // if the user is liking his own/her post
+                    // notification should not be sent
+                    
                     await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: 1}})
+                    
+                    if (post_id_exists.author.toString() !== user_id) {
+
+                        const sendLikeNotification = new PostLikesNotification( {
+                            receiver: post_id_exists.author,
+                            sender: user_id,
+                            message: likeMessage(username.username),
+                            post_id: post_id
+                        })
+                        // notifying the user of the comment on his post
+    
+                        await sendLikeNotification.save()
+                    }
 
                     return res.status(200).json({status: "success", data: "liked"})
                 }
                 // subtracting one
+                await PostLikesNotification.findOneAndDelete({sender: user_id, post_id: post_id, receiver: post_id_exists.author})
                 await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: -1}})
 
                 return res.status(200).json({status: "success", data: "disliked"})
@@ -527,14 +547,28 @@ router.post(
                     likes: 1,
                     liker: user_id
                 }) 
-
+                
+                // and notification be sent
                 await newLiker.save();
+                
+                if (post_id_exists.author.toString() !== user_id) {
+
+                    const sendLikeNotification = new PostLikesNotification( {
+                        receiver: post_id_exists.author,
+                        sender: user_id,
+                        message: likeMessage(username.username),
+                        post_id: post_id
+                    })
+                    await sendLikeNotification.save()
+                }
+
                 return res.status(200).json({status: "success", data: "liked"})
             }
         } 
         else {
             
-            await Likes.findOneAndUpdate({'liker': userEmail}, {$inc: {likes: -1}})
+            await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: -1}})
+            await PostLikesNotification.findOneAndDelete({sender: user_id, post_id: post_id, receiver: post_id_exists.author})
             return res.status(200).json({status: "success", data: "disliked and subtracted one"})
         }
     }
@@ -553,13 +587,19 @@ router.get(
 
         let {post_id} = req.query;     
 
+        let user_id = req.user_id
+
+        console.log(post_id, user_id)
+        
         if (post_id) {
 
             let view_count = await PostView.find({'post_id': post_id}).lean().exec();
             let commentCount = await Comment.find({'post': post_id}).lean().exec();
             let likes_count = await PostLikes.find({'post_id': post_id, likes: {$eq: 1}}).lean().exec()
             
-            let already_user_liked = await PostLikes.findOne({'post_id': post_id, 'liker': req.user_id, likes: { $eq: 1}}).lean().exec()
+            let already_user_liked = await PostLikes.findOne({'post_id': post_id, 'liker': user_id, likes: { $eq: 1}}).lean().exec()
+
+            console.log(already_user_liked)
 
             if (view_count) {
                 return res.status(200).json({status: "success", view_count, commentCount, likes_count, already_user_liked: already_user_liked ? already_user_liked.likes : 0})
@@ -1653,6 +1693,27 @@ router.get("/user_notifications", async (req, res) => {
             
             })
         )
+        
+        let postLikesNoti = await PostLikesNotification.find({receiver: user_id}).lean().exec()
+
+        await Promise.all(
+            
+            postLikesNoti.map( async liker => {
+                
+                const currentSenderData = await SignedUpUser.findById(liker.sender)
+
+                const date_difference = formatDistanceToNowStrict((liker.At), {addSuffix: true}).replace("about", "")
+                
+                if (currentSenderData) {
+                    dataToSendBack.push({
+                        ...liker,
+                        profileUrl: currentSenderData.profileUrl,
+                        notifier_id : currentSenderData._id,
+                        date_difference
+                    })
+                }
+            })
+        )
 
         dataToSendBack = dataToSendBack.sort( (a, b) => {
             const firstDate = new Date(a.At)
@@ -1660,6 +1721,7 @@ router.get("/user_notifications", async (req, res) => {
 
             return secondDate - firstDate
         })
+
         return res.status(200).json({followersNotification: dataToSendBack})
 
     } 
@@ -1704,6 +1766,10 @@ router.get(
 
             else if (notification_type === "follow") {
                 await FollowingNotification.findByIdAndUpdate(notification_id, {isRead: true})
+            }
+
+            else if (notification_type === "like") {
+                await PostLikesNotification.findByIdAndUpdate(notification_id, {isRead: true})
             }
            
             return res.status(200).json({status: "success", message: "marked"})
@@ -1949,11 +2015,11 @@ router.get("/analytics_data", async (req, res) => {
                 return post
             })
 
-            let totalPostViews = await Promise.all(
+            await Promise.all(
                 
                 posts.map( async post => {
                     
-                    const views = await PostView.find({post_id: post._id}).lean().exec()
+                    const views = await PostView.find({post_id: post._id}).sort({viewdAt: -1}).lean().exec()
                     
                     const likes = await PostLikes.find({post_id: post._id, likes: { $eq: 1}}).lean().exec()
                     
@@ -1961,7 +2027,7 @@ router.get("/analytics_data", async (req, res) => {
                         totalLikesSummary.push(...likes)
                     }
 
-                    let comments = await Comment.find({post: post._id}).lean().exec()
+                    let comments = await Comment.find({post: post._id}).sort({commentedOn: -1}).lean().exec()
 
                     if (comments.length) {
                         

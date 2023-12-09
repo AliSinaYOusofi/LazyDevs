@@ -43,8 +43,10 @@ export default function SocialIcons({post_id}) {
                 },
                 
             );
+            
             const data = await response.json()
 
+            console.log(data, 'dddd')
             if (data.data === "liked") {
                 setLiked( true )
             } else if (data.data === "disliked") {
@@ -73,6 +75,7 @@ export default function SocialIcons({post_id}) {
                 );
                 const data = await response.json()
 
+                console.log(data)
                 if (data.status === "success") {
                     setViewCount(data?.view_count ? data.view_count?.length : 0)
                     setCommentCount(data?.commentCount ?  data.commentCount.length : 0)

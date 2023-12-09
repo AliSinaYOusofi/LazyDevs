@@ -46,6 +46,7 @@ export default async function Page() {
     
     const result = await getNotifications()
 
+    console.log(result, 'res')
     if (result === undefined) {
         return (
             <div className="mt-10 text-center">
