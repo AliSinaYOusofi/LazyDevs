@@ -7,6 +7,8 @@ export const LazyContextProvider = ({children}) => {
     const [profileUrl, setProfileUrl] = useState();
     const [currentUser, setCurrentUser] = useState();
     const [templateContent, setTemplateContent] = useState(undefined)
+    const [editTags, setEditTags] = useState(null)
+    const[postid, setPostid] = useState(null)
 
     return (
         <lazyContext.Provider 
@@ -14,7 +16,9 @@ export const LazyContextProvider = ({children}) => {
                     {
                         profileUrl, setProfileUrl,
                         templateContent, setTemplateContent,
-                        currentUser, setCurrentUser
+                        currentUser, setCurrentUser,
+                        editTags, setEditTags,
+                        postid, setPostid,
                     }
                 }
             >
