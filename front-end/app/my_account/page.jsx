@@ -13,7 +13,7 @@ import PostOfUserBasedId from '@/components/SingleUserPosts/PostOfUserBasedId'
 import { useAppContext } from '@/context/useContextProvider'
 import React, {useState, useEffect} from 'react'
 import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Following from '@/components/Followers/Following'
 import TagsIcon from '@/components/SVG/TagsIcon'
 import UserTags from '@/components/UserFollowingTags/UserTags'
@@ -29,17 +29,20 @@ export default function Page() {
     const router = useRouter()
 
     const {currentUser} = useAppContext();
-
+    
     let liArray = ["Profile", "Edit Profile", "Posts", "Saved", "Followers", "Tags", "Following", "Danger Zone", "Analytics"]
     let liIconMapping = [<ProfileIcon />, <EditProfileIcon />, <PostsIcon />, <SavedPostIcon />, <FollowersIcon />, <TagsIcon />, <FollowersIcon />, <DangerZone />, <AnalyticsIcon />]
     let components = [<AccountDetails />, <EditProfile />, <PostOfUserBasedId author={currentUser ? currentUser._id : null}/>, <SavedPosts />, <Followers />, <UserTags />, <Following />, <DeleteAccount />, <Analytics />]
 
     const handleListItemClick = (index) => {
+        
         setActiveListItem(index)
         setCurrentComponent(components[index])
+        localStorage.setItem("lastVisitedComponentOfAccount", index)
     }
 
     const similarClass = "flex items-center justify-start transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 px-2 rounded-r-md mt-2 gap-x-2"
+    
     const menuItems = liArray.map( (li, index) => 
         li === "Analytics" ?
         
@@ -89,6 +92,17 @@ export default function Page() {
         checkUser()
         if (!currentComponent) setCurrentComponent(components[activeListItem])
         return () => setCurrentComponent(components[0])
+    }, [])
+
+    useEffect( () => {
+        
+        const setLastVisitedComponent = () => {
+            const lastVisitedComponent = localStorage.getItem("lastVisitedComponentOfAccount")
+            setActiveListItem(parseInt(lastVisitedComponent))
+            setCurrentComponent(components[lastVisitedComponent])
+        }
+
+        setLastVisitedComponent()
     }, [])
     
     return (

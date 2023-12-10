@@ -10,31 +10,46 @@ import FollowingFeed from './FollowingFeed';
 
 export default function HandleFeed() {
   
-  const [blogType, setBlogType] = useState("Relevant")
+  const [activeListItem, setActiveListItem] = useState(0)
+  const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
   
   const menutItems = ["Relevant", "Most Viewed", "Latest", "Following"]
   const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />, <FollowingFeed />]
-  const [currentComponent, setCurrentComponent] = useState(<RelevantFeeds />)
-
-  /* 
-    adding the top, latest and relevant options
-    when clicked on when one of them then the blogs should also.
-  */
 
   const liItemStyle = 'bg-[#f5f6fb] px-4 py-1 rounded-sm   transition-all duration-300'
   
-  const handleLiItemsClick = (e) => {
-    setBlogType(e.target.textContent.trim())
-    setCurrentComponent(components[menutItems.indexOf(e.target.textContent.trim())])
+  const handleLiItemsClick = (index) => {
+    
+    setActiveListItem(parseInt(index))
+    setCurrentComponent(components[parseInt(index)])
+    console.log(components[menutItems.indexOf(index)])
+    localStorage.setItem("lastFeedAccessed", index)
+  
   }
 
-  const menutItemsHTML = menutItems.map( li => {
+  const menutItemsHTML = menutItems.map( (li, index) => {
     return (
       
-      <li onClick={handleLiItemsClick} key={li} className={`${blogType === li ? liItemStyle : "cursor-pointer w-fit px-4 py-1 rounded-sm"}`}> {li} </li>
+      <li onClick={() => handleLiItemsClick(index)} key={li} className={`${menutItems[activeListItem] === li ? liItemStyle : "cursor-pointer w-fit px-4 py-1 rounded-sm"}`}> {li} </li>
       
     )
   })
+
+
+  useEffect( () => {
+        
+    const setLastVisitedComponent = () => {
+      
+      const lastVisitedComponent = localStorage.getItem("lastFeedAccessed")
+
+      if (lastVisitedComponent !== null) {
+        setActiveListItem(parseInt(lastVisitedComponent))
+        setCurrentComponent(components[parseInt(lastVisitedComponent)])
+      }
+    }
+    setLastVisitedComponent()
+  }, [])
+
 
   return (
     <>

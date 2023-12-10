@@ -23,6 +23,7 @@ export default function UserHomePage({user_id}) {
     const handleListItemClick = (index) => {
         setActiveListItem(index)
         setCurrentComponent(components[index])
+        localStorage.setItem("lastVisitedComponent", index)
     }
 
     const similarClass = "flex items-center justify-start transition-all duration-200 cursor-pointer hover:translate-x-2 py-2 px-2 rounded-r-md mt-2 gap-x-2"
@@ -66,9 +67,27 @@ export default function UserHomePage({user_id}) {
             }
         }
         checkUser()
+        
         if (!currentComponent) setCurrentComponent(components[activeListItem])
-        return () => setCurrentComponent(components[0])
+    
     }, [])
+
+    useEffect( () => {
+        
+        const setLastVisitedComponent = () => {
+            const lastVisitedComponent = localStorage.getItem("lastVisitedComponent")
+
+            if ( lastVisitedComponent !== null ) {
+
+                setActiveListItem(parseInt(lastVisitedComponent))
+                setCurrentComponent(components[lastVisitedComponent])
+            }
+        }
+
+        setLastVisitedComponent()
+
+    }, [])
+
     
     return (
         <>
