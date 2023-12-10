@@ -14,7 +14,9 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
         try {
             setSpinner(true)
             let whichNotificationToInvode = notification_to_invoke(message)
+            console.log(message)
 
+            console.log(id, whichNotificationToInvode)
             const response = await fetch(`http://localhost:3001/blogRoutes/mark_notification?notification_id=${encodeURIComponent(id)}&post_id=${post_id}&notification_type=${encodeURIComponent(whichNotificationToInvode)}`, {
                 method: "GET",
                 credentials: "include",
@@ -22,6 +24,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
 
             const json = await response.json()
             
+            console.log(json, "json")
             if (json.message === "marked") {
                 router.refresh()
             }

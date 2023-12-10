@@ -86,7 +86,7 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
 
             <div>
                 {
-                    user_id === currentUser._id ?
+                    user_id === currentUser?._id ?
                     <button
                         disabled
                         className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-white text-black ml-10" 
