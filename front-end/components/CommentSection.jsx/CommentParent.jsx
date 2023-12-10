@@ -55,7 +55,6 @@ export default function CommentParent({post_id}) {
 
             let json = await response.json();
 
-            console.log(json, 'comm')
             if (json.data === "saved") {
                 toast.success("comment posted")
                 setComment(" ");
@@ -69,6 +68,7 @@ export default function CommentParent({post_id}) {
     }
 
     useEffect( () => {
+        
         const getPostComments = async () => {
             
             try {
@@ -91,7 +91,7 @@ export default function CommentParent({post_id}) {
                 
                 else if (data.status === "success") {
                     const extractedComments = data.data.map(comms => comms.comment).flat().reverse()
-                    const extractedReplies = data.data.map(reps => reps.replies).flat()
+                    const extractedReplies = data.data.map(reps => reps.replies).flat().reverse()
                     setCommentReplies(extractedReplies)
                     setPostComments(extractedComments)
                     console.log(extractedReplies)

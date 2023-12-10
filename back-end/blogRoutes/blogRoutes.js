@@ -229,7 +229,6 @@ router.get("/top", async (req, res) => {
             
             if (user_id) {
                 const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
-                console.log(alreadySaved)
                 blog.saved = alreadySaved.length > 0
             }    
             
@@ -510,7 +509,7 @@ router.post(
     
         if (! post_id_exists) return res.status(200).json({ status: "failed", data: "post not found" })
 
-        const username = await SignedUpUser.findById(post_id_exists.author).lean().exec()
+        const username = await SignedUpUser.findById(user_id).lean().exec()
 
         if (status) {
             
@@ -597,8 +596,6 @@ router.get(
         let {post_id} = req.query;     
 
         let user_id = req.user_id
-
-        console.log(post_id, user_id)
         
         if (post_id) {
 
@@ -607,8 +604,6 @@ router.get(
             let likes_count = await PostLikes.find({'post_id': post_id, likes: {$eq: 1}}).lean().exec()
             
             let already_user_liked = await PostLikes.findOne({'post_id': post_id, 'liker': user_id, likes: { $eq: 1}}).lean().exec()
-
-            console.log(already_user_liked)
 
             if (view_count) {
                 return res.status(200).json({status: "success", view_count, commentCount, likes_count, already_user_liked: already_user_liked ? already_user_liked.likes : 0})
@@ -758,17 +753,15 @@ router.post(
             
             // send notifications to the user
             let blogAuthorData = await Post.findById(post_id).lean().exec()
-
-            console.log(blogAuthorData, ' blog author', post_id)
             
             // and send the notifications if it's other than the user who made the comment
             // so a user should not get notifications if he replies to his or her own
             // comment
             
+            // this condition is good if the sender of the 
             if (user_id !== blogAuthorData.author) {
                 
                 let authorData = await SignedUpUser.findById(user_id).lean().exec()
-                console.log("sending notifications")
 
                 // the receiver should be the author of the comment not the author of the post
 
@@ -1542,7 +1535,6 @@ router.get(
                     blog.viewCount = views.length
                 }
 
-                console.log(completeBlogData)
                 return res.status(200).json({message: "success", data: completeBlogData})
             }
             return res.status(200).json({message: "success", zero: true})
@@ -1756,14 +1748,13 @@ router.get("/user_notifications", async (req, res) => {
 
 router.get(
     "/mark_notification",
-    query('notification_id').notEmpty().escape(),
-    query("post_id").notEmpty().escape().isMongoId().optional(),
+    query('notification_id').notEmpty().escape().optional(),
+    query("post_id").notEmpty().escape().optional(),
     async (req, res) => 
     {
     
         let error = validationResult(req)
-
-        if (! error.isEmpty()) return res.status(200).json({message: "invalid notification id"})
+        if (! error.isEmpty()) return res.status(200).json({message: "invalid notification id", data: error.array()})
 
         try {
 
