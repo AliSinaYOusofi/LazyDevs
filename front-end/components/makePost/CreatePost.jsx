@@ -18,7 +18,7 @@ export default function CreatePost({content}) {
     const [spinner, setSpinner] = useState(false);
     const [tagInputs, setTagInputs] = useState(['', '', '']);
     const [postContent, setPostContent] = useState({content: ""});
-    const {currentUser, templateContent, editTags, postid, setPostid, setEditTags} = useAppContext()
+    const {currentUser, templateContent, editTags, postid, setPostid, setEditTags, setTemplateContent} = useAppContext()
     
     const handleImagePreview = () => {}
     
@@ -170,11 +170,18 @@ export default function CreatePost({content}) {
             setTagInputs(editTags);
         }
 
-        return () => {
-            setEditTags(null)
-            setPostid(null)
-        }
       }, [content]);
+
+    
+    useEffect(() => {
+        return () => {
+            // This function will run when the component unmounts
+            setEditTags(null);
+            setPostid(null);
+            setTemplateContent(null)
+        };
+    }, []);
+    
     
     const handleInputChange = (index, value) => {
         const newInputs = [...tagInputs];
