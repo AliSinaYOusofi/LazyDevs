@@ -1,0 +1,1 @@
+export const otpValidator = otp => /^\d{6}$/.test(otp);

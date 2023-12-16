@@ -20,6 +20,7 @@ const ReplyCommentNotification = require("../models/ReplyCommentNotification")
 const PostLikes = require("../models/postLikes")
 const PostLikesNotification = require("../models/LikePostNotification")
 const nodemailer = require("nodemailer")
+const OTPModel = require("../models/OTP")
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -2137,46 +2138,101 @@ router.post(
         let {email} = req.body
 
         try {
+            
             const user = await SignedUpUser.findOne({email: email}).lean().exec()
             
             if (! user) return res.status(400).json({error: "account not found"})
             
-            const token = jwt.sign({user_id: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"})
-            const link = `XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX${token}`
-            
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
+            let transporter = nodemailer.createTransport({
+                
+                service: 'hotmail',
+                
                 auth: {
-                  user: 'youremail@gmail.com',
-                  pass: 'yourpassword'
+                    user: process.env.OUTLOOK_ACC,
+                    pass: process.env.OUTLOOK_ACC_PASS
+                },
+                
+                secure: false,
+                
+                port: 25,
+                
+                tls: {
+                    rejectUnauthorized: false
                 }
             });
 
+            const otp = Math.floor(100000 + Math.random() * 900000);
+
+            await OTPModel.create({email, otp})
+
             const mailOptions = {
-                from: "LazyDevs",
+                
+                from: process.env.OUTLOOK_ACC,
                 to: email,
                 subject: "Reset Password",
-                html: `<h1>Reset Password</h1>
-                <p>Click the link to reset your password</p>
-                <a href="${link}">Reset Password</a>`
+                text: `Use this verfication code to reset your password: ${otp}`
             }
             
             transporter.sendMail(mailOptions, (error, info) => {
+                
                 if (error) {
                     console.error("error while sending email", error)
-                    return res.status(200).json({message: "serverError"})
+                    return res.status(400).json({error: "Server error, try again later"})
                 }
+                
                 else {
                     console.log("email sent successfully")
+                    return res.status(200).json({message: "success"})
                 }
             })
         }
         catch(e) {
             console.error("while resetting password", e)
-            return res.status(200).json({error: "serverError"})
+            return res.status(400).json({error: "Server error, try again later"})
         }
 
     }
 )
 
+router.post(
+    "/verify_otp",
+    body('email').isEmail().escape(), 
+    body('otp').isNumeric().escape(), 
+    body('password').isLength({min: 6}),
+    async (req, res) => 
+    {
+        const error = validationResult(req)
+
+        if (! error.isEmpty()) return res.status(400).json({error: "invalid email", error: error.array()})
+    
+        let {email, otp, password} = req.body
+        
+        try {
+            
+            const user = await SignedUpUser.findOne({email: email}).lean().exec()
+            
+            if (! user) return res.status(400).json({error: "account not found"})
+            
+            const otpData = await OTPModel.findOne({email: email}).lean().exec()
+            
+            if (! otpData) return res.status(400).json({error: "invalid otp"})
+            
+            if (otpData.otp !== otp) return res.status(400).json({error: "invalid otp"})
+            
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
+            
+            await SignedUpUser.updateOne({email: email}, {
+                password: hashedPassword
+            })
+            
+            return res.status(200).json({message: "Your password was reset."})
+            
+        }
+        catch(e) {
+            console.error("while resetting password", e)
+            return res.status(400).json({error: "Server error, try again later"})
+        }
+    }
+)
 module.exports = router 
