@@ -92,11 +92,14 @@ export default function Login() {
                             name=""
                             id=""
                             placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)}/>
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        
                         <HideUnhide required={true}
                             field={password}
                             condition={hidePassword}
-                            setConditionFunction={setHidePassword} />
+                            setConditionFunction={setHidePassword} 
+                        />
                     </div>
                     
                     <button disabled={spinner}
@@ -106,7 +109,7 @@ export default function Login() {
                             handleSubmit();
                         }}
                         className="block md:relative shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 px-6  w-full rounded-md  font-semibold mb-2">
-                    Login
+                        Login
                     { spinner ? <Spinner /> : null}
                     </button>
                     
@@ -118,6 +121,11 @@ export default function Login() {
                     <Link href={"/"}
                         className="text-sm block mt-2 md:mt-0 hover:text-blue-500 cursor-pointer md:ml-2 md:inline-block">
                     Home
+                    </Link>
+                    
+                    <Link href={"/reset_password"}
+                        className="text-sm block f float-right mt-2 md:mt-0 hover:text-blue-500 cursor-pointer md:ml-2 md:inline-block">
+                    Forgot password ?
                     </Link>
                 </div>
             </div>

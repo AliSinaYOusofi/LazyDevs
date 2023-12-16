@@ -19,6 +19,7 @@ const CommentNotification = require("../models/CommentsNotifications")
 const ReplyCommentNotification = require("../models/ReplyCommentNotification")
 const PostLikes = require("../models/postLikes")
 const PostLikesNotification = require("../models/LikePostNotification")
+const nodemailer = require("nodemailer")
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -2123,4 +2124,59 @@ router.post(
         }
     }
 )
+
+router.post(
+    "/reset_password",
+    body('email').isEmail().escape(), 
+    async (req, res) => {
+
+        const error = validationResult(req)
+
+        if (! error.isEmpty()) return res.status(400).json({error: "invalid email", error: error.array()})
+        
+        let {email} = req.body
+
+        try {
+            const user = await SignedUpUser.findOne({email: email}).lean().exec()
+            
+            if (! user) return res.status(400).json({error: "account not found"})
+            
+            const token = jwt.sign({user_id: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"})
+            const link = `XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX${token}`
+            
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'youremail@gmail.com',
+                  pass: 'yourpassword'
+                }
+            });
+
+            const mailOptions = {
+                from: "LazyDevs",
+                to: email,
+                subject: "Reset Password",
+                html: `<h1>Reset Password</h1>
+                <p>Click the link to reset your password</p>
+                <a href="${link}">Reset Password</a>`
+            }
+            
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error("error while sending email", error)
+                    return res.status(200).json({message: "serverError"})
+                }
+                else {
+                    console.log("email sent successfully")
+                }
+            })
+        }
+        catch(e) {
+            console.error("while resetting password", e)
+            return res.status(200).json({error: "serverError"})
+        }
+
+    }
+)
+
 module.exports = router 
