@@ -48,13 +48,6 @@ const checkUserStatus = async () => {
 
 export default async function Page() {
   
-
-  /* 
-    adding the top, latest and relevant options
-    when clicked on when one of them then the blogs should also.
-  */
-
-  await checkUserStatus()
   return (
     <>
       <HandleFeed />
