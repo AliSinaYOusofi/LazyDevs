@@ -41,8 +41,6 @@ router.post(
 
         const userInfo = { username, fullName, password, email, profileUrl };
 
-        // const db = await getDB();
-
         try {
             
             let newUserData = new SignedUpUser(userInfo);

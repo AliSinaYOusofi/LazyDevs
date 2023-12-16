@@ -3,6 +3,7 @@ import ValidatorIcon from "@/components/ValidatorIcons/ValidatorIcon";
 import { emailValidator } from "@/functions/emailValidator";
 import Link from "next/link";
 import React, { useState } from "react";
+import ResetPassword from "./ResetPassword";
 
 const ForgotPassword = () => {
 
@@ -31,8 +32,10 @@ const ForgotPassword = () => {
                 body: JSON.stringify({ email }),
             });
 
+            console.log(response)
             if (response.ok) {
                 const data = await response.json();
+                console.log(data)
                 setSuccessMessage(data.message);
             } else {
                 const errorData = await response.json();
@@ -51,7 +54,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="w-[50%] mx-auto  h-screen mt-20">
+        <div className="w-[50%] mx-auto mt-20">
             
             <h1 className="text-5xl font-bold mb-5"> Find Your account </h1>
 
@@ -96,11 +99,17 @@ const ForgotPassword = () => {
             </button>
             
                 {errorMessage && 
-                <p className="w-full mt-10 p-10 rounded-md border-2 border-red-500">
+                <p className="w-full mt-10 p-10 rounded-md border-2 border-red-500 text-center font-bold font-mono uppercase text-3xl">
                     {errorMessage}
                 </p>}
-
-            {successMessage && <p>{successMessage}</p>}
+            
+            {successMessage === "success" ? 
+                <p className="w-full mt-10 p-10 rounded-md border-2 border-green-500 an animate-border-spin text-center font-bold font-mono uppercase text-3xl">
+                    A verfication code has been sent to your email
+                </p> 
+                : null
+            }
+            {successMessage === "success" ? <ResetPassword email={email}/> : null}
         </div>
     );
 };
