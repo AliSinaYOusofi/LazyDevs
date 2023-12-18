@@ -27,10 +27,6 @@ export default function Footer () {
                         and code snippets on a wide range of topics related to software 
                         development, programming languages, frameworks, and tools. 
                     </p>
-                    <p className="mt-4 text-sm text-gray-800">
-                        The website also features discussion forums, Q&A sections, and a 
-                        job board, allowing members to connect, collaborate, and advance their careers in the tech industry.
-                    </p>
                     </div>
                 </div>
                 <div className="space-y-2 text-sm">
