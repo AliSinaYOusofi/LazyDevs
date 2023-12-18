@@ -2145,19 +2145,11 @@ router.post(
             
             let transporter = nodemailer.createTransport({
                 
-                service: 'hotmail',
-                
+                host: "live.smtp.mailtrap.io",
+                port: 587,
                 auth: {
-                    user: process.env.OUTLOOK_ACC,
+                    user: "api",
                     pass: process.env.OUTLOOK_ACC_PASS
-                },
-                
-                secure: false,
-                
-                port: 25,
-                
-                tls: {
-                    rejectUnauthorized: false
                 }
             });
 
