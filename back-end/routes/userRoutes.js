@@ -16,6 +16,7 @@ const { postMessage } = require("../utils/notification_data");
 const PostLikesNotification = require("../models/LikePostNotification");
 const CommentNotification = require("../models/CommentsNotifications");
 const ReplyCommentNotification = require("../models/ReplyCommentNotification");
+const validateEmail = require("../utils/verifyEmailValidation");
 require("dotenv").config();
 
 router.post(
@@ -31,6 +32,9 @@ router.post(
 
         if (! result.isEmpty()) return res.status(200).json({message: "invalid data provided"})
 
+        // checking if we can send or receive emails to this account in case they provide invalid
+        // emails (self made emails)        
+        
         const {
             username,
             fullName,
@@ -43,8 +47,23 @@ router.post(
 
         try {
             
-            let newUserData = new SignedUpUser(userInfo);
+            let emailVerificationValid = await fetch(`https://emailverification.whoisxmlapi.com/api/v3?apiKey=${process.env.EMAIL_VERIFICATION}&emailAddress=${email}`, 
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
             
+            emailVerificationValid = await emailVerificationValid.json()
+            
+            let isEmailValid = validateEmail(emailVerificationValid)
+
+            if (! isEmailValid) return res.status(200).send("EmailInvalid");
+
+            let newUserData = new SignedUpUser(userInfo);
+             
             if (await SignedUpUser.usernameAlreadyExists(username)) return res.status(200).json("usernameExists");
             else if (await SignedUpUser.emailAlreadyExists(email)) return res.status(200).json("emailExists");
             

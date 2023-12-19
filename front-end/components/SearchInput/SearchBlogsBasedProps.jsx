@@ -5,7 +5,7 @@ import FetchPostError from '../Error/FetchPostError/FetchPostError'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
-export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
+export default function SearchBlogsBasedProps({blogs, size, showTitle}) {
 
     const [searchFlag, setSearchFlag] = useState('Title')
     const [searchText, setSearchText] = useState('')
@@ -17,8 +17,7 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
         setSearchText(e.target.value)
 
         if (searchFlag === 'Title') searchByTitle(e.target.value)
-        else if (searchFlag === 'Body') searchByBody()
-        else if (searchFlag === 'Most occurring') SearchByMostOccuring()
+        else if (searchFlag === 'Body') searchByBody(e.target.value)
     }
 
     function escapeRegExp(text) {
@@ -33,6 +32,7 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
 
         })
     }
+
     const searchByTitle = (text) => {
         
         if (text) {
@@ -64,11 +64,27 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
     }
 
     const searchByBody = (text) => {
-        alert("searching by body")
-    }
-
-    const SearchByMostOccuring = (text) => {
-        alert("searching by occuring")
+        if (text) {
+            
+            const escapeSpecialChars = escapeRegExp(text);
+            const searchRegex = new RegExp(escapeSpecialChars, 'i');
+            
+            const matchingBlogs = blogs.filter((blog) => searchRegex.test(blog.body));
+            const unmatchedBlogs = blogs.filter((blog) => !matchingBlogs.includes(blog));
+            
+            if (matchingBlogs.length > 0) {
+                hideUnHideElements("block", matchingBlogs);
+                hideUnHideElements("none", unmatchedBlogs);
+                setResult(matchingBlogs.length);
+            } 
+            else {
+                console.log('No matching blogs found');
+                hideUnHideElements("none", unmatchedBlogs);
+                setResult(0);
+            }
+        } else {
+            hideUnHideElements("block", blogs);
+        }
     }
 
 
@@ -115,7 +131,6 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle   }) {
                         <select defaultValue={"Title"} className="py-3 px-4 rounded-lg border-none outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
                             <option value="Title" defaultValue={"Title"}>Title</option>
                             <option value="Body">Body</option>
-                            <option value="Most occurring">Most occuring</option>
                         </select>
                 
                         </div> : 
