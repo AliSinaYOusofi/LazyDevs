@@ -21,6 +21,7 @@ const PostLikes = require("../models/postLikes")
 const PostLikesNotification = require("../models/LikePostNotification")
 const nodemailer = require("nodemailer")
 const OTPModel = require("../models/OTP")
+const bcrypt = require("bcrypt");
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -1192,7 +1193,7 @@ router.get("/get_following", async (req, res) => {
         
         let ListOfFollowingUsers = []
         
-        if (following.follows.length) {
+        if (following?.follows.length) {
             
             await Promise.all(
             
@@ -2145,17 +2146,20 @@ router.post(
             
             let transporter = nodemailer.createTransport({
                 
-                host: "live.smtp.mailtrap.io",
+                host: "smtp-relay.brevo.com",
                 port: 587,
                 auth: {
-                    user: "api",
+                    user: process.env.OUTLOOK_ACC,
                     pass: process.env.OUTLOOK_ACC_PASS
                 }
             });
 
             const otp = Math.floor(100000 + Math.random() * 900000);
 
-            await OTPModel.create({email, otp})
+            const newOtp = new OTPModel({
+                email,
+                otp
+            })
 
             const mailOptions = {
                 
@@ -2174,6 +2178,7 @@ router.post(
                 
                 else {
                     console.log("email sent successfully")
+                    newOtp.save()
                     return res.status(200).json({message: "success"})
                 }
             })
@@ -2199,7 +2204,9 @@ router.post(
     
         let {email, otp, password} = req.body
         
-        try {
+        console.log(email, otp, password)
+
+        try {   
             
             const user = await SignedUpUser.findOne({email: email}).lean().exec()
             
@@ -2207,7 +2214,7 @@ router.post(
             
             const otpData = await OTPModel.findOne({email: email}).lean().exec()
             
-            if (! otpData) return res.status(400).json({error: "invalid otp"})
+            if (! otpData) return res.status(400).json({error: "invalid otp provided"})
             
             if (otpData.otp !== otp) return res.status(400).json({error: "invalid otp"})
             
@@ -2218,6 +2225,7 @@ router.post(
                 password: hashedPassword
             })
             
+            await OTPModel.deleteOne({email: email})
             return res.status(200).json({message: "Your password was reset."})
             
         }
