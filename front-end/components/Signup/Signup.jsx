@@ -48,10 +48,17 @@ export default function Signup() {
 
             else if (response ==="error") toast.error("Server error try again later !");
 
-            setSpinner(false);
-        } catch (error) {
+            else if (response === "emailInvalid") toast.error("Email is invalid")
+
+        } 
+        
+        catch (error) {
             console.error("Error in signup comp", error);
             toast.error("Server error try again later !");
+        }
+        
+        finally {
+            setSpinner(false);
         }
     }
     return (

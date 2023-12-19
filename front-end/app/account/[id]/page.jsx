@@ -95,7 +95,7 @@ export default async function Page({params}) {
                 bio={userData?.user ? userData.user.bio : null}
             />
 
-            <div className="md:ml-12 ml-0 mx-auto overflow-x-hidden w-[100%] h-[100%]">
+            <div className="md:ml-12 ml-0 mx-auto overflow-x-hidden w-[100%] h-[100%]" id="user_details">
                 <UserHomePage user_id={params.id}/>
             </div>
         </>

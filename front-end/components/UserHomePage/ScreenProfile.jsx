@@ -44,6 +44,13 @@ export default function ScreenProfile({username, work, followers, following, num
             setSpinner(false)
         }
     }
+
+    const goToUserDetails = () => {
+        
+        let element = document.getElementById("user_details")
+
+        if (element) element.scrollIntoView({behavior: "smooth"})
+    }
     
     return (
         <div className="h-full rounded-md mt-10 flex md:flex-row flex-col w-[80%] mx-auto items-center  justify-evenly bg-[#fafafd] py-10">
@@ -107,6 +114,7 @@ export default function ScreenProfile({username, work, followers, following, num
 
                     <button
                         className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-50 text-black ml-10" 
+                        onClick={goToUserDetails}
                     >
                         More
                     </button>

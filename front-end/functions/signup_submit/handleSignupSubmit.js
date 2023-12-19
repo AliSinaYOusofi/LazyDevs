@@ -41,6 +41,7 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
         if (response.data === "UserSaved") return "saved"
         else if (response.data === "usernameExists") return "usernameExists"
         else if (response.data === "emailExists") return "emailExists"
+        else if (response.data === "EmailInvalid") return "emailInvalid"
         else return "error"
     
     } catch(error) {
