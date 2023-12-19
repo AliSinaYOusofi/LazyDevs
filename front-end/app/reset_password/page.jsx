@@ -32,20 +32,18 @@ const ForgotPassword = () => {
                 body: JSON.stringify({ email }),
             });
 
-            console.log(response)
             if (response.ok) {
                 const data = await response.json();
-                console.log(data)
                 setSuccessMessage(data.message);
-            } else {
+            } 
+            else {
                 const errorData = await response.json();
-                console.log(errorData)
                 setErrorMessage(errorData.error);
             }
         } 
         catch (error) {
             console.error("while reseting pass: " , error)
-            setErrorMessage("An error occurred while processing your request.");
+            setErrorMessage("An error occurred while processing your request");
         }
         
         finally {
@@ -99,7 +97,7 @@ const ForgotPassword = () => {
             </button>
             
                 {errorMessage && 
-                <p className="w-full mt-10 p-10 rounded-md border-2 border-red-500 text-center font-bold font-mono uppercase text-3xl">
+                <p className="w-full mt-10 p-10 rounded-md border-2 border-red-800 text-center font-bold font-mono uppercase text-3xl">
                     {errorMessage}
                 </p>}
             

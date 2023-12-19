@@ -16,6 +16,7 @@ export default function ResetPassword({email}) {
     const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
     const [spinner, setSpinner] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("")
     const router = useRouter()
 
     const handleResetPassword = async () => {
@@ -45,7 +46,7 @@ export default function ResetPassword({email}) {
         }
 
         setErrorMessage(null)
-        setSpinner(false)
+        setSpinner(true)
 
         try {
             
@@ -57,15 +58,19 @@ export default function ResetPassword({email}) {
                 body: JSON.stringify({ email, otp, password }),
             });
 
+            console.log("response ", response)
             if (response.ok) {
                 const data = await response.json();
                 setSuccessMessage(data.message);
 
+                console.log(data, 'success')
                 setTimeout( () => router.push("/login"), 2000)
             } 
             
             else {
                 const errorData = await response.json();
+
+                console.log(errorData)
                 setErrorMessage(errorData.error);
             }
         } 
@@ -84,6 +89,10 @@ export default function ResetPassword({email}) {
             {errorMessage && 
                 <p className="w-full mt-10 p-10 rounded-md border-2 border-red-500 text-center font-bold font-mono uppercase text-3xl">
                     {errorMessage}
+                </p>}
+            {successMessage && 
+                <p className="w-full mt-10 p-10 rounded-md border-2 border-green-500 text-center font-bold font-mono uppercase text-3xl">
+                    {successMessage}
                 </p>}
             <div className="flex relative items-center border-2 py-2 px-3 rounded-md group mt-10">
                         
@@ -130,7 +139,7 @@ export default function ResetPassword({email}) {
                 disabled={spinner} 
                 type="button" 
                 onClick={handleResetPassword} 
-                className="block relative w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                className="relative w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
                 Reset Password
                 { spinner ? <Spinner /> : null}
             </button>
