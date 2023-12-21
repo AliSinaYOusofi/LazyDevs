@@ -25,7 +25,7 @@ export default function UserFollowing ({user_id}) {
                     }
                 );
                 const data = await response.json()
-                console.log(data)
+                
                 if (data.message === "success" && data.data === "zero") {
                     setFollowers([])
                 } 

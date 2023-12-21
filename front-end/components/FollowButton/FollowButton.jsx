@@ -5,7 +5,7 @@ export default function FollowButton({follows, toBeFollowed}) {
     const [spinner, setSpinner] = useState(false);
     
     const {currentUser} = useAppContext()
-    console.log(toBeFollowed, follows)
+    
     useEffect( () => {
         // check if the user follows
         setAlreadyFollows(follows)
@@ -21,7 +21,6 @@ export default function FollowButton({follows, toBeFollowed}) {
                 }   
             );
             const data = await response.json()
-            console.log(data)
 
             if (data.message === "following") {
                 setAlreadyFollows(true)

@@ -43,21 +43,16 @@ export default function VerifyAccount({}) {
                     body: JSON.stringify({ email, otp }),
                 }
             );
-
-            console.log("response ", response)
             
             if (response.ok) {
                 const data = await response.json();
                 setSuccessMessage(data.message);
 
-                console.log(data, 'success')
                 setTimeout( () => router.push("/login"), 3000)
             } 
             
             else {
                 const errorData = await response.json();
-
-                console.log(errorData)
                 setErrorMessage(errorData.error);
             }
         } 

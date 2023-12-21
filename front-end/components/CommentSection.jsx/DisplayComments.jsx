@@ -6,6 +6,14 @@ import HiddenReplySmallPortion from './HiddenReplySmallPortion'
 import CopyToClipBoard from './CopyToClipBoard'
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
 import Link from 'next/link'
+import { Roboto } from 'next/font/google'
+
+const roboto = Roboto({
+    weight: ['400'],
+    style: ['normal'],
+    subsets: ['latin'],
+    display: 'swap',
+})
 
 export default function DisplayComments({author, comment, _id, profileUrl, date, distance, post_id, commentReplies, updateComments, author_id}) {
     
@@ -80,7 +88,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
     }
     return (
         <>
-            <div key={_id} className="max-w-2xl mt-10  rounded-md p-4 bg-[#fafafd]">
+            <div key={_id} className="max-w-2xl mt-10  rounded-md p-4 bg-white">
             
                 <div className="flex flex-row mt-3">
                     <img src={profileUrl} alt="" className="w-10 h-10 rounded-full ml-2 object-cover" />
@@ -145,7 +153,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                         <div className="w-full mt-4">
                             <textarea 
                                 placeholder='reply'
-                                className="w-full bg-[#fafafd]  focus:ring-1 ring-black border-black/40 outline-none p-2"
+                                className={`${roboto.className} w-full bg-white   border-black/40 focus:border-[1px] rounded-md outline-none p-2`}
                                 rows={4}
                                 value={replyCommentValue}
                                 onChange={(e) => setReplyCommentValue(e.target.value)}

@@ -19,8 +19,6 @@ export default function TagSearchResults({query}) {
 
             const json = await response.json()
             
-            console.log(json)
-            
             if (json.message === "success" && !json.zero) {
                 setTagPosts(json.data)
             }

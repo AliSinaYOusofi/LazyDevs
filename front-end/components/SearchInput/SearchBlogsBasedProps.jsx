@@ -51,7 +51,7 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle}) {
             } 
             
             else {
-                console.log('No matching blogs found');
+               
                 hideUnHideElements("none", unmatchedBlogs)
                 setResult(0)
             }
@@ -78,7 +78,6 @@ export default function SearchBlogsBasedProps({blogs, size, showTitle}) {
                 setResult(matchingBlogs.length);
             } 
             else {
-                console.log('No matching blogs found');
                 hideUnHideElements("none", unmatchedBlogs);
                 setResult(0);
             }

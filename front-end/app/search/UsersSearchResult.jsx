@@ -22,8 +22,6 @@ export default function UsersSearchResult({query}) {
 
             const json = await response.json()
             
-            console.log(json)
-            
             if (json.message === "success" && !json.zero) {
                 setUsers(json.data)
             }

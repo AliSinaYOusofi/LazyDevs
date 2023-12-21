@@ -53,7 +53,7 @@ export default function ScreenProfile({username, work, followers, following, num
     }
     
     return (
-        <div className="h-full rounded-md mt-10 flex md:flex-row flex-col w-[80%] mx-auto items-center  justify-evenly bg-[#fafafd] py-10">
+        <div className="h-full rounded-md mt-10 flex md:flex-row flex-col w-[80%] mx-auto items-center  justify-evenly bg-white py-10">
             
             <div className="px-5 md:w-1/2 md:h-1/2 flex items-center flex-col">
                 <img src={profileUrl} alt="" className="object-cover w-[25rem] h-[25rem]  p-2 rounded-full border-2 border-white"/>

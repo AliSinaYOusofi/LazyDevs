@@ -28,10 +28,10 @@ export default function Avatar({profileUrl}) {
                 setUserHasNotifications(parseInt(data.data))
             }
 
-            console.log(data)
+            
         } 
         catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }, [profileUrl])
 

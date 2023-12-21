@@ -22,6 +22,7 @@ const PostLikesNotification = require("../models/LikePostNotification")
 const nodemailer = require("nodemailer")
 const OTPModel = require("../models/OTP")
 const bcrypt = require("bcrypt");
+const he = require("he")
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -340,6 +341,10 @@ router.post(
         
         let { post_id, comment} = req.body;
         
+        // decoding the comment
+        comment = decodeURIComponent(comment)
+        comment = he.decode(comment)
+
         let author = req.user_id
         
         if (!author) return res.status(400).json({message: "invalid data provided"})
@@ -376,7 +381,7 @@ router.post(
 
                 // same user should not get notifications for commenting on his/her post
 
-                if (author !== singleBlog.author) {
+                if (author !== singleBlog.author.toString()) {
 
                     let sendNotfication = new CommentNotification( {
                         receiver: singleBlog.author,
@@ -546,7 +551,7 @@ router.post(
                 }
                 // subtracting one
                 await PostLikesNotification.findOneAndDelete({sender: user_id, post_id: post_id, receiver: post_id_exists.author})
-                await Likes.findOneAndUpdate({'liker': user_id}, {$inc: {likes: -1}})
+                await Likes.findOneAndDelete({'liker': user_id}, {$inc: {likes: -1}})
 
                 return res.status(200).json({status: "success", data: "disliked"})
             } 
@@ -762,7 +767,7 @@ router.post(
             // comment
             
             // this condition is good if the sender of the 
-            if (user_id !== blogAuthorData.author) {
+            if (user_id !== blogAuthorData.author.toString()) {
                 
                 let authorData = await SignedUpUser.findById(user_id).lean().exec()
 

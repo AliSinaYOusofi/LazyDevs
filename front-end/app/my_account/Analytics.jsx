@@ -53,8 +53,6 @@ export default function Analytics() {
 
             const json = await response.json()
             
-            console.log(json, )
-            
             if (json.message === "success" && ! json.zero) {
                 
                 setHasPosts(json.posts?.length)

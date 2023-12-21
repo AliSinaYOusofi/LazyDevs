@@ -25,7 +25,7 @@ export default function AccountDetails() {
                 setError(true)
             }
         } catch( e ) {
-            console.log('while fetching udpated data', e )
+            console.error('while fetching udpated data', e )
             setError(true)
         }
     })
