@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const postLikes = new mongoose.Schema({
     
     post_id: {
-        type: "String",
+        type: mongoose.Types.ObjectId,
+        ref: "Post",
         required: true,
         immutable: true
     },

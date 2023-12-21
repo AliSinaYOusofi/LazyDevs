@@ -41,7 +41,7 @@ export default function Signup() {
             let response = await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
             
             if (response === "confirm") {
-                console.log("redirecting to confirm_account")
+                toast.info("redirecting to verfication page")
                 await sleep(1000);
                 router.push("/confirm_account");
             }

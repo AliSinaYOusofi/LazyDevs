@@ -2277,4 +2277,44 @@ router.post(
 
     }
 )
+
+router.get(
+    "/get_likers",
+    query("post_id").isMongoId(), 
+    async (req, res) => {
+
+    try {
+        let {post_id} = req.query
+
+        let postLikers = await PostLikes.find({post_id}).lean().exec()
+        let likersData = []
+
+        await Promise.all(
+            
+            postLikers.map( async (post) => {
+                
+                let likerInfo = await SignedUpUser.findById(post.liker).lean().exec()
+                
+                if (likerInfo) {
+
+                    delete likerInfo.password
+                    likersData.push(
+                        {
+                            ...likerInfo,
+                            likeDistance: formatDistanceToNowStrict((post.likedAt), {addSuffix: true}).replace("about", ""),
+                            date: post.likedAt
+                        }
+                    )
+                }
+            })
+        )
+        
+        likersData = likersData.sort( (a, b) => new Date(b.date) - new Date(a.date))
+        return res.status(200).json({data: likersData})
+
+    } catch( e ) {
+        console.error("failed to get likers: ", e)
+        return res.status(500).json({error: "Server error, try again later"})
+    }
+})
 module.exports = router 

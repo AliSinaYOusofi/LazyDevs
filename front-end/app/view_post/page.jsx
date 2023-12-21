@@ -17,15 +17,19 @@ import delete_cookie from '@/functions/delete_cookie';
 import { useAppContext } from '@/context/useContextProvider';
 import { debounce } from 'lodash';
 import PostNotFoundDiv from './PostNotFound';
+import WhoLiked from './WhoLiked';
 
 export default function Page() {
 
     const post_id = useSearchParams().get("post");
+    
     const [currentBlog, setCurrentBlog] = useState(undefined)
     const [recentBlogs, setRecentBlogs] = useState([])
     const [errorMessages, setErrorMessages] = useState('')
     const [retryPosts, setRetryPosts] = useState(false)
     const [retryRecentPosts, setRetryRecentPosts] = useState(false)
+    const [showPostLikers, setShowPostLikers] = useState(false)
+    const [hideLikersDiv, setHideLikersDiv] = useState(false)
     const currentUser = useCurrentUser()
     const router = useRouter()
     const {setCurrentUser} = useAppContext()
@@ -214,11 +218,6 @@ export default function Page() {
             }
         </div>
     }
-    
-    // const handleSortRecentPosts = () => {
-    //    setRecentBlogs([...recentBlogs].reverse())
-    //    setSortedBy(prev => !prev)
-    // }
 
     else if (currentBlog === "notfound") return <PostNotFoundDiv />
     
@@ -248,6 +247,26 @@ export default function Page() {
                             : null
                         }
                     </div>
+
+                    <div className=" flex w-1/2 mt-4 items-center transition-all duration-200 border-black border-[1px] rounded-full p-1 " onClick={() => setShowPostLikers(prev => ! prev)}>
+                                
+                        {
+                            showPostLikers
+                            ?
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                            :
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" />
+                            </svg>
+                        }
+                        <span className="text-gray-500">hide/unhide post likers</span>
+                    </div>
+
+                    {
+                        showPostLikers ? <WhoLiked post_id={post_id}/> : null
+                    }
                     {/* <TextToSpeech text={currentBlog?.body}/> */}
                     
                     <hr className="mt-10"/>
@@ -288,7 +307,6 @@ export default function Page() {
                 </div>
 
             </div>
-            
         </>
     )
 }

@@ -239,7 +239,11 @@ export default function CreatePost({content}) {
                         Clear
                     </button>
 
-                    <Link href="/templates" className="hover:text-blue-500 ml-10 flex bg-white/50 p-2 rounded-sm w-fit">
+                    <Link 
+                        href="/templates"
+                        className="bg-white ml-4 px-5 py-3  border-2 border-gray-900 text-black rounded-lg h-8 md:h-10 
+                            flex items-center justify-center relative"
+                    >
                         See templates
                     </Link>
                 </div>
