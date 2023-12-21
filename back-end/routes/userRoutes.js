@@ -17,6 +17,8 @@ const PostLikesNotification = require("../models/LikePostNotification");
 const CommentNotification = require("../models/CommentsNotifications");
 const ReplyCommentNotification = require("../models/ReplyCommentNotification");
 const validateEmail = require("../utils/verifyEmailValidation");
+const OTPModel = require("../models/OTP");
+const nodemailer = require("nodemailer")
 require("dotenv").config();
 
 router.post(
@@ -68,9 +70,52 @@ router.post(
             else if (await SignedUpUser.emailAlreadyExists(email)) return res.status(200).json("emailExists");
             
             newUserData.save(); // no longer accepts callback
-            return res.status(200).send("UserSaved");
 
-        }catch(error) {
+            // sending confirmation otp for verifying if the user is the owner of the email
+            // they calaim to be
+            
+            // gening otp
+            const otp = Math.floor(100000 + Math.random() * 900000);
+
+            const newOtp = new OTPModel({
+                email,
+                otp
+            })
+
+            // sending otp to the user
+            let transporter = nodemailer.createTransport({
+                
+                host: "smtp-relay.brevo.com",
+                port: 587,
+                auth: {
+                    user: process.env.OUTLOOK_ACC,
+                    pass: process.env.OUTLOOK_ACC_PASS
+                }
+            });
+
+            const mailOptions = {
+                
+                from: process.env.OUTLOOK_ACC,
+                to: email,
+                subject: "Confrim Your email",
+                text: `Use this verfication code to confirm your email: ${otp}`
+            }
+            
+            transporter.sendMail(mailOptions, (error, info) => {
+                
+                if (error) {
+                    console.error("error while sending email", error)
+                    return res.status(400).json({error: "Server error, try again later"})
+                }
+                
+                else {
+                    console.log("email sent successfully")
+                    newOtp.save()
+                    return res.status(200).send("confrim")
+                }
+            })
+        }
+        catch(error) {
             console.error(error, "error while saving data");
             return res.status(500).send("serverError");
         }
@@ -99,6 +144,17 @@ router.post(
                 let currentUserData = await SignedUpUser.authenticateUser(password, email);
                 
                 if (currentUserData) {
+                    
+                    // if the user has signed up but has not yet confirmed his/her
+                    // account. they must confirm their account first
+                    if (! currentUserData.isAccountConfirmed) {
+                        return res.
+                        status(200).
+                        send
+                        (   
+                            "unconfirmed"
+                        )
+                    }
 
                     const accessToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "1d"});
                     const refreshToken = jwt.sign(currentUserData, process.env.JWT_SECRET, {expiresIn: "2d"});
@@ -250,12 +306,13 @@ router.delete("/delete_account", async (req, res) => {
             { $pull: { "follows": user_id } }
         )
         // remove those who are followed by this user
-
+        
         await FollowingUser.findOneAndDelete({user_id: user_id})
-        await PostLikesNotification.deleteMany({post_id: post_id, sender: user_id})
-        await CommentNotification.deleteMany({post_id: post_id, sender: user_id})
-        await ReplyCommentNotification.deleteMany({post_id: post_id, sender: user_id})
-        await PostNotifications.deleteMany({post_id: post_id, sender: user_id})
+        
+        await PostLikesNotification.deleteMany({sender: user_id})
+        await CommentNotification.deleteMany({sender: user_id})
+        await ReplyCommentNotification.deleteMany({sender: user_id})
+        await PostNotifications.deleteMany({sender: user_id})
         
         return res.status(200).json({status: "success"});
     } catch (error) {

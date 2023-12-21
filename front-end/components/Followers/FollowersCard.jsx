@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, {useState, useEffect} from 'react';
 
 
-function ProfileCard({ followers, posts, following, image, name, work, user_id, isFollowing, date, diff}) {
+function ProfileCard({ followers, posts, following, image, name, work, user_id, isFollowing, date, diff, setTriggerParent}) {
 
     const [spinner, setSpinner] = useState()
     const [alreadyFollows, setAlreadyFollows] = useState()
@@ -40,10 +40,11 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
         
         finally {
             setSpinner(false)
+            setTriggerParent(prev => ! prev)
         }
     }
     return (
-        <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-[#fbfbfd]">
+        <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-white">
             
             <div className=" flex items-center justify-start gap-x-4">
 

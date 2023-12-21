@@ -7,7 +7,7 @@ export default function OtherUserPosts({title, date, viewCount, commentCount, da
         
         <>
             <hr className="md:w-full"/>
-            <div id={id} className=" flex  flex-col gap-y- md:flex-row md:items-center justify-between mt-3 mb-3">
+            <div id={id} className=" flex  flex-col gap-y- md:flex-row md:items-center justify-between mt-3 mb-3 bg-white p-2 rounded-md">
                 <div className="md:w-1/2 ">
                     <p className="mt-4 md:text-base text-sm">{date ? date.split("T")[0] : ""} <i className="md:text-sm text-xs text-gray-600"> ({dateDifference}) </i></p>
                     <Link href={{ pathname:"/view_post", query: {post: id} }} className="md:text-2xl text-xl line-clamp-1 hover:underline  font-bold tracking-wide mt-4">{title}</Link>

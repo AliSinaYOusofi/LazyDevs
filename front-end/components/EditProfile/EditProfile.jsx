@@ -10,6 +10,7 @@ import Spinner from '../Spinner/Spinner';
 import { sleep } from '@/functions/sleep/sleep';
 import { toast } from 'react-toastify';
 import PreviousDetailsOfUser from '../PreviousUserDetails/PreviousDetailsOfUser';
+import { useRouter } from 'next/navigation';
 
 const UserInfoForm = () => {
 
@@ -24,8 +25,7 @@ const UserInfoForm = () => {
     const [spinner, setSpinner] = useState(false);
     const [hidePassword, setHidePassword] = useState(false);
     const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
-    const [previousDetails, setPreviousDetails] = useState(false)
-
+    const router = useRouter()
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
     };
@@ -53,17 +53,6 @@ const UserInfoForm = () => {
         
         // validating for the new data
 
-        if (! navigator.onLine) return toast.warning("You are offline");
-        else if (username.length && ! fullnameValidator(username)) return toast.error("username must be at least 3 chars")
-        else if (workEducation.length && ! usernameValidator(workEducation)) return toast.error("education must be at least 2 chars")
-        else if (password.length && ! passwordValidator(password)) return toast.error("Password is too short. Include a number and a character.");
-        else if (confirmPassword.length && ! passwordValidator(confirmPassword))return  toast.error("confirm pass is too short. Include a number and a character.");
-        else if ((password !== confirmPassword)) return toast.error("passwords don't match")
-        else if (bio.length && !bio.length >= 5) return toast.error("bio must be at least five chars")
-        else if (work.length && ! work.length > 2) return toast.error("work must at least 2 chars")
-        
-        // checking if the new data is same as the old data
-
         if (
             username.trim() === '' &&
             workEducation.trim() === '' &&
@@ -73,6 +62,24 @@ const UserInfoForm = () => {
             work.trim() === ''
         ) return toast.info("there is nothing to update.")
         
+        if (! navigator.onLine) return toast.warning("You are offline");
+        
+        else if (!fullnameValidator(username) && username.length) return toast.error("username must be at least 3 chars")
+        
+        else if (workEducation.length < 3 && workEducation.length) return toast.error("education must be at least 3 chars")
+        
+        else if (!passwordValidator(password) && password.length) return toast.error("Password is too short. Include a number and a character.");
+        
+        else if (!passwordValidator(confirmPassword) && confirmPassword.length)return  toast.error("confirm pass is too short. Include a number and a character.");
+        
+        else if ((password !== confirmPassword)) return toast.error("passwords don't match")
+        
+        else if (bio.length < 5 && bio.length) return toast.error("bio must be at least five chars")
+        
+        else if (work.length < 2 && work.length) return toast.error("work must at least 2 chars")
+        
+        // checking if the new data is same as the old data
+
         const data = {
             username: username.trim() !== '' ? username : undefined,
             workEducation: workEducation.trim() !== '' ? workEducation : undefined,
@@ -107,7 +114,9 @@ const UserInfoForm = () => {
                 let json = await response.json()
                 setCurrentUser(json.updatedData)
 
-                if (json?.updatedData) toast.success("account info updated")
+                if (json?.updatedData) {
+                    toast.success("account info updated")
+                }
                 else if (json.stauts === "failed") toast.error("failed to update account info")
                 else if (json.status === "offline") toast.warning("you are offline")
                 else toast.error("unknown error!!!")
@@ -126,7 +135,7 @@ const UserInfoForm = () => {
 
     
     return (
-        <div className="shadow-white shadow-lg">
+        <div className="bg-white py-4">
             
             {/* <div className="">
 

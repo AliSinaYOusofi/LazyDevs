@@ -50,8 +50,8 @@ export default function PostOfUserBasedId({author}) {
 
     let noPostDiv = 
         <div className="mx-auto w-full"> 
-            <h1 className="text-5xl font-extrabold mb-10 "> You have No Posts</h1>
-            <Link className="mt-10 text-gray-600 hover:text-black" href="/create_post"> Make Post</Link>
+            <h1 className="text-5xl font-extrabold mb-10 "> You have No Posts ☕︎</h1>
+            <Link href="/create_post" className="font-normal hover:-translate-y-1 transition-all duration-200 text-2xl mt-10 hover:text-gray-600"> Create Post <span className="group-hover:translate-y-10"> ✍️</span></Link>
         </div>
 
     const handleRetryFetchingPosts = () => {

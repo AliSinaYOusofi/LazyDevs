@@ -16,7 +16,7 @@ export default function HandleFeed() {
   const menutItems = ["Relevant", "Most Viewed", "Latest", "Following"]
   const components = [<RelevantFeeds />, <TopFeed />, <LatestFeed />, <FollowingFeed />]
 
-  const liItemStyle = 'bg-[#f5f6fb] px-4 py-1 rounded-sm   transition-all duration-300'
+  const liItemStyle = 'bg-white md:px-10 md:py-2 px-4 py-1 rounded-sm   transition-all duration-300'
   
   const handleLiItemsClick = (index) => {
     
@@ -53,7 +53,7 @@ export default function HandleFeed() {
 
   return (
     <>
-      <div className="w-full bg-white/30 mx-auto z-[999]">
+      <div className="w-full mx-auto z-[999]">
         
         <div className="w-[60%] mx-auto flex flex-col items-center justify-evenly">
           <div className=" w-full mt-10">

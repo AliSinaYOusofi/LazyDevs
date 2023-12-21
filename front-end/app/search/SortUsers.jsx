@@ -59,7 +59,7 @@ export default function SortUsers({sortedBy, setSortedBy}) {
     return (
         <div className="mt-10">
             <span className="">Select Sort options : </span>
-            <select defaultValue={"joined"} className="py-3 px-5 rounded-lg border-none bg-[#fafafd] w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
+            <select defaultValue={"joined"} className="py-3 px-5 rounded-lg border-none bg-white w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
                 <option value="joined" defaultValue={"joined"}>Joined</option>
                 <option value="post">post</option>
                 <option value="follower">Followers</option>

@@ -52,7 +52,7 @@ export default function Page() {
             </Link>
         :
         <li 
-            className={`${activeListItem === index  ? `${similarClass} bg-[#fbfbfd] border-l-2 border-black`: `${similarClass}`}`} 
+            className={`${activeListItem === index  ? `${similarClass} bg-white border-l-2 border-black`: `${similarClass}`}`} 
             
             key={index} 
             

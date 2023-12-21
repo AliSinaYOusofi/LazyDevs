@@ -2068,7 +2068,7 @@ router.get("/analytics_data", async (req, res) => {
                 })
             )
             
-            return res.status(200).json({message: "success", data: totalReadSummary, readerCount: totalReadSummary, commentCount: commentsSummary, likeCount: totalLikesSummary})
+            return res.status(200).json({message: "success", data: totalReadSummary, readerCount: totalReadSummary, commentCount: commentsSummary, likeCount: totalLikesSummary, posts})
         }
         return res.status(200).json({message: "success", zero: true})
     } 
@@ -2172,7 +2172,7 @@ router.post(
             transporter.sendMail(mailOptions, (error, info) => {
                 
                 if (error) {
-                    console.error("error while sending email", error)
+                    console.error("error while sending email => ", error)
                     return res.status(400).json({error: "Server error, try again later"})
                 }
                 
@@ -2233,6 +2233,48 @@ router.post(
             console.error("while resetting password", e)
             return res.status(400).json({error: "Server error, try again later"})
         }
+    }
+)
+
+router.post(
+    "/verify_signup",
+    body('email').isEmail().escape(), 
+    body('otp').isNumeric().escape(), 
+    async (req, res) => 
+    {
+        const error = validationResult(req)
+
+        if (! error.isEmpty()) return res.status(400).json({error: "invalid email", error: error.array()})
+    
+        let {email, otp} = req.body
+        
+        console.log(email, otp)
+
+        try {
+            const user = await SignedUpUser.findOne({email: email}).lean().exec()
+            
+            if (! user) return res.status(400).json({error: "account not found"})
+            
+            const otpData = await OTPModel.findOne({email: email}).lean().exec()
+            
+            if (! otpData) return res.status(400).json({error: "invalid otp provided"})
+            
+            if (otpData.otp !== otp) return res.status(400).json({error: "invalid otp provided"})
+
+            await SignedUpUser.findOneAndUpdate({email: email}, {
+                isAccountConfirmed: true
+            })
+
+            await OTPModel.deleteOne({email: email})
+
+            return res.status(200).json({message: "Welcome Your account is now confirmed"})
+        } 
+        
+        catch( e ) {
+            console.error("while verifying account", e)
+            return res.status(500).json({error: "Server error, try again later"})
+        }
+
     }
 )
 module.exports = router 

@@ -11,7 +11,7 @@ export default function CommunityInfo() {
             <p className="font-bold tracking-wide text-gray-900 md:text-3xl text-xl mb-3 ml-2">Other</p>
             <ul>
                 <li className="w-full p-1" id="bu-users-accordion">
-                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/code_of_conduct" ? "bg-white" : ""}`}  href="/code_of_conduct">
+                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/code_of_conduct" ? "bg-[#F3F8FF]" : ""}`}  href="/code_of_conduct">
                         <svg
                             viewBox="0 0 1024 1024"
                             fill="currentColor"
@@ -23,7 +23,7 @@ export default function CommunityInfo() {
                     </Link>
                 </li>
                 <li className="w-full p-1" id="bu-users-accordion">
-                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/privacy_and_policy" ? "bg-white" : ""}`}  href="/privacy_and_policy">
+                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/privacy_and_policy" ? "hover:bg-[#F3F8FF]" : ""}`}  href="/privacy_and_policy">
                         <svg
                             viewBox="0 0 1024 1024"
                             fill="currentColor"
@@ -37,7 +37,7 @@ export default function CommunityInfo() {
                 </li>
 
                 <li className="w-full p-1" id="bu-users-accordion">
-                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/contact_us" ? "bg-white" : ""}`}  href="/contact_us">
+                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/contact_us" ? "bg-[#F3F8FF]" : ""}`}  href="/contact_us">
                         <svg
                             viewBox="0 0 1024 1024"
                             fill="currentColor"
@@ -50,7 +50,7 @@ export default function CommunityInfo() {
                 </li>
 
                 <li className="w-full p-1" id="bu-users-accordion">
-                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/about" ? "bg-white" : ""}`}  href="/about">
+                    <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/about" ? "bg-[#F3F8FF]" : ""}`}  href="/about">
                         <svg
                             viewBox="0 0 512 512"
                             fill="currentColor"
