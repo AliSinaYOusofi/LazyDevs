@@ -45,7 +45,7 @@ export const handleSignupSubmit = async (email, password, username, fullName, co
         else return "error"
     
     } catch(error) {
-        console.error(error);
+        console.error(error, ' while signing a new user');
         return error;
     }
     
