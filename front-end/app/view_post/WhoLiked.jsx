@@ -18,8 +18,6 @@ export default function WhoLiked({post_id}) {
             );
 
             const json = await response.json()
-            
-            console.log(json, ' likers')
 
             if (response.ok) {
                 setLikers(json.data)
@@ -41,6 +39,13 @@ export default function WhoLiked({post_id}) {
 
     }, [retryLikersFetch])
 
+    const handleRetry = () => {
+        
+        setRetryLikersFetch(prev => !prev)
+        setError(false)
+        setLikers(undefined)
+    }
+
     if (likers === undefined) {
         return (
             <div className="w-full h-full flex items-center justify-center">
@@ -51,7 +56,7 @@ export default function WhoLiked({post_id}) {
                     <button 
                         type="button" 
                         className="py-1 h-8 md:h-10 px-4 mt-2 inline-flex justify-center items-center text-lg font-light gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
-                        onClick={() => setRetryLikersFetch( prev => ! prev)}
+                        onClick={handleRetry}
                     >
                         <svg
                             viewBox="0 0 512 512"

@@ -58,19 +58,15 @@ export default function ResetPassword({email}) {
                 body: JSON.stringify({ email, otp, password }),
             });
 
-            console.log("response ", response)
             if (response.ok) {
                 const data = await response.json();
                 setSuccessMessage(data.message);
 
-                console.log(data, 'success')
                 setTimeout( () => router.push("/login"), 2000)
             } 
             
             else {
                 const errorData = await response.json();
-
-                console.log(errorData)
                 setErrorMessage(errorData.error);
             }
         } 

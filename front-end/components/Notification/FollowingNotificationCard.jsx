@@ -14,9 +14,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
         try {
             setSpinner(true)
             let whichNotificationToInvode = notification_to_invoke(message)
-            console.log(message)
-
-            console.log(id, whichNotificationToInvode)
+        
             const response = await fetch(`http://localhost:3001/blogRoutes/mark_notification?notification_id=${encodeURIComponent(id)}&post_id=${post_id}&notification_type=${encodeURIComponent(whichNotificationToInvode)}`, {
                 method: "GET",
                 credentials: "include",
@@ -24,7 +22,6 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
 
             const json = await response.json()
             
-            console.log(json, "json")
             if (json.message === "marked") {
                 router.refresh()
             }
@@ -39,7 +36,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
     return (
         
         <div 
-            className={`${!isRead ? "border-l-4 border-black" : ""} max-w-2xl px-8 py-4 mx-auto bg-[#fafafd] transition-all duration-100  from-pink-500 via-red-500 to-yellow-500  rounded-lg mt-4 flex items-center justify-between`}>
+            className={`${!isRead ? "border-l-4 border-black" : ""} max-w-2xl px-8 py-4 mx-auto bg-white transition-all duration-100  from-pink-500 via-red-500 to-yellow-500  rounded-lg mt-4 flex items-center justify-between`}>
             
             <Link href={{pathname: `/account/${notifier_id}`}} className="flex items-center gap-x-2">
                 

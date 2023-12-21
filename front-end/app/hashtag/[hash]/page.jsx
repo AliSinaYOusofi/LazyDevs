@@ -52,7 +52,6 @@ export default async function Page({params}) {
     
     const data = await getPostsWithSameHashTags(params.hash)
     
-    console.log(data)
     if (data === undefined) return <ErrorPage  />
 
     return (

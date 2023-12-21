@@ -22,7 +22,6 @@ export default function HandleFeed() {
     
     setActiveListItem(parseInt(index))
     setCurrentComponent(components[parseInt(index)])
-    console.log(components[menutItems.indexOf(index)])
     localStorage.setItem("lastFeedAccessed", index)
   
   }

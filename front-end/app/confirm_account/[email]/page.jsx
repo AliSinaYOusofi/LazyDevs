@@ -16,7 +16,6 @@ export default function VerifyAccount({params}) {
     const [successMessage, setSuccessMessage] = useState("")
     const router = useRouter()
 
-    console.log(params, ' params')
     const handleResetPassword = async () => {
 
 
@@ -43,19 +42,16 @@ export default function VerifyAccount({params}) {
                 }
             );
 
-            console.log("response ", response)
             if (response.ok) {
                 const data = await response.json();
                 setSuccessMessage(data.message);
 
-                console.log(data, 'success')
                 setTimeout( () => router.push("/login"), 2000)
             } 
             
             else {
                 const errorData = await response.json();
 
-                console.log(errorData)
                 setErrorMessage(errorData.error);
             }
         } 

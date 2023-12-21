@@ -7,7 +7,7 @@
 
 body {
     overflow-x: hidden;
-    background-color: #F3F8FF;
+    background-color: #f9f9fa;
 }
 @layer base {
     .editor h1 {

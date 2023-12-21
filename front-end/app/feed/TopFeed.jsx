@@ -24,7 +24,6 @@ export default function TopFeed() {
                 
                 const data = await response.json()
                 
-                console.log(data, ' top feed')
                 if (data.redirectTo) {
                     
                     const redirectTo = data.redirectTo

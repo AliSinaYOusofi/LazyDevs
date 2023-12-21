@@ -49,8 +49,6 @@ export default function Page() {
                 
                 const data = await response.json()
                 
-                console.log(data)
-                
                 if (data.redirectTo) {
                     const redirectTo = data.redirectTo
                     delete_cookie("refreshToken")
