@@ -50,7 +50,7 @@ export default function SortData({sortedBy, setSortedBy}) {
             
             <span className="">Select Sort options : </span>
             
-            <select defaultValue={"Title"} className="py-3 px-5 rounded-lg border-none bg-[#fafafd] w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
+            <select defaultValue={"Title"} className="py-3 px-5 rounded-lg border-none bg-white w-[10rem] outline-none" onChange={(e) => setSearchFlag(e.target.value)}>
                 <option value="likes" defaultValue={"likes"}>Likes</option>
                 <option value="date">Date</option>
                 <option value="viewcount">View</option>

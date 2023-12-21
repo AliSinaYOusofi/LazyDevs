@@ -54,7 +54,7 @@ export default function SavedToAccountPostCard({content, title, username, profil
     return (
         <>
             <hr className="mt-3 shadow-sm shadow-white"/>
-            <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg mt-4`} id={id}>
+            <div className={`${width ? "w-full" : "max-w-2xl"} px-8 py-4 mx-auto  rounded-lg mt-4 bg-white`} id={id}>
                 
                 <div className="flex items-center justify-between ">
 

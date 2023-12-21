@@ -30,7 +30,7 @@ export default function UserHomePage({user_id}) {
     
     const menuItems = liArray.map( (li, index) => 
         <li 
-            className={`${activeListItem === index  ? `${similarClass} shadow-inner border-l-2 border-black`: `${similarClass}`}`} 
+            className={`${activeListItem === index  ? `${similarClass} shadow-inner border-l-2 border-black bg-white`: `${similarClass}`}`} 
             
             key={index} 
             

@@ -94,6 +94,11 @@ const usersSignupSchema = new mongoose.Schema( {
         type: Date,
         required: false,
         default: () => new Date().toISOString()
+    },
+
+    isAccountConfirmed: {
+        type: Boolean,
+        default: false
     }
 });
 

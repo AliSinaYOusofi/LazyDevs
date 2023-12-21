@@ -6,7 +6,7 @@ import CommunityInfo from '../Community Info/CommunityInfo';
 import { useAppContext } from '@/context/useContextProvider';
 import delete_cookie from '@/functions/delete_cookie';
 
-export default function Sidebar({sidebar}) {
+export default function Sidebar({sidebar, setTriggerFunction}) {
 
     const pathname = usePathname();
     const {currentUser, setCurrentUser} = useAppContext();
@@ -21,13 +21,21 @@ export default function Sidebar({sidebar}) {
     }
 
     return (
-        <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 bg-[#fafafd] top-0 left-0 flex-col h-screen w-64  text-black`}>
+        <div className={`transfrom ${sidebar ? "-translate-x-full" : "-translate-x-0"} flex z-[100] justify-center fixed transition-all duration-300 bg-white top-0 left-0 flex-col h-screen w-64  text-black`}>
             
+            <div
+                onClick={() => setTriggerFunction(prev => ! prev)} 
+                className="absolute right-3 top-3 rotate-45 hover:rotate-0 cursor-pointer transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" dataSlot="icon" className="w-6 h-6 md:h-9 md:w-9">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+
+            </div>
             <nav className="flex-grow w-full md:mt-12 mt-20">
                 <p className="font-bold tracking-wide text-gray-900 md:text-3xl text-xl mb-3 ml-2">Links</p>
                 <ul className="flex flex-col justify-center items-start gap-y- w-full">
                     <li className="w-full p-1">
-                        <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/" ? "bg-white" : ""}`}  href="/">
+                        <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/" ? "bg-[#F3F8FF]" : ""}`}  href="/">
                             <svg
                                 viewBox="0 0 1024 1024"
                                 fill="currentColor"
@@ -40,7 +48,7 @@ export default function Sidebar({sidebar}) {
                     </li>
 
                     <li className="w-full p-1" id="bu-users-accordion">
-                        <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "bg-white" : ""}`}  href="/blogs">
+                        <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "hover:bg-[#F3F8FF]" : ""}`}  href="/blogs">
                             <svg
                                 viewBox="0 0 64 64"
                                 fill="currentColor"
@@ -62,7 +70,7 @@ export default function Sidebar({sidebar}) {
                         {
                             currentUser
                             ?
-                            <p onClick={handleLogout} className={`p-2 gap-x-2 cursor-pointer flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "bg-white" : ""}`}  href="/login">
+                            <p onClick={handleLogout} className={`p-2 gap-x-2 cursor-pointer flex items-center transition-all duration-200 hover:hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "hover:bg-[#F3F8FF]" : ""}`}  href="/login">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                 </svg>
@@ -70,7 +78,7 @@ export default function Sidebar({sidebar}) {
                                 Log out
                             </p>
                             :
-                            <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "bg-white" : ""}`}  href="/login">
+                            <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/blogs" ? "hover:bg-[#F3F8FF]" : ""}`}  href="/login">
                                 <svg
                                     viewBox="0 0 1024 1024"
                                     fill="currentColor"
@@ -91,7 +99,7 @@ export default function Sidebar({sidebar}) {
                         {
                             currentUser ?
                             null :
-                            <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:bg-white  text-sm text-slate-700 rounded-md ${pathname === "/create_account" ? "bg-white" : ""}`}  href="/create_account">
+                            <Link className={`p-2 gap-x-2 flex items-center transition-all duration-200 hover:hover:bg-[#F3F8FF]  text-sm text-slate-700 rounded-md ${pathname === "/create_account" ? "hover:bg-[#F3F8FF]" : ""}`}  href="/create_account">
                                 <svg
                                     viewBox="0 0 1024 1024"
                                     fill="currentColor"

@@ -24,10 +24,10 @@ export default function SearchInput() {
 
         <>
             <form className="flex items-center justify-center">
-                <div className="flex border-2 rounded">
+                <div className="flex rounded-md bg-[#F3F8FF] outline-none">
                     <input 
                         type="text" 
-                        className="px-4 py-2 w-80" 
+                        className="px-4 py-2 w-80 bg-[#F3F8FF]" 
                         placeholder="Search..." 
                         onChange={(e) => setSearchQuery(e.target.value)}
                         value={searchQuery}

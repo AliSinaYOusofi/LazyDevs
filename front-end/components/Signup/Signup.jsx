@@ -40,15 +40,17 @@ export default function Signup() {
             
             let response = await handleSignupSubmit(email, password, username, fullName, confirmPassword, profileUrl);
             
-            if (response === "saved") {
+            if (response === "confirm") {
+                console.log("redirecting to confirm_account")
                 await sleep(1000);
-                router.push("/login");
+                router.push("/confirm_account");
             }
+            
             else if (response === "usernameExists" || response === "emailExists") toast.error("username or email already taken")
 
             else if (response ==="error") toast.error("Server error try again later !");
 
-            else if (response === "emailInvalid") toast.error("Email is invalid")
+            else if (response === "emailInvalid") toast.error("We could not verify your email")
 
         } 
         
@@ -65,7 +67,7 @@ export default function Signup() {
         <>  
             <div className="h-screen md:flex items-center justify-center w-full">
                 
-                <div className="flex-col lg:px-4 w-full lg:w-1/2 md:w-1/2 justify-center items-center bg-white">
+                <div className="flex-col p-10 rounded-md lg:px-4 w-full lg:w-1/2 md:w-1/2 justify-center items-center bg-white">
                     <div className="">
                         <code className="text-white mx-auto w-fit md:hidden lg:mt-8 flex p-2 rounded-md  items-center bg-black/80">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -73,7 +75,7 @@ export default function Signup() {
                             </svg>
                             <span className="">LazyDevs</span>
                         </code>
-                        <p className="text-center mt-8 md:mt-0">Join our community today and discover a world of possibilities</p>
+                        {/* <p className="text-center mt-8 md:mt-0">Join our community today and discover a world of possibilities</p> */}
                     </div>
                     
                     <Profile />
@@ -145,7 +147,7 @@ export default function Signup() {
                             disabled={spinner} 
                             type="button" 
                             onClick={handleSignup} 
-                            className="block relative w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 rounded-md  font-semibold mb-2">
+                            className="block relative w-full shadow-md shadow-black/10 transition-all duration-300 hover:bg-black/90 hover:text-white mt-4 py-2 rounded-md mb-2">
                             Create Account
                             { spinner ? <Spinner /> : null}
                         </button>

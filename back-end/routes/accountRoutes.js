@@ -80,10 +80,19 @@ router.post(
             id
         } = req.body
         
+        console.log( username,
+            workEducation,
+            password,
+            bio,
+            work,
+            profileUrl,
+            id)
         try {
             
             const currentUserToBeUpdated  = await SignedUpUser.findById(id)
             const currentUserToBeUpdatedPlainObj = currentUserToBeUpdated.toObject()
+
+            console.log(currentUserToBeUpdatedPlainObj)
 
             if (currentUserToBeUpdated) {
                 if (username && username?.trim() !== '') {
@@ -114,6 +123,7 @@ router.post(
                 
                 await currentUserToBeUpdated.updateOne(currentUserToBeUpdatedPlainObj)
                 delete currentUserToBeUpdatedPlainObj.password;
+                console.log(currentUserToBeUpdatedPlainObj, ' last')
                 return res.status(200).json({ message: "User information updated", status: "success", updatedData: currentUserToBeUpdatedPlainObj});
             }
             
@@ -258,4 +268,23 @@ router.get(
         }
     }
 )
+
+
+router.get("/my_updated_info", async (req, res) => {
+    
+    let user_id = req.user_id
+
+    if (! user_id) return res.status(400).json({message: "no user id provided", status: "failed"})
+
+    try {
+        const userDetails = await SignedUpUser.findById(user_id).lean().exec()
+        return res.status(200).json({data: userDetails})
+    } 
+    
+    catch( e ) {
+        console.error("error getting tags", e)
+        return res.status(400).json({message: "tags update failed", status: "failed"})
+    }
+})
+
 module.exports = router

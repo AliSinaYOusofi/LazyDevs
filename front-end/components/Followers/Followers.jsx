@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import ProfileCard from './FollowersCard'
 import SortUsers from '@/app/search/SortUsers'
+import Link from 'next/link'
 
 export default function Followers() {
 
@@ -107,10 +108,20 @@ export default function Followers() {
             </div>
         )
     }
+
+    let noFriendsDiv = <div className="mx-auto w-full mt-10">
+        <div className="mx-auto w-full mt-20">
+        <p className="text-5xl text-gray-700 mb-10"> You are not following anyone at the moment <span className="">☕︎</span></p>        
+        <Link href="/feed" className="font-normal hover:-translate-y-1 transition-all duration-200 text-2xl  hover:text-gray-600"> Check Posts <span className="group-hover:translate-y-10"> ✍️</span></Link>
+    </div>
+    </div>
+
     return (
         <>
             <h1 className="md:text-4xl text-xl  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Followers : {followers.length}</h1>
-            <SortUsers setSortedBy={setFollowers} />
+            {
+                !followers.length ? noFriendsDiv : <SortUsers setSortedBy={setFollowers} />
+            }
             <div className="w-full md:mt-0 mt-10 flex flex-row iems gap-x-2 flex-wrap md:items-start md:justify-start items-center justify-center">
                 {
                     followers.
@@ -126,6 +137,7 @@ export default function Followers() {
                                 isFollowing={user.isFollowing}
                                 date={user?.joined}
                                 diff={user?.distance}
+                                setTriggerParent={setRetryFollowers}
                             />
                         )
                 }

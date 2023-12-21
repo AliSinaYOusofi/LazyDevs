@@ -23,17 +23,25 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [spinner, setSpinner] = useState(false);
+    const [showUnConfirmedAccountLink, setShowUnConfirmedAccountLink] = useState()
 
     const router = useRouter();
 
     const handleSubmit = async () => {
         
+        setShowUnConfirmedAccountLink(false)
+
         try {
             let response = await handleLoginSubmit(email, password);
 
             if (!response) return toast.error("Network Error")
 
             if (response.data === "Invalid")  toast.error("Invalid email or password")
+
+            else if (response.data === "unconfirmed") {
+                toast.error("account not yet confirmed")
+                setShowUnConfirmedAccountLink(true)
+            }
 
             else if (response.data === "Server Error")  toast.error("Server Error");
             
@@ -57,11 +65,15 @@ export default function Login() {
     return (
         <div className="h-screen flex flex-col items-center justify-center gap-x-10 md:px-0">
 
-            <div className="w-full md:max-w-7xl md:px-0 px-2 md:mx-auto md:flex md:flex-col md:items-center md:justify-center md:gap-x-10">
+            {
+                showUnConfirmedAccountLink && <Link href="/confirm_account"> Confirm Account</Link>
+            }
+
+            <div className="w-full bg-white rounded-md md:max-w-3xl p-10 md:px-0 px-2 md:mx-auto md:flex md:flex-col md:gap-y-4 md:items-center md:justify-center md:gap-x-10">
                 <p className="text-center mt-2 font-bold">Sign in to access your account</p>
 
                 <div className="mt-5 mx-auto md:w-3/5 w-full max-w-md">
-                    <form className="flex md:relative justify-center items-center border-2 py-2 px-3 rounded-2xl mb-4 group">
+                    <form className="flex md:relative justify-center items-center border-2 py-2 px-3 rounded-2xl mb-4 group md:gap-y-10">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5 text-gray-400 transition-all duration-75 group-hover:text-black"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,7 +120,7 @@ export default function Login() {
                             setSpinner(true);
                             handleSubmit();
                         }}
-                        className="block md:relative shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 px-6  w-full rounded-md  font-semibold mb-2">
+                        className="block md:relative shadow-md shadow-black/10 outline-none border-none transition-all duration-300 hover:bg-black hover:text-white mt-4 py-2 px-6  w-full rounded-md mb-2">
                         Login
                     { spinner ? <Spinner /> : null}
                     </button>

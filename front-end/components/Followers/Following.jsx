@@ -112,8 +112,8 @@ export default function Following () {
     }
 
     let noFriendsDiv = <div className="mx-auto w-full mt-20">
-        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> Follow some authors to see their blogs in your feed</h1>
-        <Link href="/feed" className=""> Check posts</Link>
+        <p className="text-5xl text-gray-700 mb-10"> You are not following anyone at the moment <span className="">☕︎</span></p>        
+        <Link href="/feed" className="font-normal hover:-translate-y-1 transition-all duration-200 text-2xl  hover:text-gray-600"> Check Posts <span className="group-hover:translate-y-10"> ✍️</span></Link>
     </div>
     
     return (
@@ -138,6 +138,7 @@ export default function Following () {
                                 isFollowing={user.isFollowing}
                                 date={user?.joined}
                                 diff={user?.distance}
+                                setTriggerParent={setRetryFollowers}
                             />
                         )
                 }

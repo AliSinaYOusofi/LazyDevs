@@ -41,7 +41,7 @@ app.use(
     {
         console.log(req.path)
         
-        const saveRoutes = ['/user/save_user', '/user/check_user_login', '/blogRoutes/reset_password', '/blogRoutes/verify_otp']
+        const saveRoutes = ['/user/save_user', '/user/check_user_login', '/blogRoutes/reset_password', '/blogRoutes/verify_otp', '/blogRoutes/verify_signup']
         
         if (saveRoutes.includes(req.path)) return next()
         

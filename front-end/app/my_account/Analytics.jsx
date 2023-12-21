@@ -30,7 +30,8 @@ ChartJS.register(
 
 export default function Analytics() {
 
-    const [postDataSet, setPostDataSet] = useState([])
+    const [hasPosts, setHasPosts] = useState(false)
+    const [postDataSet, setPostDataSet] = useState()
     const [error, setError] = useState('')
     const {currentUser} = useAppContext()
     const [readerCount, setReadersCount ] = useState([])
@@ -56,6 +57,7 @@ export default function Analytics() {
             
             if (json.message === "success" && ! json.zero) {
                 
+                setHasPosts(json.posts?.length)
                 setPostDataSet(json.data)
                 setCommentsCount(json.commentCount)
                 setReadersCount(json.readerCount)
@@ -82,7 +84,7 @@ export default function Analytics() {
 
     // let labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     
-    if (! postDataSet?.length && postDataSet !== "zero") return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
+    if (!postDataSet?.length && postDataSet !== "zero" && !hasPosts) return <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
         {
           error ? <div className=" w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
                 
@@ -114,8 +116,9 @@ export default function Analytics() {
             
             <div className="flex h-screen items-center justify-center mx-auto right-[50%] mt-[4rem]">
                 <div className="w-screen flex items-center justify-center flex-col text-center  mt-20 mx-auto text-4xl font-semibold mb-10 text-black ">
-                    <p className="text-2xl"> You have not created any posts yet. </p>
-                    <p className="text-2xl"> Create a new post to get started. </p>
+                    <p className="text-5xl text-gray-700"> You have not created any posts yet. <span className="">☕︎</span></p>
+                    <p className="text-2xl mt-4 font-normal text-gray-500"> Create a new post to get started. </p>
+                    <Link href="/create_post" className="font-normal hover:-translate-y-1 transition-all duration-200 text-2xl mt-10 hover:text-gray-600"> Create Post <span className="group-hover:translate-y-10"> ✍️</span></Link>
                 </div>
             </div>
         )
@@ -144,30 +147,30 @@ export default function Analytics() {
     return (
         <div className=" h-1/2 flex flex-col">
             
-            <Link href={"/my_account"} className="mt-10 border-none outline-none   hover:text-gray-900 w-fit px-3 py-2 rounded-md bg-gray-300 hover:bg-gray-400 text-white"> Back to profile</Link>
+            <Link href={"/my_account"} className="mt-10 border-none outline-none   hover:text-white transition-all duration-200 w-fit px-3 py-2 rounded-md bg-white hover:bg-gray-900 text-black "> Back to profile</Link>
             
             <h1 className="md:text-5xl text-2xl text-black font-bold mt-10 tracking-wide"> Analytics for {currentUser ? currentUser?.username : null }</h1>
             
             <div className="w-full justify-center items-center md:justify-between mt-20 flex md:flex-row flex-col gap-y-4 gap-x-2">
 
-                <div className="p-10 w-1/2 bg-gray-100 rounded-md text-center flex items-center justify-center flex-col">
+                <div className="p-10 w-1/2 bg-white rounded-md text-center flex items-center justify-center flex-col">
                    <p> Readers </p>
-                   <p className="mt-3 font-bold bg-white px-2 rounded-full w-fit text-2xl"> {totalReadCount}</p>
+                   <p className="mt-3 font-bold bg-white/10 px-2 rounded-full w-fit text-2xl"> {totalReadCount}</p>
 
                 </div>
 
-                <div className="p-10 w-1/2 bg-gray-100 rounded-md text-center flex items-center justify-center flex-col">
+                <div className="p-10 w-1/2 bg-white rounded-md text-center flex items-center justify-center flex-col">
                     <p>   Reactions </p>
-                    <p className="mt-3 font-bold bg-white px-2 rounded-full w-fit text-2xl"> {likeCount.length }</p>
+                    <p className="mt-3 font-bold bg-white/10 px-2 rounded-full w-fit text-2xl"> {likeCount.length }</p>
                 </div>
 
-                <div className="p-10 w-1/2 bg-gray-100 rounded-md text-center flex items-center justify-center flex-col">
+                <div className="p-10 w-1/2 bg-white rounded-md text-center flex items-center justify-center flex-col">
                     Comments
-                    <p className="mt-3 font-bold bg-white px-2 rounded-full w-fit text-2xl"> {commentsCount.length }</p>
+                    <p className="mt-3 font-bold bg-white/10 px-2 rounded-full w-fit text-2xl"> {commentsCount.length }</p>
                 </div>
             </div>
 
-            <div className="bg-gray-50 rounded-md mt-5">
+            <div className="bg-white rounded-md mt-5">
                 
                 <h1 className="md:text-3xl text-xl text-black font-bold mt-10 tracking-wide mb-2 ml-4"> Readers Summary</h1>
                 
@@ -197,7 +200,7 @@ export default function Analytics() {
             
             <div className="flex md:flex-row flex-col items-center justify-between gap-x-2">
 
-                <div className="bg-gray-50 rounded-md mt-5 md:w-1/2 w-full">
+                <div className="bg-white rounded-md mt-5 md:w-1/2 w-full">
                     
                     <h1 className="md:text-3xl text-xl text-black font-bold mt-10 tracking-wide mb-2 ml-4"> Comments Summary</h1>
                     
@@ -227,7 +230,7 @@ export default function Analytics() {
                     />
                 </div>
 
-                <div className="bg-gray-50 rounded-md mt-5 md:w-1/2 w-full">
+                <div className="bg-white rounded-md mt-5 md:w-1/2 w-full">
                     
                     <h1 className="md:text-3xl text-xl text-black font-bold mt-10 tracking-wide mb-2 ml-4"> Reaction Summary</h1>
                     

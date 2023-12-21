@@ -267,7 +267,7 @@ export default function Page() {
                         errorMessages?.recentBlogsFetchError
                     
                         ? null :
-                            <div className="flex items-center justify-start mt-4 gap-x-4">
+                            <div className="flex items-center justify-start mt-4 gap-x-4 mb-4">
                                 <SortData sortedBy={recentBlogs} setSortedBy={setRecentBlogs} />
                             </div>
                     }

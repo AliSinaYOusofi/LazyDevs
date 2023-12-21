@@ -121,7 +121,7 @@ export default function UserTags() {
                         key={index}
                         type="text"
                         placeholder={`Tag ${index + 1}`}
-                        className="  rounded-md px-4 py-3 mr-2 outline-none border-none bg-[#fafafd]"
+                        className="  rounded-md px-4 py-3 mr-2 outline-none border-none bg-white"
                         value={value}
                         onChange={(e) => handleInputChange(index, e.target.value)}
                     />

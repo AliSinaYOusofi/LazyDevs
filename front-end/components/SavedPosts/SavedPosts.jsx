@@ -47,9 +47,9 @@ export default function SavedPosts() {
 
     let noSavedPosts = 
         <div className="mx-auto w-full"> 
-            <h1 className="text-5xl font-extrabold mb-10 "> You haven't saved a post yet</h1>
-            <p> Some posts you had saved might have been deleted by their owners.</p>
-            <Link className="mt-10 text-gray-600 hover:text-black" href={"/feed"}> See posts </Link>
+            <p className="text-5xl text-gray-700 mb-10"> You have no saved posts <span className="">☕︎</span></p>        
+            <p className="mb-4"> Some posts you had saved might have been deleted by their owners.</p>
+            <Link href="/feed" className="font-normal hover:-translate-y-1 transition-all duration-200 text-2xl  hover:text-gray-600"> Check Posts <span className="group-hover:translate-y-10"> ✍️</span></Link>
         </div>
 
     if (savedPosts === undefined) {
