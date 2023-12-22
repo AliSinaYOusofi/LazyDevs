@@ -11,7 +11,7 @@ const { cookie, validationResult } = require("express-validator");
 require("dotenv").config();
 app.use(cors({
     origin: "http://localhost:3000", 
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true, // allows us to use cookies or authorization tokens
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods']
 }));

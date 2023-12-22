@@ -1,11 +1,11 @@
-import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/context/useContextProvider';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function DeleteCommentConfirmation({id: comment_id, func, mod, refechPosts}) {
     
     const [spinner, setSpiner] = useState(false)
-    const router = useRouter()
+    const { setRefetchCommentsAfterCrud } = useAppContext()
     
     const handleDeletePost = async () => {
 
@@ -25,7 +25,7 @@ export default function DeleteCommentConfirmation({id: comment_id, func, mod, re
             const data = await response.json()
             console.log(data, ' why is it not refreshing')
             if (data.message === "success") {
-                location.reload()
+                setRefetchCommentsAfterCrud(prev => ! prev)
             }
             else if (data.message === "failed") toast.error("Failed ! try again later")
         } 
