@@ -22,7 +22,7 @@ export default function CommentParent({post_id}) {
     const [commentReplyPosted, setCommentReplyPosted] = useState(false)
     const [hideComments, setHideComments] = useState(false)
     
-    const {currentUser} = useAppContext(); 
+    const {currentUser, refechCommentsAfterCrud} = useAppContext(); 
 
 
     const handleSumitComment = async () => {
@@ -87,7 +87,6 @@ export default function CommentParent({post_id}) {
                 
                 const data = await response.json()
 
-                console.log(data, ' authros')
                 if (data?.data?.length === 0) {
                     setPostComments([])
                     setCommentReplies([])
@@ -114,7 +113,7 @@ export default function CommentParent({post_id}) {
         getPostComments();
 
         return () => setNotLoggedInCard(false)
-    }, [commentSuccessful, post_id, retryFetchComments, commentReplyPosted])
+    }, [commentSuccessful, post_id, retryFetchComments, commentReplyPosted, refechCommentsAfterCrud])
 
     const handleRetryFetchPostComments = () => {
         setRetryFetchComments(prev => !prev)

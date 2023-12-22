@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 export const metadata = {
-  title: "View post"
+  title: "Newsfeed"
 }
 
 const checkUserStatus = async () => {

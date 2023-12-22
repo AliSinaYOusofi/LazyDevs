@@ -110,7 +110,7 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
                         }
 
                         {
-                            displayCommentUPOpe && <CommentUD comment_id={_id}/>
+                            displayCommentUPOpe && <CommentUD comment_id={_id} body={comment}/>
                         }
                     </div>
                 </div>

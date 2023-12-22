@@ -2366,4 +2366,43 @@ router.delete(
         }
     }
 )
+
+router.put(
+    "/update_comment",
+    query('comment_id').notEmpty().isMongoId().escape(), 
+    body('updatedComment').notEmpty().escape(), // You might adjust this based on your frontend's payload
+    async (req, res) => {
+
+        const result = validationResult(req)
+        
+        if (!result.isEmpty()) return res.status(400).json({ message: "Invalid data provided" })
+        
+        try {
+            
+            let { comment_id } = req.query
+            let { updatedComment } = req.body
+
+            const commentExists = await Comment.findOne({ "comment._id": comment_id })
+            
+            if (!commentExists) return res.status(400).json({ message: "Comment not found" })
+
+            const commentIndex = commentExists.comment.findIndex(comment => comment._id.toString() === comment_id)
+
+            if (commentIndex === -1) return res.status(400).json({ message: "Comment not found" })
+
+            commentExists.comment[commentIndex].set({ body: updatedComment })
+
+            await commentExists.save()
+
+            return res.status(200).json({ message: "success", updatedComment: commentExists.comment[commentIndex] })
+        } 
+        
+        catch (e) {
+            console.error("Failed to update comment: ", e)
+            return res.status(500).json({ error: "Server error, try again later", message: "failed" })
+        }
+    }
+)
+
+
 module.exports = router 
