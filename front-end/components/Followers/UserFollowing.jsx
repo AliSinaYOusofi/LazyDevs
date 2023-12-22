@@ -111,8 +111,8 @@ export default function UserFollowing ({user_id}) {
         )
     }
 
-    let noFriendsDiv = <div className="mx-auto w-full mt-20 border-2 border-green-600 rounded-md p-10">
-        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 italic md:ml-0 ml-10"> This user is not following anyone at the moment!</h1>
+    let noFriendsDiv = <div className="mx-auto w-full mt-20 ">
+        <h1 className="md:text-2xl text-xl mb-10  font-bold tracking-wide mt-10 md:mt-0 md:ml-0 ml-10"> This user is not following anyone at the moment! 🚫</h1>
         {/* <Link href="/feed" className=""> Check posts</Link> */}
     </div>
     
