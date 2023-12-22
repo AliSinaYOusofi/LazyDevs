@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar/Navbar'
 import Footer from '@/components/Footer/Footer';
 
 export const metadata = {
-    title: "Feed"
+    title: "View Post"
 }
 export default function Layout({children}) {
     

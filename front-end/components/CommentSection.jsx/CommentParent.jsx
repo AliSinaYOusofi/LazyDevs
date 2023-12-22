@@ -86,6 +86,8 @@ export default function CommentParent({post_id}) {
                 );
                 
                 const data = await response.json()
+
+                console.log(data, ' authros')
                 if (data?.data?.length === 0) {
                     setPostComments([])
                     setCommentReplies([])

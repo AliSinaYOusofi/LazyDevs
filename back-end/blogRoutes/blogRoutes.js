@@ -2322,4 +2322,48 @@ router.get(
         return res.status(500).json({error: "Server error, try again later"})
     }
 })
+
+router.delete(
+    "/delete_comment",
+    query('comment_id').notEmpty().isMongoId().escape(), 
+    async (req, res) => 
+    {
+
+        const result = validationResult(req)
+        
+        if (! result.isEmpty()) return res.status(400).json({message: "invalid data provided"})
+        
+        try {
+            
+            let {comment_id} = req.query
+            
+            let comment_exists = await Comment.findOneAndUpdate(
+                {
+                    "comment._id": comment_id
+                },
+                {
+                    $pull: {
+                        comment: { _id: comment_id}
+                    }
+                },
+
+                {
+                    new: false, // don't return the updated document since it's not needed no more
+                }
+            )
+
+            if (! comment_exists) return res.status(400).json({message: "comment not found"})
+
+            comment_exists.deleteOne()
+
+
+            return res.status(200).json({message: "success"})
+        } 
+        
+        catch ( e ) {
+            console.error("failed to delete comment: ", e)
+            return res.status(500).json({error: "Server error, try again later", message: "failed"})
+        }
+    }
+)
 module.exports = router 
