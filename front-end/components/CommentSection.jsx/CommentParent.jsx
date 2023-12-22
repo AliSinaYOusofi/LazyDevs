@@ -9,14 +9,7 @@ import DisplayComments from './DisplayComments';
 import RecentPostsError from '../Error/RecentPostsError/RecentPostError';
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard';
 import DisplayReplyComments from './DisplayReplyComments';
-import { Roboto } from 'next/font/google'
 
-const roboto = Roboto({
-    weight: ['400'],
-    style: ['normal'],
-    subsets: ['latin'],
-    display: 'swap',
-})
 export default function CommentParent({post_id}) {
 
     const [comment, setComment] = useState("")
@@ -165,7 +158,7 @@ export default function CommentParent({post_id}) {
                 
                     <textarea id="message" 
                         onChange={(e) => setComment(e.target.value)} 
-                        rows="4" style={roboto.style} className={`${roboto.className} bg-white border-black/40 focus:border-[1px] outline-none p-2.5 w-full text-lg text-gray-900 rounded-md`}
+                        rows="4"  className={` bg-white border-black/40 focus:border-[1px] outline-none p-2.5 w-full text-lg text-gray-900 rounded-md`}
                         placeholder="your comment..." >
                     </textarea>
                             

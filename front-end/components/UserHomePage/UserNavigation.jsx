@@ -9,6 +9,7 @@ import Following from '@/components/Followers/Following'
 import UserHomePosts from './UserHomePosts'
 import UserFollowers from '../Followers/UserFollowers'
 import UserFollowing from '../Followers/UserFollowing'
+import { ToastContainer } from 'react-toastify';
 
 export default function UserHomePage({user_id}) {
     
@@ -104,6 +105,7 @@ export default function UserHomePage({user_id}) {
                     {currentComponent}
                 </div>
             </div>
+            <ToastContainer />
         </>
   )
 }

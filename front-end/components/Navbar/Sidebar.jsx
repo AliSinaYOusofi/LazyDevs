@@ -26,7 +26,7 @@ export default function Sidebar({sidebar, setTriggerFunction}) {
             <div
                 onClick={() => setTriggerFunction(prev => ! prev)} 
                 className="absolute right-3 top-3 rotate-45 hover:rotate-0 cursor-pointer transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" dataSlot="icon" className="w-6 h-6 md:h-9 md:w-9">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 md:h-9 md:w-9">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
 

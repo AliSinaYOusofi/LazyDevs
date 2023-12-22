@@ -5,6 +5,10 @@ import HandleFeed from './HandleFeeds'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
+export const metadata = {
+  title: "View post"
+}
+
 const checkUserStatus = async () => {
     
   let isAuthenticated

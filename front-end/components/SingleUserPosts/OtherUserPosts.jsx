@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 
-export default function OtherUserPosts({title, date, viewCount, commentCount, dateDifference, id, body}) {
+export default function OtherUserPosts({title, date, viewCount, commentCount, dateDifference, id, body, likes}) {
 
     return (
         
         <>
-            <hr className="md:w-full"/>
-            <div id={id} className=" flex  flex-col gap-y- md:flex-row md:items-center justify-between mt-3 mb-3 bg-white p-2 rounded-md">
+            <div id={id} className=" flex  flex-col gap-y- md:flex-row md:items-center justify-evenly mt-3 mb-3 bg-white p-2 rounded-md">
                 <div className="md:w-1/2 ">
                     <p className="mt-4 md:text-base text-sm">{date ? date.split("T")[0] : ""} <i className="md:text-sm text-xs text-gray-600"> ({dateDifference}) </i></p>
                     <Link href={{ pathname:"/view_post", query: {post: id} }} className="md:text-2xl text-xl line-clamp-1 hover:underline  font-bold tracking-wide mt-4">{title}</Link>
@@ -15,7 +14,15 @@ export default function OtherUserPosts({title, date, viewCount, commentCount, da
                 </div>
 
                 <div className="flex flex-row items-center gap-x-4 mt-3">
+                    
+                    <div className="flex items-center gap-x-1">
 
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                        <p className="flex items-center justify-center">{likes}</p>
+                    </div>
+                    
                     <div className="flex items-center gap-x-1">
                         
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="md:w-6 md:h-6 w-5 h-5">

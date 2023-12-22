@@ -47,22 +47,24 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
         <div className="w-full group mt-10 flex md:flex-row flex-col flex-wrap items-center justify-between rounded-md md:px-10  p-4 bg-white">
             
             <div className=" flex items-center justify-start gap-x-4">
-
-                <img className="rounded-full w-20 h-20  md:border-[2px] object-cover border-[2px] border-gray-400" src={image} alt="Avatar" />
+                
+                <div className="border-[1px] border-black rounded-full">
+                    <img className="rounded-full w-20 h-20 object-cover p-1" src={image} alt="Avatar" />
+                </div>
                 
                 <div>
                     <div className=" ">
-                        <Link href={`/account/${user_id}`} className="md:text-xl italic text-gray-500">{name || "username"}</Link>
+                        <Link href={`/account/${user_id}`} className="md:text-xl text-black transition-all hover:underline">{name || "username"}</Link>
                     </div>
 
                     <div className=" ">
-                        <h4 className="md:text-xl text-gray-500">{work || "NA"}</h4>
+                        <h4 className="md:text-lg text-gray-500">{work || "NA"}</h4>
                     </div>
                 </div>
             </div>
             
 
-            <div className="mt-6 mb-3 flex gap-14 md:!gap-14">
+            <div className="mt-6 mb-3 flex gap-4">
                 
                 <div className="flex flex-col items-center justify-center">
                     <p className="text-sm font-normal text-gray-600">Posts</p>
@@ -80,8 +82,8 @@ function ProfileCard({ followers, posts, following, image, name, work, user_id, 
                 </div>
 
                 <div className="flex flex-col items-center justify-center">
-                    <p className="text-sm font-normal text-gray-600">Joined</p>
-                    <p className="text-sm font-bold text-gray-500"> { date ? date.split("T")[0] : null} <span className="text-xs"> ({diff})</span></p>
+                    <p className="text-sm font-normal text-gray-600 mb-2">Joined</p>
+                    <p className="text-xs font-bold text-gray-500"> { date ? date.split("T")[0] : null} <span className="text-xs"> ({diff})</span></p>
                 </div>
             </div>
 

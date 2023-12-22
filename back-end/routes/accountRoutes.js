@@ -155,9 +155,9 @@ router.get(
         let result = validationResult(req)
         
         if (! result.isEmpty()) return res.status(200).json({message : "no author id provied"})
+        
         let {user_id: author} = req.query;
         
-        console.log("here")
         try {
             const Posts = await Post.find({author}).lean().exec()
 
@@ -166,9 +166,10 @@ router.get(
                 post.viewCount = views.length
                 post.commentCount = post.comments.length
                 post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
+                post.likes = (await PostLikes.find({post_id: post._id}).lean().exec()).length
             }
 
-            Posts.sort( (a, b) => b.viewCount - a.viewCount)
+            Posts.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
             return res.
                 status(200).
