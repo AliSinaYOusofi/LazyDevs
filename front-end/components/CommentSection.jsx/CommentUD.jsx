@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import DeleteCommentConfirmation from './DeleteConfirmationModal'
 import UpdateComment from './UpdateComment'
 
-export default function CommentUD({comment_id, body}) {
+export default function CommentUD({comment_id, body, isReply}) {
     
     const [modal, setModal] = useState(false)
     const [updateCommentModel, setUpdateCommentModal] = useState(false)
 
     return (
         <>
-            <div className="absolute right-10 top-0">
+            <div className="absolute right-10 top-0 shadow-white shadow-lg backdrop-blur-sm p-4 rounded-md">
                 
                 <div className="flex items-center gap-x-2">
 
@@ -30,7 +30,7 @@ export default function CommentUD({comment_id, body}) {
 
             <div className="absolute w-[10rem]">
                 {
-                    modal ? <DeleteCommentConfirmation id={comment_id} func={setModal} mod={modal} /> : null
+                    modal ? <DeleteCommentConfirmation id={comment_id} func={setModal} mod={modal} isReply={isReply}/> : null
                 }
                 {
                     updateCommentModel ? <UpdateComment id={comment_id} body={body} func={setUpdateCommentModal} mod={updateCommentModel} /> : null
