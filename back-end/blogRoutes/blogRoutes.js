@@ -23,6 +23,7 @@ const nodemailer = require("nodemailer")
 const OTPModel = require("../models/OTP")
 const bcrypt = require("bcrypt");
 const he = require("he")
+const CommentsReply = require("../models/ReplyComments")
 
 router.get("/relevant_feed", async (req, res) => {
     
@@ -2337,6 +2338,8 @@ router.delete(
             
             let {comment_id} = req.query
             
+            // for every comment it must also delete the 
+            // replies associated with the comment
             let comment_exists = await Comment.findOneAndUpdate(
                 {
                     "comment._id": comment_id
@@ -2351,7 +2354,12 @@ router.delete(
                     new: false, // don't return the updated document since it's not needed no more
                 }
             )
-
+            
+            await Promise.all(
+                comment_exists.replies.map( async (reply) => {
+                    await CommentsReply.findOneAndDelete({_id: reply._id})
+                })
+            )
             if (! comment_exists) return res.status(400).json({message: "comment not found"})
 
             comment_exists.deleteOne()
@@ -2404,5 +2412,84 @@ router.put(
     }
 )
 
+router.delete(
+    '/delete_comment_reply',
+    query('comment_id').notEmpty().isMongoId().escape(),
+    async (req, res) => 
+    {
 
+        const result = validationResult(req)
+
+        if (!result.isEmpty()) return res.status(400).json({ message: "Invalid data provided" })
+
+        
+        const { comment_id } = req.query;
+        
+        try {
+        
+            const deletedReply = await CommentsReply.findOne({ comment: comment_id }).exec();
+
+            if (!deletedReply) {
+                return res.status(404).json({ message: 'failed' });
+            }
+            
+            // Assuming 'find_references' is the correct variable name for the found references
+            const find_references = await Comments.find({ replies: deletedReply._id });
+            
+            if (find_references) {
+
+                for (const reference of find_references) {
+                    reference.replies = reference.replies.filter(item => item.toString() !== deletedReply._id.toString());
+                    await reference.save();
+                }
+            }
+            
+            await deletedReply.deleteOne();
+            return res.status(200).json({ message: 'success' });
+            
+        }
+
+        catch (error) {
+            console.error('Error deleting comment reply:', error);
+            return res.status(500).json({ error: 'Server error' , message: "failed"});
+        }
+    }
+)
+
+router.put(
+    '/update_comment_reply/:replyId',
+    body('updatedComment').notEmpty().escape(), // Adjust as needed based on your frontend's payload
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+  
+      try {
+        const { replyId } = req.params;
+        const { updatedComment } = req.body;
+  
+        const commentExists = await Comment.findOne({ "replies._id": replyId });
+  
+        if (!commentExists) {
+          return res.status(400).json({ message: "Comment reply not found" });
+        }
+  
+        const replyIndex = commentExists.replies.findIndex(reply => reply._id.toString() === replyId);
+  
+        if (replyIndex === -1) {
+          return res.status(400).json({ message: "Comment reply not found" });
+        }
+  
+        commentExists.replies[replyIndex].set({ text: updatedComment });
+  
+        await commentExists.save();
+  
+        return res.status(200).json({ message: "Success", updatedComment: commentExists.replies[replyIndex] });
+      } catch (error) {
+        console.error("Failed to update comment reply:", error);
+        return res.status(500).json({ error: "Server error, try again later", message: "Failed" });
+      }
+    }
+);
 module.exports = router 

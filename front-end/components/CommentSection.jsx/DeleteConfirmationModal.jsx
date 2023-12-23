@@ -2,17 +2,21 @@ import { useAppContext } from '@/context/useContextProvider';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function DeleteCommentConfirmation({id: comment_id, func, mod, refechPosts}) {
+export default function DeleteCommentConfirmation({id: comment_id, func, mod, isReply}) {
     
     const [spinner, setSpiner] = useState(false)
     const { setRefetchCommentsAfterCrud } = useAppContext()
     
-    const handleDeletePost = async () => {
+    const handleDeleteComment = async () => {
 
         setSpiner(prev => ! prev)
 
         try {
-            const response = await fetch(`http://localhost:3001/blogRoutes/delete_comment?comment_id=${comment_id}`, 
+            const url = isReply
+            ? `http://localhost:3001/blogRoutes/delete_comment_reply?comment_id=${comment_id}`
+            : `http://localhost:3001/blogRoutes/delete_comment?comment_id=${comment_id}`;
+
+            const response = await fetch(url, 
                 {
                     method: "DELETE",
                     headers: {
@@ -21,6 +25,7 @@ export default function DeleteCommentConfirmation({id: comment_id, func, mod, re
                     credentials: "include"
                 }
             );
+
             
             const data = await response.json()
             console.log(data, ' why is it not refreshing')
@@ -100,7 +105,7 @@ export default function DeleteCommentConfirmation({id: comment_id, func, mod, re
                             </h3>
                             
                             <button
-                                onClick={handleDeletePost}
+                                onClick={handleDeleteComment}
                                 type="button"
                                 className="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                             >
