@@ -5,6 +5,7 @@ const SignedUpUser = require("../models/Register");
 const bcrypt = require("bcrypt");
 const { body, validationResult, query } = require("express-validator");
 const PostLikes = require("../models/postLikes");
+const Comments = require("../models/Comments");
 const router = require("express").Router();
 
 router.get(
@@ -25,10 +26,11 @@ router.get(
                 
                 const views = await PostView.find({post_id: post._id}).lean().exec()
                 const likes = await PostLikes.find({post_id: post._id}).lean().exec()
-            
+                const comments = await Comments.find({ post: blog._id }).lean().exec()
+                
                 post.likes = likes?.length
                 post.viewCount = views.length
-                post.commentCount = post.comments.length
+                blog.commentsCount = comments?.length
                 post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
             }
 
@@ -162,11 +164,14 @@ router.get(
             const Posts = await Post.find({author}).lean().exec()
 
             for (let post of Posts) {
+                
                 const views = await PostView.find({post_id: post._id}).lean().exec()
-                post.viewCount = views.length
-                post.commentCount = post.comments.length
-                post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
+                const comments = await Comments.find({ post: post._id }).lean().exec()
+                
                 post.likes = (await PostLikes.find({post_id: post._id}).lean().exec()).length
+                post.viewCount = views.length
+                post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
+                post.commentsCount = comments?.length
             }
 
             Posts.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt))
