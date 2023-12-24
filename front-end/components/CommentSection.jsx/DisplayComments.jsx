@@ -18,8 +18,6 @@ export default function DisplayComments({author, comment, _id, profileUrl, date,
     const [displayCommentUPOpe, setDisplayCommentUPOpe] = useState(false)
     const {currentUser} = useAppContext()
 
-    console.log(commentReplies)
-
     const handleReplyComment = async () => {
 
         if (!currentUser) return alert("not logged in ")

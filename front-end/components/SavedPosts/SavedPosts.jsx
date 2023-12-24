@@ -107,8 +107,7 @@ export default function SavedPosts() {
             
             <div className="mt-10"></div>
                 {
-                
-                    savedPosts.map(blog => <SavedToAccountPostCard refechSavedListRefreshFunction={setRetrySavedPosts} savedAt={blog.savedAt} savedDifference={blog.savedAtDifference} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    savedPosts.map(blog => <SavedToAccountPostCard commentsCount={blog?.commentCount} likesCount={blog?.likesCount} refechSavedListRefreshFunction={setRetrySavedPosts} savedAt={blog.savedAt} savedDifference={blog.savedAtDifference} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
         </div>
     )

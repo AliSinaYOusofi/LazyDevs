@@ -122,7 +122,7 @@ export default function TopFeed() {
             }
             <div className="md:w-fit w-screen px-4">
                 {
-                    topBlogs.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    topBlogs.map(blog => <BlogCard commentsCount={blog?.commentsCount} likes={blog?.likes} author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

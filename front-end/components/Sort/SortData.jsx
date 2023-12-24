@@ -36,7 +36,7 @@ export default function SortData({sortedBy, setSortedBy}) {
 
             else if (searchFlag === "comment") {
                 setSortedBy( comment => {
-                    const sortedByComment = comment.slice().sort( (a, b) => b.comments.length > a.comments.length)
+                    const sortedByComment = comment.slice().sort( (a, b) => b.commentsCount > a.commentsCount)
                     return sortedByComment
                 })
             }

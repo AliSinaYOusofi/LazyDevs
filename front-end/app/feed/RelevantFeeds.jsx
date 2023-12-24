@@ -125,7 +125,7 @@ export default function RelevantFeeds() {
 
             <div className="px-4">
                 {
-                    relevantBlogs.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} saved={blog?.saved} tags={blog?.tags} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    relevantBlogs.map(blog => <BlogCard commentsCount={blog?.commentsCount} likes={blog?.likes} author={blog?.author} saved={blog?.saved} tags={blog?.tags} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
 
             </div>

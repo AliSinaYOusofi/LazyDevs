@@ -92,7 +92,8 @@ router.get("/relevant_feed", async (req, res) => {
             
             const views = await PostView.find({post_id: blog._id}).lean().exec()
             const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
-            
+            const comments = await Comments.find({ post: blog._id }).lean().exec()
+
             if (user_id) {
                 const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                 blog.saved = alreadySaved.length > 0
@@ -100,6 +101,7 @@ router.get("/relevant_feed", async (req, res) => {
 
             blog.likes = likes?.length
             blog.viewCount = views.length
+            blog.commentsCount = comments.length
         }
 
         completeBlogData.sort( (a, b) => b.viewCount - a.viewCount);
@@ -167,7 +169,7 @@ router.get(
                 }
                 
                 blog.viewCount = views.length
-                blog.commentCount = blog.comments.length
+                blog.commentsCount = blog.comments.length
                 blog.likes = likes.length
             }
 
@@ -238,9 +240,11 @@ router.get("/top", async (req, res) => {
             }    
             
             const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
-            
+            const comments = await Comments.find({ post: blog._id }).lean().exec()
+
             blog.likes = likes?.length
             blog.viewCount = views.length
+            blog.commentsCount = comments.length
         }
 
         const mostViewdBlogs = completeBlogData.reduce( (pre, curr) => pre.viewCount > curr.viewCount ? pre : curr)
@@ -836,7 +840,7 @@ router.get("/recent_posts", async (req, res) => {
                 blog.profileUrl = authorData[index].profileUrl;
                 blog.username = authorData[index].username;
                 blog.viewCount = 0
-                blog.commentCount = 0
+                blog.commentsCount = 0
                 blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
                 return blog;
             })
@@ -851,10 +855,11 @@ router.get("/recent_posts", async (req, res) => {
                 }
 
                 const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+                const comments = await Comments.find({ post: blog._id }).lean().exec()
                 
                 blog.likes = likes?.length
                 blog.viewCount = views?.length
-                blog.commentCount = blog.comments?.length
+                blog.commentsCount = comments?.length
             }
 
             postsInLast15Days.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1)
@@ -963,7 +968,9 @@ router.get("/posts_saved", async (req, res) => {
                 if (currentSavedPost) {
                 
                     const views = await PostView.find({ post_id: currentSavedPost._id }).lean().exec();
-                
+                    const comments = await Comments.find({ post: currentSavedPost._id }).lean().exec()
+                    const postLikes = await PostLikes.find({ post_id: currentSavedPost._id }).lean().exec()
+                    
                     return {
                         ...currentSavedPost,
                         profileUrl: detailsOfUserWhoSavedPost.profileUrl,
@@ -972,7 +979,9 @@ router.get("/posts_saved", async (req, res) => {
                         viewCount: views.length,
                         saved: true,
                         savedAtDifference: formatDistanceToNowStrict(post.savedAt, { addSuffix: true }).replace("about", ""),
-                        savedAt: post.savedAt
+                        savedAt: post.savedAt,
+                        commentCount: comments.length,
+                        likesCount: postLikes.length
                     };
                 }
                 return post;
@@ -1471,6 +1480,7 @@ router.get("/my_following_posts", async (req, res) => {
                 
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
                 const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
+                const comments = await Comments.find({ post: blog._id }).lean().exec()
                 
                 if (user_id) {
                     const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
@@ -1479,7 +1489,7 @@ router.get("/my_following_posts", async (req, res) => {
             
                 blog.likes = likes?.length
                 blog.viewCount = views.length || 0
-                blog.commentCount = blog.comments.length
+                blog.commentsCount = comments.length
             }
 
             return res.status(200).json({message: "success", data: completeBlogData, zero: completeBlogData.length ? true : false})
@@ -2457,39 +2467,36 @@ router.delete(
 )
 
 router.put(
-    '/update_comment_reply/:replyId',
+    '/update_comment_reply/',
     body('updatedComment').notEmpty().escape(), // Adjust as needed based on your frontend's payload
+    query('comment_id').notEmpty().isMongoId().escape(),
     async (req, res) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-  
-      try {
-        const { replyId } = req.params;
-        const { updatedComment } = req.body;
-  
-        const commentExists = await Comment.findOne({ "replies._id": replyId });
-  
-        if (!commentExists) {
-          return res.status(400).json({ message: "Comment reply not found" });
+        
+        const errors = validationResult(req);
+        
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-  
-        const replyIndex = commentExists.replies.findIndex(reply => reply._id.toString() === replyId);
-  
-        if (replyIndex === -1) {
-          return res.status(400).json({ message: "Comment reply not found" });
+    
+        try {
+            const {comment_id } = req.query;
+            const { updatedComment } = req.body;
+            
+            const commentExists = await CommentsReply.findOne({ comment: comment_id });
+            
+            if (!commentExists) {
+                return res.status(400).json({ message: "Comment reply not found" });
+            }
+    
+            commentExists.set({ text: updatedComment });
+    
+            await commentExists.save();
+    
+            return res.status(200).json({ message: "success"});
+        } catch (error) {
+            console.error("Failed to update comment reply:", error);
+            return res.status(500).json({ error: "Server error, try again later", message: "failed" });
         }
-  
-        commentExists.replies[replyIndex].set({ text: updatedComment });
-  
-        await commentExists.save();
-  
-        return res.status(200).json({ message: "Success", updatedComment: commentExists.replies[replyIndex] });
-      } catch (error) {
-        console.error("Failed to update comment reply:", error);
-        return res.status(500).json({ error: "Server error, try again later", message: "Failed" });
-      }
     }
 );
 module.exports = router 
