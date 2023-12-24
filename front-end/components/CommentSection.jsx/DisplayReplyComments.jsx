@@ -9,10 +9,9 @@ export default function DisplayReplyComments({author, comment, _id, profileUrl, 
     const {currentUser} = useAppContext()
     const [displayCommentUPOpe, setDisplayCommentUPOpe] = React.useState(false)
 
-    console.log(comment_id)
     return (
         <>
-        <div id={_id} key={_id} className="max-w-2xl  mt-10 p-4 ml-24 bg-white rounded-xl outline-none">
+        <div id={_id} key={_id} className="max-w-2xl mt-4 p-4 ml-24 bg-white rounded-xl outline-none">
             
             <div className="flex flex-row mt-3 justify-between">
 

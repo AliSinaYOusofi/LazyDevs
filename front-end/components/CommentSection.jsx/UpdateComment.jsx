@@ -2,17 +2,24 @@ import { useAppContext } from '@/context/useContextProvider';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function UpdateComment({ id: comment_id, func, mod }) {
+export default function UpdateComment({ id: comment_id, func, mod, isReply }) {
     
     const [spinner, setSpinner] = useState(false);
     const [updatedComment, setUpdatedComment] = useState('');
     const { setRefetchCommentsAfterCrud } = useAppContext();
 
     const handleUpdatePost = async () => {
+        
         setSpinner(true);
 
+        if (updatedComment.length < 1) return toast.error("can't post an empty comment", {pauseOnHover: true});
+        
         try {
-            const response = await fetch(`http://localhost:3001/blogRoutes/update_comment?comment_id=${comment_id}`, {
+            const url = isReply ? 
+                `http://localhost:3001/blogRoutes//update_comment_reply?comment_id=${comment_id}` : 
+                `http://localhost:3001/blogRoutes/update_comment?comment_id=${comment_id}`
+            
+            const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,7 +34,6 @@ export default function UpdateComment({ id: comment_id, func, mod }) {
 
                 if (data.message === 'success') {
                     setRefetchCommentsAfterCrud(prev => !prev);
-                    console.log("updating")
                 } 
                 else if (data.message === 'failed') toast.error('Failed! Try again later');
             }
@@ -50,10 +56,7 @@ export default function UpdateComment({ id: comment_id, func, mod }) {
         <div className={`${mod ? 'blurry-background pointer-events-auto' : ''}`}>
             <div
                 className={`${spinner ? "pointer-events-none" : "pointer-events-auto"} fixed  z-50 p-4 overflow-x-hidden overflow-y-auto  max-h-full bg-white rounded-md top-[40%] md:right-[30%]`}
-                id="popup-modal"
-                tabIndex="-1"
             >
-
                 <button
                     onClick={() => func( prev => ! prev )}
                     type="button"

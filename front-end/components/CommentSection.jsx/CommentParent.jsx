@@ -24,14 +24,12 @@ export default function CommentParent({post_id}) {
     
     const {currentUser, refechCommentsAfterCrud} = useAppContext(); 
 
-
     const handleSumitComment = async () => {
         
         if (!currentUser) {
            
             return setNotLoggedInCard(prev => ! prev)
         }
-        
         
         if (comment.length < 1) return toast.error("can't post an empty comment", {pauseOnHover: true});
 

@@ -33,7 +33,7 @@ export default function CommentUD({comment_id, body, isReply}) {
                     modal ? <DeleteCommentConfirmation id={comment_id} func={setModal} mod={modal} isReply={isReply}/> : null
                 }
                 {
-                    updateCommentModel ? <UpdateComment id={comment_id} body={body} func={setUpdateCommentModal} mod={updateCommentModel} /> : null
+                    updateCommentModel ? <UpdateComment id={comment_id} body={body} func={setUpdateCommentModal} mod={updateCommentModel} isReply={isReply}/> : null
                 }
             </div>
         </>

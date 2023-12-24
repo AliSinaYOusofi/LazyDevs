@@ -25,7 +25,7 @@ export default function LatestFeed() {
                     }
                 );
                 const data = await response.json()
-
+                console.log(data, ' following')
                 if (data.redirectTo) {
                     
                     const redirectTo = data.redirectTo
@@ -112,7 +112,7 @@ export default function LatestFeed() {
             }
             <div className="md:max-w-2xl w-screen px-4 md:px-0">
                 {
-                    latestPosts.map(blog => <BlogCard likes={blog?.likes} author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
+                    latestPosts.map(blog => <BlogCard commentsCount={blog?.commentsCount} likes={blog?.likes} author={blog?.author} tags={blog?.tags} saved={blog?.saved} dateDistance={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>)
                 }
             </div>
         </>

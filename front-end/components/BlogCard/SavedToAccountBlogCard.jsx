@@ -3,8 +3,12 @@ import React, { useEffect, useState } from 'react'
 import ReadingTime from '../ReadingTime/ReadingTime'
 import { useAppContext } from '@/context/useContextProvider'
 import NotLoggedInCard from '../NotLoggedCard/NotLoggedInCard'
+import SavedPostIcon from '../SVG/SavedPostIcon'
+import UnsavedPostBlogIcon from '../SVG/UnsavedPostIcon'
+import SavedPostIconBlog from '../SVG/SavedPostBlogIcon'
+import CommentIcon from '../SVG/CommentIcon'
 
-export default function SavedToAccountPostCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, savedAt, savedDifference, refechSavedListRefreshFunction}) {
+export default function SavedToAccountPostCard({content, title, username, profileUrl, date, id, width, clamp, viewCount, dateDistance, saved, savedAt, savedDifference, refechSavedListRefreshFunction, likesCount, commentsCount}) {
     
     const [savedToAccount, setSavedToAccount] = useState(false)
     const [showNotLoggedInCard, setNotLoggedInCard] = useState(false)
@@ -62,14 +66,33 @@ export default function SavedToAccountPostCard({content, title, username, profil
                         <span className="text-sm font-semibold text-black">Posted: {date ? date?.split("T")[0] : ""} <i className="text-sm text-gray-600">({dateDistance})</i></span>
                         <p className="text-sm font-semibold text-black"> Saved: {savedAt ? savedAt?.split("T")[0]: ""} <date> <span className="text-sm text-gray-600"> ({savedDifference}) </span></date></p>
                     </div>
-                    <div className="flex items-center justify-center gap-x-1 bg-gray-50 p-1 rounded-md">
-                
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <p className="flex items-center justify-center">{viewCount}</p>
-                    </div> 
+
+                    <div className="flex items-center bg-gray-50 p-1 rounded-md gap-x-2">
+
+                        <div className="flex items-center justify-center gap-x-1 ">
+                    
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <p className="flex items-center justify-center">{viewCount}</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-x-1">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                            </svg>
+                            <p className="flex items-center justify-center">{likesCount}</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-x-1">
+
+                            <CommentIcon />
+                            <p className="flex items-center justify-center">{commentsCount}</p>
+                        </div>
+                    </div>
+
                 </div> 
                 <div className="mt-2">
                     
@@ -87,21 +110,9 @@ export default function SavedToAccountPostCard({content, title, username, profil
                             {
                                 ! savedToAccount
                                 ?
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="h-7 w-7"
-                                        >
-                                        <path d="M16 2H8a3.003 3.003 0 00-3 3v16.5a.5.5 0 00.75.434l6.25-3.6 6.25 3.6A.5.5 0 0019 21.5V5a3.003 3.003 0 00-3-3zm2 18.635l-5.75-3.312a.51.51 0 00-.5 0L6 20.635V5a2.003 2.003 0 012-2h8a2.003 2.003 0 012 2v15.635z" />
-                                    </svg>
+                                    <UnsavedPostBlogIcon />
                                 :
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="w-7 h-7"
-                                        >
-                                        <path d="M16 2H8C6.3 2 5 3.3 5 5v16c0 .2 0 .3.1.5.3.5.9.6 1.4.4l5.5-3.2 5.5 3.2c.2.1.3.1.5.1.6 0 1-.4 1-1V5c0-1.7-1.3-3-3-3z" />
-                                    </svg>
+                                    <SavedPostIconBlog />
                             }
                         </div>
                     
