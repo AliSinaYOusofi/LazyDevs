@@ -19,6 +19,7 @@ export default function UserHomePosts({author}) {
         async function getUserBlogsBasedOnAuthorOfTheUser() {
 
             if (!author) return alert("no author id provided") 
+            
             try {
                 const response = await fetch(`http://localhost:3001/accountRoutes/user_posts?user_id=${author}`, 
                     {
@@ -39,11 +40,6 @@ export default function UserHomePosts({author}) {
         getUserBlogsBasedOnAuthorOfTheUser()
 
     }, [author, retryPosts, deletePost])
-
-    const reversePosts = () => {
-        setPosts([...posts].reverse())
-        setSortedBy(prev => ! prev)
-    }
 
     let noPostDiv = 
         <div className="mt-10"> 
@@ -114,7 +110,7 @@ export default function UserHomePosts({author}) {
                 {   
                     posts.map
                     (blog => 
-                        <OtherUserPosts likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} body={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                        <OtherUserPosts likes={blog?.likes} commentCount={blog.commentsCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} body={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                     )
                         
                 }

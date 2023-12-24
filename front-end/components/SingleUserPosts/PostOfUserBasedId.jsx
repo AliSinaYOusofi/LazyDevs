@@ -117,7 +117,7 @@ export default function PostOfUserBasedId({author}) {
             {   
                 posts.map
                 (blog => 
-                    <SingleUserPostBlogTemplate tags={blog?.tags} body={blog?.body} likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
+                    <SingleUserPostBlogTemplate commentsCount={blog?.commentsCount} tags={blog?.tags} body={blog?.body} likes={blog?.likes} commentCount={blog.commentCount} parentUseEffectTrigger={setDeletePost} dateDifference={blog.distance} viewCount={blog.viewCount} title={blog.title} content={blog.body} username={blog.username} profileUrl={blog.profileUrl} date={blog.createdAt} key={blog._id} id={blog._id}/>
                 )
                     
             }

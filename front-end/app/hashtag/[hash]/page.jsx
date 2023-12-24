@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation'
 
 import React from 'react'
 
-
+export const metadata = {
+    title: "Hashtags"
+}
 const getPostsWithSameHashTags = async (hashtag) => {
     
     let isAuthenticated

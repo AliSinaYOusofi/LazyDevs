@@ -5,7 +5,9 @@ import {cookies} from 'next/headers'
 import UserHomePage from '@/components/UserHomePage/UserNavigation';
 
 // to be the server component
-
+export const metadata = {
+    title: "User Profile"
+}
 async function getUserData (user_id)  {
     
     let isAuthenticated
