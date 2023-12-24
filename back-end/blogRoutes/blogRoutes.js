@@ -2350,6 +2350,9 @@ router.delete(
             
             // for every comment it must also delete the 
             // replies associated with the comment
+
+            // and it must also delete the notfications sent to the user
+            // and the notifications replies associated with the comment
             let comment_exists = await Comment.findOneAndUpdate(
                 {
                     "comment._id": comment_id
@@ -2364,9 +2367,10 @@ router.delete(
                     new: false, // don't return the updated document since it's not needed no more
                 }
             )
-            
+            await CommentNotification.deleteMany({comment: comment_id})
             await Promise.all(
                 comment_exists.replies.map( async (reply) => {
+                    await ReplyCommentNotification.findOneAndDelete({comment_id})
                     await CommentsReply.findOneAndDelete({_id: reply._id})
                 })
             )
@@ -2432,6 +2436,9 @@ router.delete(
 
         if (!result.isEmpty()) return res.status(400).json({ message: "Invalid data provided" })
 
+        // another thing missing ::::::
+        // remove the notifications sent to he user if the user 
+        // chooses to delete his/her reply
         
         const { comment_id } = req.query;
         
@@ -2439,11 +2446,12 @@ router.delete(
         
             const deletedReply = await CommentsReply.findOne({ comment: comment_id }).exec();
 
+            // also delete the notification sent to the user
+            await ReplyCommentNotification.deleteOne({ comment_id: comment_id });
             if (!deletedReply) {
                 return res.status(404).json({ message: 'failed' });
             }
             
-            // Assuming 'find_references' is the correct variable name for the found references
             const find_references = await Comments.find({ replies: deletedReply._id });
             
             if (find_references) {

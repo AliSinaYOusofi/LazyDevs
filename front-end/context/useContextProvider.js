@@ -18,6 +18,8 @@ export const LazyContextProvider = ({children}) => {
     // previously used: location.reload()
     // now changing the get_post_comments route to update the comments
     const [refechCommentsAfterCrud, setRefetchCommentsAfterCrud] = useState(false)
+    const [refreshNotificationsAfterRead, setRefreshNotificationAfterRead] = useState(false)
+
     return (
         <lazyContext.Provider 
             value={
@@ -27,7 +29,8 @@ export const LazyContextProvider = ({children}) => {
                         currentUser, setCurrentUser,
                         editTags, setEditTags,
                         postid, setPostid,
-                        refechCommentsAfterCrud, setRefetchCommentsAfterCrud
+                        refechCommentsAfterCrud, setRefetchCommentsAfterCrud,
+                        refreshNotificationsAfterRead, setRefreshNotificationAfterRead,
                     }
                 }
             >
