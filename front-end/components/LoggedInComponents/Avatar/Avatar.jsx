@@ -1,3 +1,4 @@
+import { useAppContext } from '@/context/useContextProvider'
 import Link from 'next/link'
 import React, {useEffect, useState, useCallback} from 'react'
 
@@ -5,6 +6,7 @@ import React, {useEffect, useState, useCallback} from 'react'
 export default function Avatar({profileUrl}) {
 
     const [userHasNotifications, setUserHasNotifications] = useState(false)
+    const { refreshNotificationsAfterRead } = useAppContext()
     
     const checkUserHasNotifications = useCallback(async  () => {
         
@@ -33,12 +35,12 @@ export default function Avatar({profileUrl}) {
         catch (error) {
             console.error(error)
         }
-    }, [profileUrl])
+    }, [profileUrl, refreshNotificationsAfterRead])
 
 
     useEffect( () => {
         checkUserHasNotifications()
-    }, [checkUserHasNotifications, profileUrl])
+    }, [checkUserHasNotifications, profileUrl, refreshNotificationsAfterRead])
 
     return (
         <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">
@@ -74,9 +76,12 @@ export default function Avatar({profileUrl}) {
                 {
                     userHasNotifications
                     ?
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                        <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
-                    </svg>
+                    <div className="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                            <path fillRule="evenodd" d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z" clipRule="evenodd" />
+                        </svg>
+                        <p className="absolute left-0 -top-1 px-1 bg-gray-100 rounded-full text-xs">{userHasNotifications}</p>
+                    </div>
                   
                     :
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

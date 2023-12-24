@@ -25,7 +25,7 @@ export default function LatestFeed() {
                     }
                 );
                 const data = await response.json()
-                console.log(data, ' following')
+
                 if (data.redirectTo) {
                     
                     const redirectTo = data.redirectTo

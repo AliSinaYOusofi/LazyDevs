@@ -26,11 +26,11 @@ router.get(
                 
                 const views = await PostView.find({post_id: post._id}).lean().exec()
                 const likes = await PostLikes.find({post_id: post._id}).lean().exec()
-                const comments = await Comments.find({ post: blog._id }).lean().exec()
+                const comments = await Comments.find({ post: post._id }).lean().exec()
                 
                 post.likes = likes?.length
                 post.viewCount = views.length
-                blog.commentsCount = comments?.length
+                post.commentsCount = comments?.length
                 post.distance = formatDistanceToNow(post.createdAt, {addSuffix: true}).replace("about", "")
             }
 
