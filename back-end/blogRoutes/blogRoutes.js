@@ -1755,7 +1755,7 @@ router.get("/user_notifications", async (req, res) => {
             return secondDate - firstDate
         })
 
-        return res.status(200).json({followersNotification: dataToSendBack})
+        return res.status(200).json({followersNotification: dataToSendBack, message: "success"})
 
     } 
     
@@ -2364,10 +2364,11 @@ router.delete(
                 },
 
                 {
-                    new: false, // don't return the updated document since it's not needed no more
+                    new: true, // don't return the updated document since it's not needed no more
                 }
             )
-            await CommentNotification.deleteMany({comment: comment_id})
+
+            await CommentNotification.deleteMany({comment_id: comment_exists._id})
             await Promise.all(
                 comment_exists.replies.map( async (reply) => {
                     await ReplyCommentNotification.findOneAndDelete({comment_id})
