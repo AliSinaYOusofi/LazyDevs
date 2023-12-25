@@ -162,14 +162,15 @@ router.get(
                 
                 const views = await PostView.find({post_id: blog._id}).lean().exec()
                 const likes = await PostLikes.find({post_id: blog._id}).lean().exec()
-
+                const comments = await Comments.find({ post: blog._id }).lean().exec()
+                
                 if (user_id) {
                     const alreadySaved = await Saved.find({user: user_id, post: blog._id}).lean().exec()
                     blog.saved = alreadySaved.length > 0
                 }
                 
                 blog.viewCount = views.length
-                blog.commentsCount = blog.comments.length
+                blog.commentsCount = comments.length
                 blog.likes = likes.length
             }
 
@@ -1605,7 +1606,7 @@ router.get("/has_notifications", async (req, res) => {
 
         totalUnreadNotifications = followingNotification?.length || 0 + postNotification?.length || 0 + commentNotification?.length || 0 + replyCommentNotification?.length || 0 + postLikeNotiFication.length || 0
         
-        return res.status(200).json({data: totalUnreadNotifications})
+        return res.status(200).json({data: totalUnreadNotifications, message: "success"})
 
     } catch(e) {
         console.error("while fetching user notifications", e)
