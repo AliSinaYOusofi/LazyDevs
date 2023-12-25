@@ -4,11 +4,12 @@ import { notification_to_invoke } from '@/functions/notification_to_invoke'
 import Link from 'next/link'
 import { useRouter} from 'next/navigation'
 import React, { useState} from 'react'
+import { toast } from 'react-toastify'
 
 export default function FollowingNotificationCard({imageSource, message, id, isRead, notifier_id, date, date_difference, post_id, post_date}) {
 
     const [spinner, setSpinner] = useState(false)
-    const {setRefreshNotificationAfterRead} = useAppContext()
+    const { setRefreshNotificationAfterRead } = useAppContext()
     const router = useRouter()
 
     const markNotificationRead = async () => {
@@ -25,14 +26,16 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
             const json = await response.json()
             
             if (json.message === "marked") {
-                setRefreshNotificationAfterRead(prev => ! prev)
-                router.refresh()
+               setRefreshNotificationAfterRead( prev => ! prev)
+            } else {
+                toast.error("Operation failed !!")
             }
         }
         catch( e ) {
             console.error(e, " error while making notification read")
         } finally {
             setSpinner(false)
+            router.refresh()
         }
     }
 

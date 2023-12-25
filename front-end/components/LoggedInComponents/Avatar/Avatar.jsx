@@ -21,11 +21,18 @@ export default function Avatar({profileUrl}) {
                     headers: {
                         "Content-Type": "application/json",
                     },
+
+                    cache: "no-cache",
+                    
+                    next: {
+                        revalidate: 0
+                    }
                 }, 
             )
 
             const data = await response.json()
             
+            console.log(data, ' from has notifications')
             if (data.data) {
                 setUserHasNotifications(parseInt(data.data))
             }
@@ -35,12 +42,12 @@ export default function Avatar({profileUrl}) {
         catch (error) {
             console.error(error)
         }
-    }, [profileUrl, refreshNotificationsAfterRead])
+    }, [refreshNotificationsAfterRead])
 
 
     useEffect( () => {
         checkUserHasNotifications()
-    }, [checkUserHasNotifications, profileUrl, refreshNotificationsAfterRead])
+    }, [profileUrl, refreshNotificationsAfterRead])
 
     return (
         <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">

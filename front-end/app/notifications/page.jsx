@@ -23,7 +23,6 @@ export default function Page() {
                 )
                 const data = await response.json()
                     
-                console.log('data ', data)
                 if (data.message === "success") {
                     setNotificationsList(data.followersNotification)
                 }
