@@ -3,13 +3,14 @@ import FollowingNotificationCard from '@/components/Notification/FollowingNotifi
 import { redirect } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import SortNotifications from './DisplayNotifications'
+import { useAppContext } from '@/context/useContextProvider'
 
 export default function Page() {
     
     const [notificationsList, setNotificationsList] = useState(undefined)
     const [errorMessage, setErrorMessages] = useState('')
     const [retryFetchTopBlogs, setRetryFetchTopBlogs] = useState(false)
-
+    const { refreshNotificationsAfterRead } = useAppContext()
     useEffect( () => {
         
         const fetchNotifications = async () => {
@@ -42,7 +43,7 @@ export default function Page() {
             } 
         }
         fetchNotifications()
-    }, [retryFetchTopBlogs])
+    }, [retryFetchTopBlogs, refreshNotificationsAfterRead])
 
     const handleRetryFetchTopBlogs = () => {
         setRetryFetchTopBlogs(prev => ! prev)

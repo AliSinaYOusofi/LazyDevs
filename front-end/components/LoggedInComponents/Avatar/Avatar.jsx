@@ -32,8 +32,7 @@ export default function Avatar({profileUrl}) {
 
             const data = await response.json()
             
-            console.log(data, ' from has notifications')
-            if (data.data) {
+            if (data.message === "success") {
                 setUserHasNotifications(parseInt(data.data))
             }
 
@@ -42,12 +41,12 @@ export default function Avatar({profileUrl}) {
         catch (error) {
             console.error(error)
         }
-    }, [refreshNotificationsAfterRead])
+    }, [profileUrl])
 
 
     useEffect( () => {
         checkUserHasNotifications()
-    }, [profileUrl, refreshNotificationsAfterRead])
+    }, [profileUrl, refreshNotificationsAfterRead, checkUserHasNotifications])
 
     return (
         <div className="flex items-center justify-center md:gap-x-2 gap-x-3 ml-2">
@@ -81,7 +80,7 @@ export default function Avatar({profileUrl}) {
             
             <Link href="/notifications">
                 {
-                    userHasNotifications
+                    Boolean(userHasNotifications )
                     ?
                     <div className="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

@@ -10,7 +10,7 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
 
     const [spinner, setSpinner] = useState(false)
     const { setRefreshNotificationAfterRead } = useAppContext()
-    const router = useRouter()
+    const router = useRouter() 
 
     const markNotificationRead = async () => {
         
@@ -35,7 +35,6 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
             console.error(e, " error while making notification read")
         } finally {
             setSpinner(false)
-            router.refresh()
         }
     }
 
@@ -44,13 +43,13 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
         <div 
             className={`${!isRead ? "border-l-4 border-black" : ""} max-w-2xl px-8 py-4 mx-auto bg-white transition-all duration-100  from-pink-500 via-red-500 to-yellow-500  rounded-lg mt-4 flex items-center justify-between`}>
             
-            <Link href={{pathname: `/account/${notifier_id}`}} className="flex items-center gap-x-2">
+            <Link href={{pathname: `/account/${notifier_id}`}} className="flex items-center gap-x-2 hover:underline">
                 
 
                 <img
                     src={imageSource}
                     alt="profile"
-                    className="w-20 h-20 rounded-full object-cover"
+                    className=" w-16 h-16 rounded-full object-cover hover:scale-[2] transition-all duration-300"
                 />
 
                 <div>
@@ -86,13 +85,16 @@ export default function FollowingNotificationCard({imageSource, message, id, isR
                     type="button"
                     onClick={markNotificationRead}
                     disabled={spinner}
-                    className="py-1 h-8 md:h-10 px-4 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
+                    className="p-1 mt-2 text-lg font-light inline-flex justify-center items-center gap-2 rounded-full bg-gray-800 text-white transition-all hover:bg-gray-900"
                     >
-                    Mark as read
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
                     {
                         spinner
                         ?
-                        <div className="border-t-transparent border-solid animate-spin  rounded-full border-gray-400 border-2 h-7 w-7"></div>
+                        <div className="border-t-transparent border-solid animate-spin  rounded-full border-white border-2 h-5 w-5"></div>
                         : null
                     }
                 </button>
