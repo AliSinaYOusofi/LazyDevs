@@ -1,10 +1,21 @@
-FROM node:18
+# Base Image
+FROM node:14-alpine
 
-WORKDIR /d/Nextjs/LazyDevs/front-end
+# Set working directory
+WORKDIR /app
 
-
+# Install app dependencies
+COPY package*.json ./
 RUN npm install
 
+# Copy app files
+COPY . .
+
+# Build app
+RUN npm run build
+
+# Expose port
 EXPOSE 3000
 
-CMD npm run dev
+# Start app
+CMD ["npm", "run", "start"]
