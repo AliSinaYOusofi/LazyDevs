@@ -50,22 +50,26 @@ router.get(
             
             return res.
                 status(200).
-                json({
-                    message: "execption happened",
-                    status: "failed"
-            })
+                json(
+                    {
+                        message: "execption happened",
+                        status: "failed"
+                    }
+                )
         }
     }
 )
 
 router.post(
     "/update_account",
+    
     body('username').notEmpty().escape().isAlpha().isString().optional(),
     body('workEducation').notEmpty().escape().isAlpha().isString().optional(),
     body('email').notEmpty().escape().trim().isEmail().optional(),
     body('password').notEmpty().isLength({min: 8, max: 50}).trim().escape().optional(),
     body('work').notEmpty().escape().optional(),
     body('id').notEmpty().isMongoId().escape().optional(),  
+    
     async (req, res) => {
         
         const result = validationResult(req)
@@ -82,21 +86,13 @@ router.post(
             id
         } = req.body
         
-        console.log( username,
-            workEducation,
-            password,
-            bio,
-            work,
-            profileUrl,
-            id)
         try {
             
             const currentUserToBeUpdated  = await SignedUpUser.findById(id)
             const currentUserToBeUpdatedPlainObj = currentUserToBeUpdated.toObject()
 
-            console.log(currentUserToBeUpdatedPlainObj)
-
             if (currentUserToBeUpdated) {
+                
                 if (username && username?.trim() !== '') {
                     currentUserToBeUpdatedPlainObj.username = username;
                 }
@@ -149,7 +145,9 @@ router.post(
 router.get(
     
     "/user_posts", 
+    
     query('user_id').notEmpty().isMongoId().escape(),
+    
     async (req, res) => 
     
     {
@@ -199,8 +197,11 @@ router.get(
 )
 
 router.post(
+    
     "/update_tag",
+    
     body('tagInputs').notEmpty().isArray(), 
+    
     async (req, res) => 
     {
         let result = validationResult(req)
@@ -268,7 +269,9 @@ router.get(
             } else {
                 return res.status(400).json({message: "user not found", status: "failed"})
             }
-        } catch(e) {
+        } 
+        
+        catch(e) {
             console.error("error getting tags", e)
             return res.status(400).json({message: "tags update failed", status: "failed"})
         }

@@ -7,8 +7,9 @@ const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./blogRoutes/blogRoutes")
 const accountRoutes = require("./routes/accountRoutes")
 const {getDBInstance} = require("./db_connection/InitializeConnection");
-const { cookie, validationResult } = require("express-validator");
+
 require("dotenv").config();
+
 app.use(cors({
     origin: "http://localhost:3000", 
     methods: ["GET", "POST", "DELETE", "PUT"],
@@ -55,6 +56,7 @@ app.use(
 
             console.log('no access || refresh token provided')
             console.log(req.path, req.cookies)
+
             return res.status(302).json({redirectTo: "/login"})
         }
         
@@ -64,9 +66,13 @@ app.use(
         try {
 
             if (accessToken) {
+
                 const verifyAccessToken = jwt.verify(accessToken, process.env.JWT_SECRET)
+
                 req.user_id = verifyAccessToken._id
+
                 console.log('access token is okay: ', req.user_id)
+
                 next()
             } 
             
@@ -92,6 +98,7 @@ app.use(
     
                 console.log('sent a new access token')
                 console.log('refresh token is okay: ', req.user_id, req.path)
+
                 next() 
             }
                 // if no refresh token or access token then both are expired and must

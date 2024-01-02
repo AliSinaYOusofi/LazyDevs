@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-// const { getDB } = require("../db_connection/mongoose.db.config");
 const SignedUpUser = require("../models/Register");
 const Post = require("../models/Blogs");
 const {validationResult, body} = require("express-validator");
@@ -10,7 +9,6 @@ const Likes = require("../models/postLikes");
 const Comments = require("../models/Comments");
 const CommentsReply = require("../models/ReplyComments");
 const FollowingUser = require("../models/FollowingUsers");
-const Notifications = require("../models/Notifications");
 const PostNotifications = require("../models/PostNotification");
 const { postMessage } = require("../utils/notification_data");
 const PostLikesNotification = require("../models/LikePostNotification");
@@ -19,14 +17,18 @@ const ReplyCommentNotification = require("../models/ReplyCommentNotification");
 const validateEmail = require("../utils/verifyEmailValidation");
 const OTPModel = require("../models/OTP");
 const nodemailer = require("nodemailer")
+
 require("dotenv").config();
 
 router.post(
+    
     "/save_user",
+    
     body('username').notEmpty().escape().isAlpha().isString(),
     body('fullName').notEmpty().escape().isAlpha().isString(),
     body('email').notEmpty().escape().trim().isEmail(),
     body('password').notEmpty().isLength({min: 8, max: 50}).trim(), 
+    
     async (req, res) => 
     {
         // this route is working just fine for now.
@@ -320,4 +322,4 @@ router.delete("/delete_account", async (req, res) => {
         return res.status(200).json({status: "failed"});
     }
 })
-module.exports = router; // to special object
+module.exports = router;
