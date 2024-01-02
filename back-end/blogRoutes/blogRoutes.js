@@ -54,6 +54,7 @@ router.get("/relevant_feed", async (req, res) => {
         let userTags = currentUserFollowingTags?.socials ? currentUserFollowingTags?.socials.map( tag => `#${tag}`.toLowerCase()) : []
 
         let blogs
+        
         let isPostsBasedOnTags = true // store if the posts selected is based on user following tags
 
         if (userTags.length) { // if user is following some tags then send the tags that intersects
@@ -122,8 +123,11 @@ router.get("/relevant_feed", async (req, res) => {
 
 
 router.get(
+    
     "/recent",
+    
     query('post_id').notEmpty().isMongoId().escape(), 
+    
     async (req, res) => 
     {
      
@@ -143,6 +147,7 @@ router.get(
         else if (! post_id ) return res.status(404).send().json({"message: ": "no post id"})
         
         try {
+            
             const blogs = await Post.find().lean().exec();
         
             const authorIds = blogs.map(blog => blog.author);
@@ -150,11 +155,13 @@ router.get(
             const authorData = await Promise.all(authorDataPromises);
         
             const completeBlogData = blogs.map((blog, index) => {
+                
                 blog.profileUrl = authorData[index].profileUrl;
                 blog.username = authorData[index].username;
                 blog.viewCount = 0
                 blog.commentCount = 0
                 blog.distance = formatDistanceToNowStrict((blog.createdAt), {addSuffix: true}).replace("about", "")
+                
                 return blog;
             });
 
