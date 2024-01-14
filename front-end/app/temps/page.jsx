@@ -1,12 +1,14 @@
-import React from 'react'
+"use client"
+import Spinner from '@/components/Spinner/Spinner'
+import React, { Suspense } from 'react'
+import HandleTemplates from './HandleTemplates'
 
-export const metadata = {
-    title: "Templates"
-}
 export default function Page() {
     return (
-        <div>
-            
-        </div>
+        <>
+            <Suspense fallback={<Spinner />}>
+                <HandleTemplates />
+            </Suspense>
+        </>
     )
 }
